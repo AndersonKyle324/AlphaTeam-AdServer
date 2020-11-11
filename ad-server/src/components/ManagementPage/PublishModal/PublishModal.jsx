@@ -1,7 +1,7 @@
 import React from 'react';
 //import './PublishModal.css';
 
-export const PublishModal = ({ show, closeModal }) => {
+export default ({ show, closeModal }) => {
     return (
         <div className="modal-wrapper"
             style={{
