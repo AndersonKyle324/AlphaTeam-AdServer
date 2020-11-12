@@ -17,17 +17,24 @@ admin.initializeApp({
 // Initialize our DB
 const db = admin.firestore()
 
-app.get('/', async (req, res) => {
-    // Sample call to the database, this will create a 'users' table with a person named 'alovelace'
-    // this is ripped straight from the docs btw
-    const docRef = db.collection('users').doc('alovelace')
-    await docRef.set({
-        first: 'Ada',
-        last: 'Lovelace',
-        born: 1815
-    })
+//Get ads associated with ad campaign
+app.get('/campaign', async (req, res) => {
+    //front end sends a campaignID and we will return a json object
+    const docRef = db.collection('campaign').doc(req.body.campaignId);
+    res.json(docRef);
 })
 
+//Get ad information
+app.get('/ad', async (req, res) => {
+    //front end sends adID and we will return a json object
+    const docRef = db.collection('ads').doc(req.body.adId);
+    res.json(docRef);
+})
+
+/**
+ * Gets information for a specific add. If any flags are added to the URL it may also
+ * update the impressions related to a given add.
+ */
 app.get('/ad/:id', async (req, res) => {
     try {
         const docId = req.params.id;
@@ -49,8 +56,8 @@ app.get('/ad/:id', async (req, res) => {
                 ? impressions.seen / impressions.clicks
                 : 0
             docRef.update({ impressions })
-            res.sendStatus(200)
         }
+        res.status(200).send({ ad })
     } catch (e) {
         res.status(500).send({ error: 'Error retrieving ad info' })
     }
