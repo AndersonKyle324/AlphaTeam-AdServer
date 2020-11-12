@@ -50,10 +50,10 @@ app.get('/ad/:id', async (req, res) => {
                 impressions.seen += 1
             }
             if (req.query.clicked) {
-                impressions.clicked += 1
+                impressions.clicks += 1
             }
             impressions.ctr = impressions.clicks !== 0
-                ? impressions.seen / impressions.clicks
+                ? impressions.clicks / impressions.seen
                 : 0
             docRef.update({ impressions })
         }
