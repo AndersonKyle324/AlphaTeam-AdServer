@@ -28,8 +28,32 @@ app.get('/', async (req, res) => {
     })
 })
 
-app.post('/ad/create', async (req, res) => {
-    const docRef = db.collection('ads')
+app.get('/ad/:id', async (req, res) => {
+    try {
+        const docId = req.params.id;
+        const docRef = db.collection('ads').doc(docId)
+        const adSnapshot = await docRef.get()
+        if (!adSnapshot.exists) {
+            throw new Error('BROKEN')
+        }
+        const ad = adSnapshot.data()
+        if (req.query.impression || req.query.clicked) {
+            const impressions = ad.impressions
+            if (req.query.impression) {
+                impressions.seen += 1
+            }
+            if (req.query.clicked) {
+                impressions.clicked += 1
+            }
+            impressions.ctr = impressions.clicks !== 0
+                ? impressions.seen / impressions.clicks
+                : 0
+            docRef.update({ impressions })
+            res.sendStatus(200)
+        }
+    } catch (e) {
+        res.status(500).send({ error: 'Error retrieving ad info' })
+    }
 })
 
 app.listen(port, () => {
