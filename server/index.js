@@ -57,7 +57,7 @@ app.get('/ad/:id', async (req, res) => {
                 : 0
             docRef.update({ impressions })
         }
-        res.status(200).send({ ad })
+        res.status(200).send(ad)
     } catch (e) {
         res.status(500).send({ error: 'Error retrieving ad info' })
     }
