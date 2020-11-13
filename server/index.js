@@ -24,6 +24,24 @@ app.get('/campaign', async (req, res) => {
     res.json(docRef);
 })
 
+/**
+ * Gets information for a specific campaign
+ */
+app.get('/campaign/:id', async (req, res) => {
+    try {
+        const campaignId = req.params.id
+        const docRef = db.collection('campaign').doc(campaignId)
+        const campaignSnapshot = await docRef.get()
+        if (!campaignSnapshot.exists) {
+            res.status(404).send({error: 'campaign does not exist', errorCode: 404 })
+        }
+        const campaign = campaignSnapshot.data()
+        res.status(200).send(campaign)
+    } catch (e) {
+        res.status(500).send({error: 'Error retriving ad info', errorCode: 503 })
+    }
+})
+
 //Get ad information
 app.get('/ad', async (req, res) => {
     //front end sends adID and we will return a json object
@@ -38,7 +56,7 @@ app.get('/ad', async (req, res) => {
 app.get('/ad/:id', async (req, res) => {
     try {
         const docId = req.params.id;
-        const docRef = db.collection('ads').doc(docId)
+        const docRef = db.collection('ad').doc(docId)
         const adSnapshot = await docRef.get()
         if (!adSnapshot.exists) {
             throw new Error('BROKEN')
