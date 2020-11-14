@@ -34,6 +34,24 @@ app.get('/campaign', async (req, res) => {
     res.json(campaignData);
 })
 
+/**
+ * Gets information for a specific campaign
+ */
+app.get('/campaign/:id', async (req, res) => {
+    try {
+        const campaignId = req.params.id
+        const docRef = db.collection('campaign').doc(campaignId)
+        const campaignSnapshot = await docRef.get()
+        if (!campaignSnapshot.exists) {
+            res.status(404).send({error: 'campaign does not exist', errorCode: 404 })
+        }
+        const campaign = campaignSnapshot.data()
+        res.status(200).send(campaign)
+    } catch (e) {
+        res.status(500).send({error: 'Error retriving ad info', errorCode: 503 })
+    }
+})
+
 //Get ad information
 app.get('/ad', async (req, res) => {
     //We gather the whole ads collection and return a list of ad objects
@@ -74,6 +92,37 @@ app.put('/ad/edit', async (req, res) => {
                    console.log(err);
                });
 });
+/**
+ * Gets information for a specific add. If any flags are added to the URL it may also
+ * update the impressions related to a given add.
+ */
+app.get('/ad/:id', async (req, res) => {
+    try {
+        const docId = req.params.id;
+        const docRef = db.collection('ad').doc(docId)
+        const adSnapshot = await docRef.get()
+        if (!adSnapshot.exists) {
+            throw new Error('BROKEN')
+        }
+        const ad = adSnapshot.data()
+        if (req.query.impression || req.query.clicked) {
+            const impressions = ad.impressions
+            if (req.query.impression) {
+                impressions.seen += 1
+            }
+            if (req.query.clicked) {
+                impressions.clicks += 1
+            }
+            impressions.ctr = impressions.clicks !== 0
+                ? impressions.clicks / impressions.seen
+                : 0
+            docRef.update({ impressions })
+        }
+        res.status(200).send(ad)
+    } catch (e) {
+        res.status(500).send({ error: 'Error retrieving ad info' })
+    }
+})
 
 app.listen(port, () => {
     console.log(`Example listening on port ${port}`)
