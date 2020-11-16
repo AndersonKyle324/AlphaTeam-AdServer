@@ -5,7 +5,7 @@ export default () => {
     // JavaScript goes here
     var openAdBoard = () => {console.log("open ad board")};
     var openCampaigns = () => {console.log("open campaigns")};
-    var openReporting = () => {console.log("open reporting")};
+    var openAddModal = () => {console.log("open add modal")};
     var logout = () => {console.log("logout")};
 
     return (
@@ -19,8 +19,8 @@ export default () => {
                 <button className="campaigns-button" onClick={() => openCampaigns()}>
                     Campaigns
                 </button>
-                <button className="reporting-button" onClick={() => openReporting()}>
-                    Reporting
+                <button className="New-Ad-button" onClick={() => openAddModal()}>
+                    New Ad
                 </button>
                 <button className="logout-button" onClick={() => logout()}>
                     Logout
