@@ -1,5 +1,6 @@
 
 const express = require('express')
+const bodyParser = require('body-parser')
 const admin = require('firebase-admin')
 
 const app = express()
@@ -13,6 +14,10 @@ admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     databaseURL: 'firebase-adminsdk-1vnku@ifixit-ad-server-edd98.iam.gserviceaccount.com'
 })
+
+//Parsing middleware
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended : false}))
 
 // Initialize our DB
 const db = admin.firestore()
@@ -72,26 +77,39 @@ app.get('/ad', async (req, res) => {
 //Edits data with given resposne data and campaignID
 app.put('/campaign/edit', async (req, res) => {
     //We get the campaignID from the request and replace the old data with the new.
-    const campaignDoc = db.collection('campaign').doc(req.body.campaignId);
-    await campaignDoc.set(req.body.campaignData)
-               .then(console.log(`Succesfully edited data for ${req.body.campaignId}`))
-               //Catches error in the case api request fails
-               .catch(err => {
-                   console.log(err);
-               });
+    try {
+        const campaignDoc = db.collection('campaign').doc(req.body.campaignId);
+        await campaignDoc.set(req.body.campaignData)
+                   .then(console.log(`Succesfully edited data for ${req.body.campaignId}`))
+                   //Catches error in the case api request fails
+                   .catch(err => {
+                       console.log(err);
+                   });
+        res.status(200).send('Success');
+    } catch (e) {
+        res.status(500).send({error: 'Improper data inputs', errorCode: 503 })
+    }
+    
 });
 
 //Edits data with given resposne data and adId
 app.put('/ad/edit', async (req, res) => {
     //We get the adID from the request and replace the old data with the new.
-    const adDoc = db.collection('ad').doc(req.body.adId);
-    await adDoc.set(req.body.adData)
-               .then(console.log(`Succesfully edited data for ${req.body.adId}`))
-               //Catches error in the case api request fails
-               .catch(err => {
-                   console.log(err);
-               });
-});
+    try {
+        const adDoc = db.collection('ads').doc(req.body.adId);
+        await adDoc.set(req.body.adData)
+                   .then(console.log(`Succesfully edited data for ${req.body.adId}`))
+                   //Catches error in the case api request fails
+                   .catch(err => {
+                       console.log(err);
+                   });
+        res.status(200).send('Success');
+    } catch (e) {
+        res.status(500).send({error: 'Improper data inputs', errorCode: 503 })
+
+    }
+})
+
 /**
  * Gets information for a specific add. If any flags are added to the URL it may also
  * update the impressions related to a given add.
@@ -121,6 +139,26 @@ app.get('/ad/:id', async (req, res) => {
         res.status(200).send(ad)
     } catch (e) {
         res.status(500).send({ error: 'Error retrieving ad info' })
+    }
+})
+
+app.delete('/ad/delete', async (req, res) => {
+    try {
+        const adDoc = db.collection('ads').doc(req.body.adId);
+        const adExists = await adDoc.get()
+        if(!adExists.exists){
+            throw new Error('Ad does not exist')
+        }
+        await adDoc.delete()
+                   .then(console.log(`Succesfully deleted ${req.body.adId}`))
+                   //Catches error in the case api request fails
+                   .catch(err => {
+                       console.log(err);
+                   });
+        res.status(200).send('Success');
+    } catch (e) {
+        res.status(500).send({error: 'Error retreiving info', errorCode: 503 })
+
     }
 })
 
