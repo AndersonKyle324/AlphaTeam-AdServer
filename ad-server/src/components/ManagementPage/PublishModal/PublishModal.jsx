@@ -13,7 +13,7 @@ export default ({ show, closeModal }) => {
     return (
         <div className="modal-wrapper"
             style={{
-                opacity: show ? '1' : '0'
+                display: show ? 'block' : 'none'
             }}
         >
             <div className="modal-header">

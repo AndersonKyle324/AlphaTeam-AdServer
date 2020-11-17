@@ -13,18 +13,15 @@ export default () => {
         <div className="navbar-wrapper">
             <h2>Navbar</h2>
             <div className="navbar-bar">
-                <button className="ad-board-button" onClick={() => openAdBoard()}>
+                <a className="ad-board-button" onClick={() => openAdBoard()}>
                     Ad Board
-                </button>
-                <button className="campaigns-button" onClick={() => openCampaigns()}>
-                    Campaigns
-                </button>
-                <button className="New-Ad-button" onClick={() => openAddModal()}>
+                </a>
+                <a className="new-ad-button" onClick={() => openAddModal()}>
                     New Ad
-                </button>
-                <button className="logout-button" onClick={() => logout()}>
+                </a>
+                <a className="logout-button" onClick={() => logout()}>
                     Logout
-                </button>
+                </a>
             </div>    
         </div>
     );
