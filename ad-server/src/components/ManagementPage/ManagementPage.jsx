@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import './ManagementPage.css'
 import AddModal from './AddModal/AddModal';
 import AdTable from './AdTable/AdTable';
+import LoginPage from './LoginPage/LoginPage';
 import PublishModal from './PublishModal/PublishModal';
 
 export default () => {
