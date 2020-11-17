@@ -1,0 +1,5 @@
+node_modules
+serviceAccountKey.json
+.gitignore
+./package.json
+package-lock.json
