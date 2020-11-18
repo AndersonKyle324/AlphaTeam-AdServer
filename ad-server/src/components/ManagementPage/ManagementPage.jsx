@@ -3,15 +3,19 @@ import React, { useState } from 'react';
 import './ManagementPage.css'
 import AddModal from './AddModal/AddModal';
 import AdTable from './AdTable/AdTable';
-import LoginPage from './LoginPage/LoginPage';
+// import LoginPage from './LoginPage/LoginPage';
 import PublishModal from './PublishModal/PublishModal';
+import CampaignModal from './CampaignModal/CampaignModal';
 
 export default () => {
     const [showAdTable, setShowAdTable] = useState(true);
     const closeAdTable = () => setShowAdTable(false);
 
     const [showPub, setShowPub] = useState(false);
-    const closePubModal = () => setShowPub(false);
+    const closePubModal = () => {
+        setShowPub(false);
+        setShowAdTable(true);
+    }
 
     const [showCampaign, setShowCampaign] = useState(false);
     const closeCampaignModal = () => {
@@ -33,7 +37,7 @@ export default () => {
     }
 
     const openCampaignModal = () => {
-        setShowCampaignModal(true);
+        setShowCampaign(true);
         closeAdTable();
         closeAddModal();
         closePubModal();
@@ -46,10 +50,14 @@ export default () => {
         closePubModal();
     }
 
+    const logout = () => {
+        //to do
+    }
+
     return (
         <div className="management-page">
             <h1>iFixit Ad Server</h1>
-            <div className="nav-bar">
+            <span className="nav-bar">
                 <a className="open-ad-table" onClick={() => openAdTable()}>
                     Ad Board
                 </a>
@@ -62,10 +70,13 @@ export default () => {
                 <a className="logout-btn" onClick={() => logout()}>
                     Logout
                 </a>
+
+                <CampaignModal show={showCampaign} closeModal={closeCampaignModal}/>
+
                 <AddModal show={showAddModal} closeModal={closeAddModal}/>
 
                 <AdTable show={showAdTable} closeModal={closeAdTable}/>
-            </div>
+            </span>
 
             <a className="open-publish-modal" onClick={() => setShowPub(true)}>
                 Publish
