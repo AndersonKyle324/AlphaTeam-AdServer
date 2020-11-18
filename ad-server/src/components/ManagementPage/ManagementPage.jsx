@@ -13,6 +13,12 @@ export default () => {
     const [showPub, setShowPub] = useState(false);
     const closePubModal = () => setShowPub(false);
 
+    const [showCampaign, setShowCampaign] = useState(false);
+    const closeCampaignModal = () => {
+        setShowCampaign(false);
+        setShowAdTable(true);
+    }
+
     const [showAddModal, setShowAddModal] = useState(false);
     const closeAddModal = () => { 
         setShowAddModal(false);
@@ -21,12 +27,21 @@ export default () => {
 
     const openAdTable = () => {
         setShowAdTable(true);
+        closeCampaignModal();
+        closeAddModal();
+        closePubModal();
+    }
+
+    const openCampaignModal = () => {
+        setShowCampaignModal(true);
+        closeAdTable();
         closeAddModal();
         closePubModal();
     }
 
     const openAddModal = () => {
         setShowAddModal(true);
+        closeCampaignModal();
         closeAdTable();
         closePubModal();
     }
@@ -39,7 +54,13 @@ export default () => {
                     Ad Board
                 </a>
                 <a className="open-add-modal" onClick={() => openAddModal()}>
-                    Create New Ad
+                    New Ad
+                </a>
+                <a className="open-campaign-modal" onClick={() => openCampaignModal()}>
+                    New Campaign
+                </a>
+                <a className="logout-btn" onClick={() => logout()}>
+                    Logout
                 </a>
                 <AddModal show={showAddModal} closeModal={closeAddModal}/>
 
