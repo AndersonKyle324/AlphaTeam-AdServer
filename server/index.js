@@ -115,6 +115,24 @@ app.put('/campaign/edit', async (req, res) => {
     }
 })
 
+//Creates data with given resposne data and adId
+app.put('/ad/create', async (req, res) => {
+    //We get the adID from the request and replace the old data with the new.
+    try {
+        const adDoc = db.collection('ads').doc(req.body.adId)
+        await adDoc
+            .set(req.body.adData)
+            .then(console.log(`Succesfully created data for ${req.body.adId}`))
+            //Catches error in the case api request fails
+            .catch((err) => {
+                console.log(err)
+            })
+        res.status(200).send('Success')
+    } catch (e) {
+        res.status(500).send({ error: 'Improper data inputs', errorCode: 503 })
+    }
+})
+
 //Edits data with given resposne data and adId
 app.put('/ad/edit', async (req, res) => {
     //We get the adID from the request and replace the old data with the new.
