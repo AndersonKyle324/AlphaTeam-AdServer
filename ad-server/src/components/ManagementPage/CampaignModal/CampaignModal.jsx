@@ -1,8 +1,7 @@
 import React from 'react';
-//import './PublishModal.css';
 
 export default ({ show, closeModal }) => {
-    var handleUrlChange = (event) => {
+    var handleCampaignChange = (event) => {
         //to do for handling url
     }
 
@@ -17,16 +16,16 @@ export default ({ show, closeModal }) => {
             }}
         >
             <div className="modal-header">
-                <h1> Publish Ad </h1>
+                <h1> New Campaign </h1>
                 <span className="close-button" onClick={closeModal}>X</span>
             </div>
             <div className="modal-body">
                 <form>
-                    <label for="url">URL for ad to be displayed on
+                    <label for="campaign">Name of new campaign
                         <input 
                             type="text" 
-                            name="url"
-                            onChange={ handleUrlChange } 
+                            name="campaign"
+                            onChange={ handleCampaignChange } 
                         />
                     </label>
                     <input 
@@ -39,3 +38,4 @@ export default ({ show, closeModal }) => {
         </div>
     )
 };
+

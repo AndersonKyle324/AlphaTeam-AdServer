@@ -1,0 +1,85 @@
+.pageContainer {
+    font-family: 'Lato', sans-serif;
+    width: auto;
+    min-width: 960px;
+    /* max-width: 1200px; */
+}
+
+.header {
+    padding: 0.5rem 0;
+    margin: 0 0 0.5rem 0;
+    background-color: #fbfbfb;
+    box-shadow: 0 2px 4px #e0e0e0;
+    align-content: flex-end;
+}
+h1, h3 {
+    margin: 0.5rem 0;
+}
+
+.pageTitle {
+    float: left;
+    margin-left: 1rem;
+    margin-top: 1rem;
+}
+
+.pageTitle:hover {
+    cursor: default;
+}
+
+.logoutButton {
+    float: left;
+}
+
+.nav-bar {
+    display: inline;
+    padding: 1rem;
+    padding-left: 1rem;
+}
+h3.open-ad-table {
+    padding-left: 1rem;
+}
+
+/* Button Styles */
+.open-add-modal, .open-publish-modal, .open-campaign-modal, .logout-btn  {
+    font-size: 0.75rem;
+    padding: 0.75rem;
+    margin: 0.5rem;
+    width: 120px;
+    border: 2px solid #eee;
+    font-weight: 600;
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 4px;
+    float: right; /* remove this to let buttons reflow down in smaller screens */
+    margin: 0.5rem 0.5rem 0 0.5rem;
+}
+.open-publish-modal:hover, 
+.logout-btn:hover,
+.open-ad-table:hover,
+.open-campaign-modal:hover {
+    cursor: pointer;
+    color: #1975f1;
+}
+
+.logout-btn {
+    border: none;
+    padding: 0;
+    margin-top: 1rem;
+    background-color: transparent;
+}
+
+/* Blue Button Style */
+.open-add-modal {
+    color: #fff;
+    border: 2px solid #1975F1;
+    background-color: #1975F1;
+}
+.open-add-modal:hover {
+    cursor: pointer;
+    background-color: #1C7EFF;
+}
+
+.blue {
+    color: #1975f1;
+}
