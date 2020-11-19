@@ -1,12 +1,23 @@
 import React from 'react';
 
 export default ({ show, closeModal }) => {
+    var campaignName = "";
+
     var handleCampaignChange = (event) => {
         //to do for handling url
+        //campaignName = event.target.value;
     }
 
-    var handleSubmit = (event) => {
+    var handleSubmit = () => {
         //to do for handling form submit
+        if (campaignName == ""){
+            alert("A name must be provided");
+        }
+        else{
+            let data = new Object();
+            data.campaignId = campaignName;
+            //axios.post('/campaign/create', data );
+        }
     }
 
     return (
