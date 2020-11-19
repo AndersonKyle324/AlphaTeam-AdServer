@@ -98,6 +98,10 @@ app.put('/campaign/edit', async (req, res) => {
     //We get the campaignID from the request and replace the old data with the new.
     try {
         const campaignDoc = db.collection('campaign').doc(req.body.campaignId)
+        const campaignExists = await campaignDoc.get()
+        if (!campaignExists.exists) {
+            throw new Error('Campaign does not exist')
+        }
         await campaignDoc
             .set(req.body.campaignData)
             .then(
@@ -117,7 +121,6 @@ app.put('/campaign/edit', async (req, res) => {
 
 //Creates data with given resposne data and adId
 app.put('/ad/create', async (req, res) => {
-    //We get the adID from the request and replace the old data with the new.
     try {
         const adDoc = db.collection('ads').doc(req.body.adId)
         await adDoc
@@ -138,6 +141,10 @@ app.put('/ad/edit', async (req, res) => {
     //We get the adID from the request and replace the old data with the new.
     try {
         const adDoc = db.collection('ads').doc(req.body.adId)
+        const adExists = await adDoc.get()
+        if (!adExists.exists) {
+            throw new Error('Ad does not exist')
+        }
         await adDoc
             .set(req.body.adData)
             .then(console.log(`Succesfully edited data for ${req.body.adId}`))
