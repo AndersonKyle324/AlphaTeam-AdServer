@@ -43,7 +43,11 @@ class AddModal extends React.Component {
         return (
             // JSX goes here
 
-            <form onSumbit={ this.handleSubmit }>
+            <form onSumbit={ this.handleSubmit }
+                style={{
+                    display: this.props.show ? 'block' : 'none'
+                }}
+            >
                 <div className="container">
                     <div className="title">
                         <h2>New Ad</h2>    
@@ -51,7 +55,7 @@ class AddModal extends React.Component {
 
                     <div className="actionButtons">
                         <input type="submit" value="Save" />
-                        <button onClick="handleThisButtonThing" className="grayButton">
+                        <button onClick={this.props.closeModal} className="grayButton">
                             Cancel
                         </button>
                     </div>                    

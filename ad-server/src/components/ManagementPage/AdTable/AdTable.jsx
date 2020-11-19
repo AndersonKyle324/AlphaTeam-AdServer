@@ -72,7 +72,7 @@ function Table({ columns, data }) {
     )
 }
 
-function AdTable() {
+function AdTable({show}) {
     const columns = React.useMemo(
         () => [
             {
@@ -120,7 +120,11 @@ function AdTable() {
     )
 
     return (
-        <Styles>
+        <Styles
+            style={{
+                display: show ? 'block' : 'none'
+            }}
+        >
             <Table columns={columns} data={data} />
         </Styles>
     )
