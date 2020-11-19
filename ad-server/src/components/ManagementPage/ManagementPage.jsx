@@ -30,6 +30,14 @@ export default () => {
         setShowAdTable(true);
     }
 
+    const openPubModal = () => {
+        setShowPub(true);
+        closeCampaignModal();
+        closeAdTable();
+        closeAddModal();
+        
+    }
+
     const openAdTable = () => {
         setShowAdTable(true);
         closeCampaignModal();
@@ -91,7 +99,7 @@ export default () => {
                         <p className="open-campaign-modal" onClick={() => openCampaignModal()}>
                             New Campaign
                         </p>
-                        <p className="open-publish-modal" onClick={() => setShowPub(true)}>
+                        <p className="open-publish-modal" onClick={() => openPubModal()}>
                             Publish
                         </p>
                     </Col>
