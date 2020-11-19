@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import {Container, Row, Col} from 'react-grid-system';
 // import Navbar from './Navbar/Navbar';
 import './ManagementPage.css'
 import AddModal from './AddModal/AddModal';
@@ -55,33 +56,47 @@ export default () => {
     }
 
     return (
-        <div className="management-page">
-            <h1>iFixit Ad Server</h1>
-            <span className="nav-bar">
-                <a className="open-ad-table" onClick={() => openAdTable()}>
-                    Ad Board
-                </a>
-                <a className="open-add-modal" onClick={() => openAddModal()}>
-                    New Ad
-                </a>
-                <a className="open-campaign-modal" onClick={() => openCampaignModal()}>
-                    New Campaign
-                </a>
-                <a className="logout-btn" onClick={() => logout()}>
-                    Logout
-                </a>
-
-                <CampaignModal show={showCampaign} closeModal={closeCampaignModal}/>
-
-                <AddModal show={showAddModal} closeModal={closeAddModal}/>
-
-                <AdTable show={showAdTable} closeModal={closeAdTable}/>
-            </span>
-
-            <a className="open-publish-modal" onClick={() => setShowPub(true)}>
-                Publish
-            </a>
-            <PublishModal show={showPub} closeModal={closePubModal}/>
+        <div className="pageContainer">
+            <Container fluid>
+                <Row className="header">
+                    <Col sm={9}>
+                        <div className="pageTitle">
+                            <h1><span className="blue">iFixit</span> Ad Server</h1>
+                        </div>
+                    </Col>
+                    <Col sm={3}>
+                        <div className="logout-btn">
+                            <p className="logout-btn" onClick={() => logout()}>
+                                Logout
+                            </p>
+                        </div>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col sm={9}>
+                        <div className="nav-bar">
+                            <h3 className="open-ad-table" onClick={() => openAdTable()}>
+                                Ad Board
+                            </h3>
+                            <AddModal show={showAddModal} closeModal={closeAddModal}/>
+                            <AdTable show={showAdTable} closeModal={closeAdTable}/>
+                            <CampaignModal show={showCampaign} closeModal={closeCampaignModal}/>
+                            <PublishModal show={showPub} closeModal={closePubModal}/>
+                        </div>
+                    </Col>
+                    <Col sm={3}>
+                        <p className="open-add-modal" onClick={() => openAddModal()}>
+                            New Ad
+                        </p>
+                        <p className="open-campaign-modal" onClick={() => openCampaignModal()}>
+                            New Campaign
+                        </p>
+                        <p className="open-publish-modal" onClick={() => setShowPub(true)}>
+                            Publish
+                        </p>
+                    </Col>
+                </Row>
+            </Container>
         </div>
     );
 };

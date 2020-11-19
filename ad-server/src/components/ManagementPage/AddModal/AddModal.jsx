@@ -1,6 +1,6 @@
 import React from 'react';
 import './AddModal.css';
-
+ 
 class AddModal extends React.Component {
     // JavaScript goes here
     // i.e. declaring variables, functions, etc.
