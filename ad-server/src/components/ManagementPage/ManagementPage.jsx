@@ -19,10 +19,6 @@ export default () => {
     }
 
     const [showCampaign, setShowCampaign] = useState(false);
-    const closeCampaignModal = () => {
-        setShowCampaign(false);
-        setShowAdTable(true);
-    }
 
     const [showAddModal, setShowAddModal] = useState(false);
     const closeAddModal = () => { 
@@ -32,7 +28,6 @@ export default () => {
 
     const openPubModal = () => {
         setShowPub(true);
-        closeCampaignModal();
         closeAdTable();
         closeAddModal();
         
@@ -40,7 +35,6 @@ export default () => {
 
     const openAdTable = () => {
         setShowAdTable(true);
-        closeCampaignModal();
         closeAddModal();
         closePubModal();
     }
@@ -54,7 +48,6 @@ export default () => {
 
     const openAddModal = () => {
         setShowAddModal(true);
-        closeCampaignModal();
         closeAdTable();
         closePubModal();
     }
@@ -88,7 +81,7 @@ export default () => {
                             </h3>
                             <AddModal show={showAddModal} closeModal={closeAddModal}/>
                             <AdTable show={showAdTable} closeModal={closeAdTable}/>
-                            <CampaignModal show={showCampaign} onHide={() => setShowCampaign(false)} closeModal={closeCampaignModal}/>
+                            <CampaignModal show={showCampaign} onHide={() => setShowCampaign(false)} />
                             <PublishModal show={showPub} closeModal={closePubModal}/>
                         </div>
                     </Col>
