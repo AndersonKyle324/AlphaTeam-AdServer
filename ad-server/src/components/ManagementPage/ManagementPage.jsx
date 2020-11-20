@@ -88,7 +88,7 @@ export default () => {
                             </h3>
                             <AddModal show={showAddModal} closeModal={closeAddModal}/>
                             <AdTable show={showAdTable} closeModal={closeAdTable}/>
-                            <CampaignModal show={showCampaign} closeModal={closeCampaignModal}/>
+                            <CampaignModal show={showCampaign} onHide={() => setShowCampaign(false)} closeModal={closeCampaignModal}/>
                             <PublishModal show={showPub} closeModal={closePubModal}/>
                         </div>
                     </Col>
