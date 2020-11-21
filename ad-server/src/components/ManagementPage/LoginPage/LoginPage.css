@@ -1,7 +1,13 @@
+.ui-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
 .login-page {
     background-color: #ECEFF1;
     border-radius: 20px;
-    margin: 20px;
     padding: 20px;
     width: 30%;
 }
