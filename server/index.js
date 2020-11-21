@@ -202,6 +202,21 @@ app.get('/ad/:id', async (req, res) => {
     }
 })
 
+app.post('/user/create', async (req, res) => {
+    admin
+        .auth()
+        .createUser(req.body)
+        .then(function (userRecord) {
+            // See the UserRecord reference doc for the contents of userRecord.
+            console.log('Successfully created new user:', userRecord.uid)
+            res.status(200).send({user: userRecord})
+        })
+        .catch(function (error) {
+            res.status(500).send({error: 'Cannot create user', errorCode: 503})
+            console.log('Error creating new user:', error)
+        })
+})
+
 app.listen(port, () => {
     console.log(`Example listening on port ${port}`)
 })
