@@ -1,0 +1,150 @@
+{
+	"info": {
+		"_postman_id": "d6856fcc-56ad-433d-b2d4-ca8f4f7907cd",
+		"name": "Ad server API testing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get campaign list",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4e1ff53b-8c9c-4eb7-8473-207cf6aacdf7",
+						"exec": [
+							"//Hard code the id for now, still looking for a way to connect to database",
+							"pm.test(\"Status Code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/campaign",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"campaign"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get specific campaign",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "39c19d7e-0cc0-4d70-a34d-cf36cfab47b8",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less one second\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/campaign/7QKUcWNNRkIQ89jUzqo8",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"campaign",
+						"7QKUcWNNRkIQ89jUzqo8"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get ad list",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "df39f0c0-e8f6-4489-a2cc-1d7ac80c73ac",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/ad",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"ad"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get specific ad",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4ebe5fa9-ee0f-4ee0-b005-e1c910f81cb6",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/ad/vEXzgrwMg1TIsBPacmo6",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"ad",
+						"vEXzgrwMg1TIsBPacmo6"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
