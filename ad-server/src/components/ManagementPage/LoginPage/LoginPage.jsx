@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Form, Alert } from 'react-bootstrap';
+import { useHistory } from 'react-router-dom';
 import './LoginPage.css';
 
 export default () => {
@@ -9,6 +10,7 @@ export default () => {
         error: false
     });
 
+    const history = useHistory();
     const handleSubmit = async () => {
         if (inputs.username.trim() && inputs.password.trim()) {
             const body = {
@@ -18,6 +20,7 @@ export default () => {
     
             // send body to POST request for authentication
             console.log(body);
+            history.push('/management');
         } else {
             setInputs({ ...inputs, error: true });
         }
