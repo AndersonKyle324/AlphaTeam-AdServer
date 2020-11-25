@@ -1,17 +1,14 @@
-import React from 'react';
-//import './PublishModal.css';
+import React, { useState } from 'react';
+import { Form, Button, Modal } from 'react-bootstrap';
 
-export default ({ show, closeModal, ad }) => {
-    var url = "";
+export default (props) => {
+    const [ad, setAd] = useState({
+        url : ''
+    });
 
-    var handleUrlChange = (event) => {
-        //to do for handling url
-        //url = event.target.value;
-    }
-
-    var handleSubmit = (event) => {
+    const handleSubmit = (event) => {
         //to do for handling form submit
-        if (url == ""){
+        if (ad.url == ""){
             alert("A url must be provided");
         }
         else{
@@ -23,31 +20,35 @@ export default ({ show, closeModal, ad }) => {
     }
 
     return (
-        <div className="modal-wrapper"
-            style={{
-                display: show ? 'block' : 'none'
-            }}
+        <Modal
+            {...props}
+            size='lg'
+            centered
+            backdrop="static"
+            keyboard={false}
         >
-            <div className="modal-header">
-                <h1> Publish Ad </h1>
-                <span className="close-button" onClick={closeModal}>X</span>
-            </div>
-            <div className="modal-body">
-                <form>
-                    <label for="url">URL for ad to be displayed on
-                        <input 
-                            type="text" 
-                            name="url"
-                            onChange={ handleUrlChange } 
+            <Modal.Header closeButton>
+                <Modal.Title id="modal-title"> 
+                    Publish Ad 
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Form>
+                    <Form.Group>
+                    <Form.Label>URL for ad to be displayed on</Form.Label>
+                        <Form.Control 
+                            controlId="url"
+                            placeholder="Enter url"
+                            onChange={ (e) => setAd({ url : e.target.value }) } 
+                            value={ad.url}
                         />
-                    </label>
-                    <input 
-                        type="submit" 
-                        value="Submit"
-                        onChange={ handleSubmit } 
-                    />
-                </form>
-            </div>
-        </div>
+                    </Form.Group>
+                </Form>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={props.onHide}>Close</Button>
+                <Button onClick={() => handleSubmit()}>Submit</Button>
+            </Modal.Footer>
+        </Modal>
     )
 };

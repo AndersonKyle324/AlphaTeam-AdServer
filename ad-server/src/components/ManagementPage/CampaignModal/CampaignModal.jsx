@@ -6,12 +6,7 @@ export default (props) => {
         campaignName: ''
     });
 
-    var handleCampaignChange = (event) => {
-        //to do for handling url
-        //campaignName = event.target.value;
-    }
-
-    var handleSubmit = () => {
+    const handleSubmit = () => {
         //to do for handling form submit
         console.log(campaign.campaignName);
         if (campaign.campaignName == ""){
