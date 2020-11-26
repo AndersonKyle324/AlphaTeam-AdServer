@@ -9,6 +9,8 @@ const swaggerSettings = require('./swaggerSettings.json')
 const swaggerJsdoc = require('swagger-jsdoc')
 const swaggerUi = require('swagger-ui-express')
 const specs = swaggerJsdoc(swaggerSettings)
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use('/docs', swaggerUi.serve)
 app.get(
     '/docs',
