@@ -11,13 +11,26 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "4e1ff53b-8c9c-4eb7-8473-207cf6aacdf7",
+						"id": "9bf8f5d6-d2c3-42d5-bac3-f5127a5b7ab6",
 						"exec": [
-							"//Hard code the id for now, still looking for a way to connect to database",
 							"pm.test(\"Status Code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
 							"});",
-							""
+							"",
+							"//Get the returned json Data",
+							"let jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Return type is an array\", function () {",
+							"    pm.expect(jsonData).to.be.an(\"array\");",
+							"});",
+							"",
+							"//Loop over compaign array and check each compaign is an object with property ads",
+							"pm.test(\"Each compaign has property 'ads'\", function () {",
+							"    for(var i = 0; i < jsonData.length; i++) {",
+							"        var obj = jsonData[i];",
+							"        pm.expect(obj).to.be.an('object').to.have.property('ads');",
+							"    }   ",
+							"});"
 						],
 						"type": "text/javascript"
 					}
