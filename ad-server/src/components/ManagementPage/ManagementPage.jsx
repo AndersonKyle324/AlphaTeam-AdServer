@@ -13,16 +13,7 @@ export default () => {
     const closeAdTable = () => setShowAdTable(false);
 
     const [showPub, setShowPub] = useState(false);
-    const closePubModal = () => {
-        setShowPub(false);
-        setShowAdTable(true);
-    }
-
     const [showCampaign, setShowCampaign] = useState(false);
-    const closeCampaignModal = () => {
-        setShowCampaign(false);
-        setShowAdTable(true);
-    }
 
     const [showAddModal, setShowAddModal] = useState(false);
     const closeAddModal = () => { 
@@ -30,33 +21,14 @@ export default () => {
         setShowAdTable(true);
     }
 
-    const openPubModal = () => {
-        setShowPub(true);
-        closeCampaignModal();
-        closeAdTable();
-        closeAddModal();
-        
-    }
-
     const openAdTable = () => {
         setShowAdTable(true);
-        closeCampaignModal();
         closeAddModal();
-        closePubModal();
-    }
-
-    const openCampaignModal = () => {
-        setShowCampaign(true);
-        closeAdTable();
-        closeAddModal();
-        closePubModal();
     }
 
     const openAddModal = () => {
         setShowAddModal(true);
-        closeCampaignModal();
         closeAdTable();
-        closePubModal();
     }
 
     const logout = () => {
@@ -75,7 +47,7 @@ export default () => {
                     <Col sm={3}>
                         <div className="logout-btn">
                             <p className="logout-btn" onClick={() => logout()}>
-                                Logout
+                                Logout`
                             </p>
                         </div>
                     </Col>
@@ -88,18 +60,18 @@ export default () => {
                             </h3>
                             <AddModal show={showAddModal} closeModal={closeAddModal}/>
                             <AdTable show={showAdTable} closeModal={closeAdTable}/>
-                            <CampaignModal show={showCampaign} closeModal={closeCampaignModal}/>
-                            <PublishModal show={showPub} closeModal={closePubModal}/>
+                            <CampaignModal show={showCampaign} onHide={() => setShowCampaign(false)} />
+                            <PublishModal ad={{id : "name1", campaignId: "Test2"}} show={showPub} onHide={() => setShowPub(false)}/>
                         </div>
                     </Col>
                     <Col sm={3}>
                         <p className="open-add-modal" onClick={() => openAddModal()}>
                             New Ad
                         </p>
-                        <p className="open-campaign-modal" onClick={() => openCampaignModal()}>
+                        <p className="open-campaign-modal" onClick={() => setShowCampaign(true)}>
                             New Campaign
                         </p>
-                        <p className="open-publish-modal" onClick={() => openPubModal()}>
+                        <p className="open-publish-modal" onClick={() => setShowPub(true)}>
                             Publish
                         </p>
                     </Col>

@@ -1,6 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const admin = require('firebase-admin')
+const newman = require('newman')
 
 const app = express()
 const port = process.env.port || 3000
@@ -248,6 +249,30 @@ app.get('/ad/:id', async (req, res) => {
         res.status(500).send({ error: 'Error retrieving ad info' })
     }
 })
+
+app.post('/user/create', async (req, res) => {
+    admin
+        .auth()
+        .createUser(req.body)
+        .then(function (userRecord) {
+            // See the UserRecord reference doc for the contents of userRecord.
+            console.log('Successfully created new user:', userRecord.uid)
+            res.status(200).send({user: userRecord})
+        })
+        .catch(function (error) {
+            res.status(500).send({error: 'Cannot create user', errorCode: 503})
+            console.log('Error creating new user:', error)
+        })
+})
+
+//Automated postman test, runs everystime when server start
+newman.run({
+    collection: require('./postman.json'),
+    reporters: 'cli'
+}, function (err) {
+	if (err) { throw err; }
+    console.log('collection run complete!');
+});
 
 app.listen(port, () => {
     console.log(`Example listening on port ${port}`)
