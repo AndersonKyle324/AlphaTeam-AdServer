@@ -61,7 +61,7 @@ export default () => {
                             <AddModal show={showAddModal} closeModal={closeAddModal}/>
                             <AdTable show={showAdTable} closeModal={closeAdTable}/>
                             <CampaignModal show={showCampaign} onHide={() => setShowCampaign(false)} />
-                            <PublishModal show={showPub} onHide={() => setShowPub(false)}/>
+                            <PublishModal ad={{id : "name1", campaignId: "Test2"}} show={showPub} onHide={() => setShowPub(false)}/>
                         </div>
                     </Col>
                     <Col sm={3}>

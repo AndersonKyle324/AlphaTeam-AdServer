@@ -12,10 +12,8 @@ export default (props) => {
             alert("A url must be provided");
         }
         else{
-            //axios.get('ad/id', )
-            let adComponent = new Object();
             //provide json with ad react component
-            //axios.get???('/ad/send??', data );
+            //axios.post('/ad/send??', data );
         }
     }
 
@@ -35,7 +33,7 @@ export default (props) => {
             <Modal.Body>
                 <Form>
                     <Form.Group>
-                    <Form.Label>URL for ad to be displayed on</Form.Label>
+                    <Form.Label>URL for "{props.ad.id}" to be displayed on</Form.Label>
                         <Form.Control 
                             controlId="url"
                             placeholder="Enter url"
