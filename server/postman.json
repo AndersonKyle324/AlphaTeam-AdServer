@@ -11,7 +11,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "9bf8f5d6-d2c3-42d5-bac3-f5127a5b7ab6",
+						"id": "be1082fe-944f-44e3-b539-7e4c6aae5350",
 						"exec": [
 							"pm.test(\"Status Code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
@@ -25,12 +25,15 @@
 							"});",
 							"",
 							"//Loop over compaign array and check each compaign is an object with property ads",
-							"pm.test(\"Each compaign has property 'ads'\", function () {",
+							"pm.test(\"Each compaign contains an ads array\", function () {",
 							"    for(var i = 0; i < jsonData.length; i++) {",
 							"        var obj = jsonData[i];",
 							"        pm.expect(obj).to.be.an('object').to.have.property('ads');",
+							"        console.log(i);",
+							"        pm.expect(obj.ads).to.be.an(\"array\");",
 							"    }   ",
-							"});"
+							"});",
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -54,44 +57,6 @@
 			"response": []
 		},
 		{
-			"name": "Get specific campaign",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "39c19d7e-0cc0-4d70-a34d-cf36cfab47b8",
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});",
-							"",
-							"pm.test(\"Response time is less one second\", function () {",
-							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:3000/campaign/7QKUcWNNRkIQ89jUzqo8",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
-					"path": [
-						"campaign",
-						"7QKUcWNNRkIQ89jUzqo8"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "Get ad list",
 			"event": [
 				{
@@ -101,6 +66,36 @@
 						"exec": [
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"//Get the returned json Data",
+							"let jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Return type is an array\", function () {",
+							"    pm.expect(jsonData).to.be.an('array');",
+							"});",
+							"",
+							"//Loop over ads array and check each ad has right properties",
+							"pm.test(\"Each ad has right properties\", function () {",
+							"    for(var i = 0; i < jsonData.length; i++) {",
+							"        var obj = jsonData[i];",
+							"        pm.expect(obj).to.have.property('impressions');",
+							"        pm.expect(obj).to.have.property('title');",
+							"        pm.expect(obj.impressions).to.have.property('ctr');",
+							"        pm.expect(obj.impressions).to.have.property('seen');",
+							"        pm.expect(obj.impressions).to.have.property('clicks');",
+							"    }   ",
+							"});",
+							"",
+							"pm.test(\"Each ad has right value type\", function () {",
+							"    for(var i = 0; i < jsonData.length; i++) {",
+							"        var obj = jsonData[i];",
+							"        pm.expect(obj.impressions).to.be.an('object');",
+							"        pm.expect(obj.title).to.be.an('string');",
+							"        pm.expect(obj.impressions.ctr).be.an('number')",
+							"        pm.expect(obj.impressions.seen).to.be.an('number');",
+							"        pm.expect(obj.impressions.clicks).to.be.an('number');",
+							"    }   ",
 							"});"
 						],
 						"type": "text/javascript"
@@ -125,7 +120,51 @@
 			"response": []
 		},
 		{
-			"name": "Get specific ad",
+			"name": "Get compaign by id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "39c19d7e-0cc0-4d70-a34d-cf36cfab47b8",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"//Get the returned json Data",
+							"let jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Campaign contains ads array\", function () {",
+							"    pm.expect(jsonData).to.have.property('ads');",
+							"    pm.expect(jsonData.ads).to.be.an(\"array\");",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/campaign/7QKUcWNNRkIQ89jUzqo2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"campaign",
+						"7QKUcWNNRkIQ89jUzqo2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get ad by id",
 			"event": [
 				{
 					"listen": "test",
@@ -134,7 +173,33 @@
 						"exec": [
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
-							"});"
+							"});",
+							"",
+							"//Get the returned json Data",
+							"let obj = pm.response.json();",
+							"",
+							"pm.test(\"Ad has right properties\", function () {",
+							"    pm.expect(obj).to.be.an('object').to.have.property('impressions');",
+							"    pm.expect(obj.impressions).to.have.property('ctr');",
+							"    pm.expect(obj.impressions).to.have.property('seen');",
+							"    pm.expect(obj.impressions).to.have.property('clicks');",
+							"});",
+							"",
+							"pm.test(\"Ad has right value type\", function () {",
+							"    pm.expect(obj).to.be.an('object').to.have.property('impressions');",
+							"    pm.expect(obj.impressions).to.have.property('ctr');",
+							"    pm.expect(obj.impressions).to.have.property('seen');",
+							"    pm.expect(obj.impressions).to.have.property('clicks');",
+							"});",
+							"",
+							"",
+							"",
+							"",
+							"",
+							"",
+							"",
+							"",
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -153,6 +218,324 @@
 					"path": [
 						"ad",
 						"vEXzgrwMg1TIsBPacmo6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get ad by title",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "de6149b9-14b4-4700-965a-393667c73e22",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"//Get the returned json Data",
+							"let jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Return type is an array\", function () {",
+							"    pm.expect(jsonData).to.be.an('array');",
+							"});",
+							"",
+							"//Loop over ads array and check each ad has right properties",
+							"pm.test(\"Each ad has right properties\", function () {",
+							"    for(var i = 0; i < jsonData.length; i++) {",
+							"        var obj = jsonData[i];",
+							"        pm.expect(obj).to.have.property('impressions');",
+							"        pm.expect(obj).to.have.property('title');",
+							"        pm.expect(obj.impressions).to.have.property('ctr');",
+							"        pm.expect(obj.impressions).to.have.property('seen');",
+							"        pm.expect(obj.impressions).to.have.property('clicks');",
+							"    }   ",
+							"});",
+							"",
+							"pm.test(\"Each ad has right value type\", function () {",
+							"    for(var i = 0; i < jsonData.length; i++) {",
+							"        var obj = jsonData[i];",
+							"        pm.expect(obj.impressions).to.be.an('object');",
+							"        pm.expect(obj.title).to.be.an('string');",
+							"        pm.expect(obj.impressions.ctr).be.an('number')",
+							"        pm.expect(obj.impressions.seen).to.be.an('number');",
+							"        pm.expect(obj.impressions.clicks).to.be.an('number');",
+							"    }   ",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/ad/search?title=testTitle",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"ad",
+						"search"
+					],
+					"query": [
+						{
+							"key": "title",
+							"value": "testTitle"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create ad",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e10ce223-0d3a-4aca-8397-8f82ade07bb0",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Body return 'Success'\", function () {",
+							"    pm.response.to.have.body(\"Success\");",
+							"});",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"adId\" : \"xGpTCGJSIDX0Z8RbMbkb\",\n    \"adData\" : {\n        \"impressions\" : {\n            \"clicks\" : 0,\n            \"ctr\" : 0,\n            \"seen\" : 0\n        },\n        \"title\" : \"testTitle\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/ad/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"ad",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create campaign",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7153d974-f334-4f95-a745-cbf4933e4081",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Body return 'Success'\", function () {",
+							"    pm.response.to.have.body(\"Success\");",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"campaignId\" : \"7QKUcWNNRkIQ89jUzqo2\", \n    \"campaignData\": {\n        \"ads\":  [\"tizIVvccQynWGGMzKgt0\", \"GaQ1qjAu8Y0eGM8jamQV\",\"5pOCSHCwbRPxoRZhu3AG\"]\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/campaign/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"campaign",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit ad",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7b26eb8d-d07a-46a9-a36d-c7d1483aa423",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Body return 'Success'\", function () {",
+							"    pm.response.to.have.body(\"Success\");",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"adId\" : \"S65VEue2H191YENXCl9T\",\n    \"adData\" : {\n        \"impressions\" : {\n            \"clicks\" : 0,\n            \"ctr\" : 0,\n            \"seen\" : 0\n        },\n        \"title\" : \"testTitle\"\n    }\n    \n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/ad/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"ad",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit campaign",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "06d61b14-81ac-4230-80bd-9ec183d6c46a",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Body return 'Success'\", function () {",
+							"    pm.response.to.have.body(\"Success\");",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"campaignId\": \"7QKUcWNNRkIQ89jUzqo7\",\n    \"campaignData\": {\n        \"ads\" : [\"bXbuQY6TgfLzxIIPm7vk\", \"tuWAFoxVhONXzLujSDRn\", \"KdBvlc1EbetC8R5Zy8ca\"]\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/campaign/edit",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"campaign",
+						"edit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete ad",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f9bf1fcd-7f51-45d0-97a2-68a4a41e6248",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Body return 'Success'\", function () {",
+							"    pm.response.to.have.body(\"Success\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"adId\": \"xGpTCGJSIDX0Z8RbMbkb\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/ad/delete",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"ad",
+						"delete"
 					]
 				}
 			},
