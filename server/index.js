@@ -1,6 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const admin = require('firebase-admin')
+const newman = require('newman')
 
 const app = express()
 const port = process.env.port || 3000
@@ -267,9 +268,14 @@ app.post('/user/create', async (req, res) => {
         })
 })
 
-app.post('/user/login', async (req, res) => {
-    admin
-})
+//Automated postman test, runs everystime when server start
+newman.run({
+    collection: require('./postman.json'),
+    reporters: 'cli'
+}, function (err) {
+	if (err) { throw err; }
+    console.log('collection run complete!');
+});
 
 app.listen(port, () => {
     console.log(`Example listening on port ${port}`)
