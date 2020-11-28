@@ -5,4 +5,6 @@ Go to [Firebase](https://firebase.google.com/) with whatever email you gave me a
 -   npm install
 -   npm run dev
 
-To run the linter run npm run format through the console
+To run the linter run `npm run format` through the terminal
+
+To create API documentation through swagger open the `swaggerSettings.json` file and add documentation to the path object. If you have any new data types that you're defining, add it in the `schemas` object. For in depth documentation on how to write an API document using swagger go to [Swagger.io](https://swagger.io/docs/specification/basic-structure/)

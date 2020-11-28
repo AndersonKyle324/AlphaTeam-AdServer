@@ -15,11 +15,84 @@
                 "email": "N/A"
             }
         },
+        "host": "localhost:3000",
+        "basePath": "/",
         "servers": [
             {
                 "url": "http://localhost:3000/"
             }
-        ]
+        ],
+        "schemas": {
+            "Ad": {
+                "required": ["title", "startDate", "endDate"],
+                "properties": {
+                    "_uid": {
+                        "type": "uuid",
+                        "unique": "true"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "startDate": {
+                        "type": "integer"
+                    },
+                    "endDate": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
+        "paths": {
+            "/ad": {
+                "get": {
+                    "parameters": {
+                        "name": "test",
+                        "in": "body"
+                    },
+                    "tags": ["Ad"],
+                    "summary": "Get all ads in the system",
+                    "description": "This request will get all active Ads",
+                    "responses": {
+                        "200": {
+                            "description": "OK",
+                            "schema": {
+                                "$ref": "#/components/schemas/Ad"
+                            }
+                        },
+                        "503": {
+                            "description": "Server Error",
+                            "schema": {
+                                "$ref": "#/components/schemas/Ad"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "components": {
+            "schemas": {
+                "Ad": {
+                    "required": ["title", "startDate", "endDate"],
+                    "properties": {
+                        "_uid": {
+                            "type": "string",
+                            "unique": "true"
+                        },
+                        "title": {
+                            "type": "string"
+                        },
+                        "startDate": {
+                            "type": "integer"
+                        },
+                        "endDate": {
+                            "type": "integer"
+                        }
+                    }
+                }
+            }
+        },
+        "consumes": ["application/json"],
+        "produces": ["application/json"]
     },
-    "apis": ["./routes/*.js"]
+    "apis": ["./*.js"]
 }
