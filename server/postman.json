@@ -62,7 +62,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "df39f0c0-e8f6-4489-a2cc-1d7ac80c73ac",
+						"id": "fb779690-7201-43ff-9b1a-cb43e60183b5",
 						"exec": [
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
@@ -169,7 +169,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "4ebe5fa9-ee0f-4ee0-b005-e1c910f81cb6",
+						"id": "7048f0ac-2a63-4b88-88cb-1cfc76124f82",
 						"exec": [
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
@@ -186,10 +186,10 @@
 							"});",
 							"",
 							"pm.test(\"Ad has right value type\", function () {",
-							"    pm.expect(obj).to.be.an('object').to.have.property('impressions');",
-							"    pm.expect(obj.impressions).to.have.property('ctr');",
-							"    pm.expect(obj.impressions).to.have.property('seen');",
-							"    pm.expect(obj.impressions).to.have.property('clicks');",
+							"    pm.expect(obj).to.be.an('object');",
+							"    pm.expect(obj.impressions.ctr).be.an('number')",
+							"    pm.expect(obj.impressions.seen).to.be.an('number');",
+							"    pm.expect(obj.impressions.clicks).to.be.an('number');",
 							"});",
 							"",
 							"",
@@ -209,7 +209,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/ad/vEXzgrwMg1TIsBPacmo6",
+					"raw": "http://localhost:3000/ad/vEXzgrwMg1TIsBPacmo6?impression=true&clicked=true",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -218,6 +218,16 @@
 					"path": [
 						"ad",
 						"vEXzgrwMg1TIsBPacmo6"
+					],
+					"query": [
+						{
+							"key": "impression",
+							"value": "true"
+						},
+						{
+							"key": "clicked",
+							"value": "true"
+						}
 					]
 				}
 			},
@@ -527,7 +537,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/ad/delete",
+					"raw": "http://localhost:3000/ad/delete/xGpTCGJSIDX0Z8RbMbkb",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -535,7 +545,8 @@
 					"port": "3000",
 					"path": [
 						"ad",
-						"delete"
+						"delete",
+						"xGpTCGJSIDX0Z8RbMbkb"
 					]
 				}
 			},

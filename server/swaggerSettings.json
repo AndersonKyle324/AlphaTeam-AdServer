@@ -19,7 +19,499 @@
             {
                 "url": "http://localhost:3000/"
             }
-        ]
+        ],
+        "tags": [
+            {
+                "name": "ad",
+                "description": "Everything about ad"
+            },
+            {
+                "name": "campaign",
+                "description": "Everything about campaign"
+            },
+            {
+                "name": "user",
+                "description": "Everything about user"
+
+            }
+        ],
+        "Schemas": {
+            "Impressions": {
+                "type": "object",
+                "properties": {
+                    "clicks": {
+                        "type": "integer",
+                        "format": "int32",
+                        "example": 0
+                    },
+                    "seen": {
+                        "type": "integer",
+                        "format": "int32",
+                        "example": 0
+                    },
+                    "ctr": {
+                        "type": "number",
+                        "formate": "double",
+                        "example": 0
+                    }
+                }
+            },
+            "Ad": {
+                "type": "object",
+                "properties": {
+                    "adId": {
+                        "type": "string",
+                        "example": "xGpTCGJSIDX0Z8RbMbkb"
+                    },
+                    "adData": {
+                        "type": "object",
+                        "properties":{
+                            "impressions":{
+                                "$ref": "#/Schemas/Impressions"
+                            },
+                            "title": {
+                                "type": "string",
+                                "example": "Ad title example"
+                            }
+                        }
+                    }
+                }
+            },
+            "AdWithoutId":{
+                "type": "object",
+                "properties": {
+                    "adData": {
+                        "type": "object",
+                        "properties":{
+                            "impressions":{
+                                "$ref": "#/Schemas/Impressions"
+                            },
+                            "title": {
+                                "type": "string",
+                                "example": "Ad title example"
+                            }
+                        }
+                    }
+                }
+            },
+            "Campaign": {
+                "type": "object",
+                "properties": {
+                    "campaignId": {
+                        "type": "string",
+                        "example": "7QKUcWNNRkIQ89jUzqo2"
+                    },
+                    "campaignData": {
+                        "type": "array",
+                        "items": {
+                            "type" : "string"
+                        },
+                        "example": ["1st ad id", "2nd ad id", "3rd ad id"]
+                    }
+                }
+            },
+            "CampaignWithoutId": {
+                "type": "object",
+                "properties": {
+                    "campaignData": {
+                        "type": "array",
+                        "items": {
+                            "type" : "string"
+                        },
+                        "example": ["1st ad id", "2nd ad id", "3rd ad id"]
+                    }
+                }
+            },
+            "User": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Trump"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "test@gmail.com"
+                    }
+                }
+            }
+        },
+        "paths": {
+            "/campaign": {
+                "get":{
+                    "tags": [ 
+                        "campaign"
+                    ],
+                    "summary": "Get a list of campaign objects",
+                    "parameters": [],
+                    "responses": {
+                        "200": {
+                            "description": "Successful Operation",
+                            "content":{
+                                "application/json": {
+                                    "schema":{
+                                        "type": "array",
+                                        "items":{
+                                            "$ref": "#/Schemas/CampaignWithoutId" 
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "/campaign/{campaignId}": {
+                "get":{
+                    "tags": [ 
+                        "campaign"
+                    ],
+                    "summary": "Get the campaign by ID",
+                    "parameters": [
+                        {
+                            "name": "campaignId",
+                            "in": "path",
+                            "description": "ID of campaign to return",
+                            "required": true,
+                            "type": "string",
+                            "example": "7QKUcWNNRkIQ89jUzqo2"
+                        }
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "Successful Operation",
+                            "content":{
+                                "application/json": {
+                                    "schema":{
+                                        "$ref": "#/Schemas/CampaignWithoutId" 
+                                    }
+                                }
+                            }
+                        },
+                        "404": {
+                            "description": "Campaign does not exist by given ID"
+                        },
+                        "500": {
+                            "description": "Error retrieving info"
+                        }
+                    }
+                }
+            },
+            "/ad": {
+                "get":{
+                    "tags": [ 
+                        "ad"
+                    ],
+                    "summary": "Get a list of ad objects",
+                    "parameters": [],
+                    "responses": {
+                        "200": {
+                            "description": "Successful Operation",
+                            "content":{
+                                "application/json": {
+                                    "schema":{
+                                        "type": "array",
+                                        "items":{
+                                            "$ref": "#/Schemas/AdWithoutId" 
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "/campaign/edit": {
+                "put":{
+                    "tags": [ 
+                        "campaign"
+                    ],
+                    "summary": "Update an existing campaign",
+                    "parameters": [
+                        {
+                            "in" : "body",
+                            "name": "body",
+                            "description": "Campaign object that needs to be added to the database",
+                            "required": true,
+                            "schema": {
+                                "$ref": "#/Schemas/Campaign"
+                            }
+
+                        }
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "Successful Operation",
+                            "content":{
+                                "text/plain": {
+                                    "schema": {
+                                        "type": "string",
+                                        "example": "Success"
+                                    }
+                                }
+                            }
+                        },
+                        "503": {
+                            "description": "Improper data inputs"
+                        }
+                    }
+                }
+            },
+            "/campaign/create": {
+                "put":{
+                    "tags": [ 
+                        "campaign"
+                    ],
+                    "summary": "Create a new campaign",
+                    "description": "If the campaign already exists, update with new campaign",
+                    "parameters": [
+                        {
+                            "in" : "body",
+                            "name": "body",
+                            "description": "Campaign object that needs to be added to the database",
+                            "required": true,
+                            "schema": {
+                                "$ref": "#/Schemas/Campaign"
+                            }
+                        }
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "Successful Operation",
+                            "content":{
+                                "text/plain": {
+                                    "schema": {
+                                        "type": "string",
+                                        "example": "Success"
+                                    }
+                                }
+                            }
+                        },
+                        "503": {
+                            "description": "Improper data inputs"
+                        }
+                    }
+                }
+            },
+            "/ad/create": {
+                "put":{
+                    "tags": [ 
+                        "ad"
+                    ],
+                    "summary": "Create a new ad",
+                    "description": "If the ad already exists, update with new ad",
+                    "parameters": [
+                        {
+                            "in" : "body",
+                            "name": "body",
+                            "description": "Ad object that needs to be added to the database",
+                            "required": true,
+                            "schema": {
+                                "$ref": "#/Schemas/Ad"
+                            }
+                        }
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "Successful Operation",
+                            "content":{
+                                "text/plain": {
+                                    "schema": {
+                                        "type": "string",
+                                        "example": "Success"
+                                    }
+                                }
+                            }
+                        },
+                        "503": {
+                            "description": "Improper data inputs"
+                        }
+                    }
+                }
+            },
+            "/ad/edit": {
+                "put":{
+                    "tags": [ 
+                        "ad"
+                    ],
+                    "summary": "Update an existing ad",
+                    "parameters": [
+                        {
+                            "in" : "body",
+                            "name": "body",
+                            "description": "Ad object that needs to be updated to the database",
+                            "required": true,
+                            "schema": {
+                                "$ref": "#/Schemas/Ad"
+                            }
+                        }
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "Successful Operation",
+                            "content":{
+                                "text/plain": {
+                                    "schema": {
+                                        "type": "string",
+                                        "example": "Success"
+                                    }
+                                }
+                            }
+                        },
+                        "503": {
+                            "description": "Improper data inputs"
+                        }
+                    }
+                }
+            },
+            "/ad/delete/{adId}": {
+                "delete":{
+                    "tags": [
+                        "ad"
+                    ],
+                    "summary": "Delete an ad",
+                    "parameters": [
+                        {
+                            "name": "adId",
+                            "in": "path",
+                            "description": "ID of ad to delete",
+                            "required": true,
+                            "type": "string",
+                            "example": "xGpTCGJSIDX0Z8RbMbkb"
+                        }
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "Successful Operation",
+                            "content":{
+                                "text/plain": {
+                                    "schema": {
+                                        "type": "string",
+                                        "example": "Success"
+                                    }
+                                }
+                            }
+                        },
+                        "503": {
+                            "description": "Improper data inputs"
+                        }
+                    }
+                }
+            },
+            "/ad/search": {
+                "get":{
+                    "tags": [ 
+                        "ad"
+                    ],
+                    "summary": "Get an ad list by their title",
+                    "parameters": [
+                        {
+                            "name": "title",
+                            "in": "query",
+                            "schema":{
+                                "type": "string"
+                            },
+                            "required": true,
+                            "example": "testTitle"
+                            
+                        }
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "Successful Operation",
+                            "content":{
+                                "application/json": {
+                                    "schema":{
+                                        "type": "array",
+                                        "items":{
+                                            "$ref": "#/Schemas/AdWithoutId" 
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "/ad/{adId}": {
+                "get":{
+                    "tags": [ 
+                        "ad"
+                    ],
+                    "summary": "Get the ad by ID",
+                    "Description": "If any flags are added to the URL it may also update the impressions related to a given ad",
+                    "parameters": [
+                        {
+                            "in": "path",
+                            "name": "adId",
+                            "description": "ID of ad to return",
+                            "required": true,
+                            "type": "string",
+                            "example": "vEXzgrwMg1TIsBPacmo6"
+                        },
+                        {
+                            "in": "query",
+                            "name": "impression",
+                            "required": false,
+                            "type": "boolean",
+                            "example": true
+                        },
+                        {
+                            "in": "query",
+                            "name": "clicked",
+                            "required": false,
+                            "type": "boolean",
+                            "example": true
+                        }
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "Successful Operation",
+                            "content":{
+                                "application/json": {
+                                    "schema":{
+                                        "$ref": "#/Schemas/AdWithoutId" 
+                                    }
+                                }
+                            }
+                        },
+                        "503": {
+                            "description": "Error retrieving info"
+                        }
+                    }
+                }
+            },
+            "user/create":{
+                "post":{
+                    "tags": [ 
+                        "user"
+                    ],
+                    "summary": "Create a new user",
+                    "parameters": [
+                        {
+                            "in" : "body",
+                            "name": "body",
+                            "description": "New user needs to be added to database",
+                            "required": true,
+                            "schema": {
+                                "$ref": "#/Schemas/User"
+                            }
+                        }
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "Successful Operation"
+                        },
+                        "500": {
+                            "description": "Cannot create user"
+                        }
+                        
+                    }
+                }
+            }
+
+        }
+
     },
     "apis": ["./routes/*.js"]
 }

@@ -181,9 +181,10 @@ app.put('/ad/edit', async (req, res) => {
     }
 })
 
-app.delete('/ad/delete', async (req, res) => {
+app.delete('/ad/delete/:id', async (req, res) => {
     try {
-        const adDoc = db.collection('ads').doc(req.body.adId)
+        const docId = req.params.id
+        const adDoc = db.collection('ads').doc(docId)
         const adExists = await adDoc.get()
         if (!adExists.exists) {
             throw new Error('Ad does not exist')
