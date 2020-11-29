@@ -7,13 +7,13 @@ class AddModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            adName: '',
-            campaignKind: '',
-            adSize: '',
+            id: '',
+            campaign: '',
+            size: '',
             imageFile: null,
             altText: '',
-            adTitle: '',
-            adSubtitle: '',
+            title: '',
+            subtitle: '',
             buttonKind: null,
             buttonText: '',
             buttonUrl: '',

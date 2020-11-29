@@ -10,15 +10,14 @@ const swaggerSettings = require('./swaggerSettings.json')
 const swaggerJsdoc = require('swagger-jsdoc')
 const swaggerUi = require('swagger-ui-express')
 const specs = swaggerJsdoc(swaggerSettings)
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use('/docs', swaggerUi.serve)
-app.get(
+app.use(
     '/docs',
+    swaggerUi.serve,
     swaggerUi.setup(specs, {
         explorer: true,
     })
 )
+app.get('/docs')
 
 // Load credentials from firebase
 const serviceAccount = require('./serviceAccountKey.json')
@@ -56,6 +55,7 @@ app.get('/campaign', async (req, res) => {
 /**
  * Gets information for a specific campaign
  */
+
 app.get('/campaign/:id', async (req, res) => {
     try {
         const campaignId = req.params.id
@@ -258,10 +258,13 @@ app.post('/user/create', async (req, res) => {
         .then(function (userRecord) {
             // See the UserRecord reference doc for the contents of userRecord.
             console.log('Successfully created new user:', userRecord.uid)
-            res.status(200).send({user: userRecord})
+            res.status(200).send({ user: userRecord })
         })
         .catch(function (error) {
-            res.status(500).send({error: 'Cannot create user', errorCode: 503})
+            res.status(500).send({
+                error: 'Cannot create user',
+                errorCode: 503,
+            })
             console.log('Error creating new user:', error)
         })
 })
