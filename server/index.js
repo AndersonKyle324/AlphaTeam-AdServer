@@ -193,7 +193,28 @@ app.delete('/ad/delete/:id', async (req, res) => {
         }
         await adDoc
             .delete()
-            .then(console.log(`Succesfully deleted ${req.body.adId}`))
+            .then(console.log(`Succesfully deleted ${docId}`))
+            //Catches error in the case api request fails
+            .catch((err) => {
+                console.log(err)
+            })
+        res.status(200).send('Success')
+    } catch (e) {
+        res.status(500).send({ error: 'Error retreiving info', errorCode: 503 })
+    }
+})
+
+app.delete('/campaign/delete/:id', async (req, res) => {
+    try {
+        const docId = req.params.id
+        const adDoc = db.collection('campaign').doc(docId)
+        const adExists = await adDoc.get()
+        if (!adExists.exists) {
+            throw new Error('Campaign does not exist')
+        }
+        await adDoc
+            .delete()
+            .then(console.log(`Succesfully deleted ${docId}`))
             //Catches error in the case api request fails
             .catch((err) => {
                 console.log(err)

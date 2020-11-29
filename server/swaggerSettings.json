@@ -400,6 +400,42 @@
                     }
                 }
             },
+            "/campaign/delete/{campaignId}": {
+                "delete":{
+                    "tags": [
+                        "campaign"
+                    ],
+                    "summary": "Delete a campaign",
+                    "parameters": [
+                        {
+                            "name": "campaignId",
+                            "in": "path",
+                            "description": "ID of campaign to delete",
+                            "required": true,
+                            "schema":{
+                                "type": "string"
+                            },
+                            "example": "7QKUcWNNRkIQ89jUzqo2"
+                        }
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "Successful Operation",
+                            "content":{
+                                "text/plain": {
+                                    "schema": {
+                                        "type": "string",
+                                        "example": "Success"
+                                    }
+                                }
+                            }
+                        },
+                        "500": {
+                            "description": "Improper data inputs"
+                        }
+                    }
+                }
+            },
             "/ad/search": {
                 "get":{
                     "tags": [ 
