@@ -11,12 +11,9 @@
             },
             "contact": {
                 "name": "No reply",
-                "url": "https://swagger.io",
-                "email": "N/A"
+                "url": "https://swagger.io"
             }
         },
-        "host": "localhost:3000",
-        "basePath": "/",
         "servers": [
             {
                 "url": "http://localhost:3000/"
@@ -37,103 +34,105 @@
 
             }
         ],
-        "Schemas": {
-            "Impressions": {
-                "type": "object",
-                "properties": {
-                    "clicks": {
-                        "type": "integer",
-                        "format": "int32",
-                        "example": 0
-                    },
-                    "seen": {
-                        "type": "integer",
-                        "format": "int32",
-                        "example": 0
-                    },
-                    "ctr": {
-                        "type": "number",
-                        "formate": "double",
-                        "example": 0
+        "components": {
+            "schemas": {
+                "Impressions": {
+                    "type": "object",
+                    "properties": {
+                        "clicks": {
+                            "type": "integer",
+                            "format": "int32",
+                            "example": 0
+                        },
+                        "seen": {
+                            "type": "integer",
+                            "format": "int32",
+                            "example": 0
+                        },
+                        "ctr": {
+                            "type": "number",
+                            "format": "double",
+                            "example": 0
+                        }
                     }
-                }
-            },
-            "Ad": {
-                "type": "object",
-                "properties": {
-                    "adId": {
-                        "type": "string",
-                        "example": "xGpTCGJSIDX0Z8RbMbkb"
-                    },
-                    "adData": {
-                        "type": "object",
-                        "properties":{
-                            "impressions":{
-                                "$ref": "#/Schemas/Impressions"
-                            },
-                            "title": {
-                                "type": "string",
-                                "example": "Ad title example"
+                },
+                "Ad": {
+                    "type": "object",
+                    "properties": {
+                        "adId": {
+                            "type": "string",
+                            "example": "xGpTCGJSIDX0Z8RbMbkb"
+                        },
+                        "adData": {
+                            "type": "object",
+                            "properties":{
+                                "impressions":{
+                                    "$ref": "#/components/schemas/Impressions"
+                                },
+                                "title": {
+                                    "type": "string",
+                                    "example": "Ad title example"
+                                }
                             }
                         }
                     }
-                }
-            },
-            "AdWithoutId":{
-                "type": "object",
-                "properties": {
-                    "adData": {
-                        "type": "object",
-                        "properties":{
-                            "impressions":{
-                                "$ref": "#/Schemas/Impressions"
-                            },
-                            "title": {
-                                "type": "string",
-                                "example": "Ad title example"
+                },
+                "AdWithoutId":{
+                    "type": "object",
+                    "properties": {
+                        "adData": {
+                            "type": "object",
+                            "properties":{
+                                "impressions":{
+                                    "$ref": "#/components/schemas/Impressions"
+                                },
+                                "title": {
+                                    "type": "string",
+                                    "example": "Ad title example"
+                                }
                             }
                         }
                     }
-                }
-            },
-            "Campaign": {
-                "type": "object",
-                "properties": {
-                    "campaignId": {
-                        "type": "string",
-                        "example": "7QKUcWNNRkIQ89jUzqo2"
-                    },
-                    "campaignData": {
-                        "type": "array",
-                        "items": {
-                            "type" : "string"
+                },
+                "Campaign": {
+                    "type": "object",
+                    "properties": {
+                        "campaignId": {
+                            "type": "string",
+                            "example": "7QKUcWNNRkIQ89jUzqo2"
                         },
-                        "example": ["1st ad id", "2nd ad id", "3rd ad id"]
+                        "campaignData": {
+                            "type": "array",
+                            "items": {
+                                "type" : "string"
+                            },
+                            "example": ["1st ad id", "2nd ad id", "3rd ad id"]
+                        }
                     }
-                }
-            },
-            "CampaignWithoutId": {
-                "type": "object",
-                "properties": {
-                    "campaignData": {
-                        "type": "array",
-                        "items": {
-                            "type" : "string"
+                },
+                "CampaignWithoutId": {
+                    "type": "object",
+                    "properties": {
+                        "campaignData": {
+                            "type": "array",
+                            "items": {
+                                "type" : "string"
+                            },
+                            "example": ["1st ad id", "2nd ad id", "3rd ad id"]
+                        }
+                    }
+                },
+                "User": {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string",
+                            "example": "Trump"
                         },
-                        "example": ["1st ad id", "2nd ad id", "3rd ad id"]
-                    }
-                }
-            },
-            "User": {
-                "type": "object",
-                "properties": {
-                    "name": {
-                        "type": "string",
-                        "example": "Trump"
-                    },
-                    "email": {
-                        "type": "string",
-                        "example": "test@gmail.com"
+                        "email": {
+                            "type": "string",
+                            "example": "test@gmail.com"
+                        }
                     }
                 }
             }
@@ -154,7 +153,7 @@
                                     "schema":{
                                         "type": "array",
                                         "items":{
-                                            "$ref": "#/Schemas/CampaignWithoutId" 
+                                            "$ref": "#/components/schemas/CampaignWithoutId" 
                                         }
                                     }
                                 }
@@ -171,11 +170,13 @@
                     "summary": "Get the campaign by ID",
                     "parameters": [
                         {
-                            "name": "campaignId",
                             "in": "path",
-                            "description": "ID of campaign to return",
+                            "name": "campaignId",
+                            "schema":{
+                                "type": "string"
+                            },
                             "required": true,
-                            "type": "string",
+                            "description": "ID of campaign to return",
                             "example": "7QKUcWNNRkIQ89jUzqo2"
                         }
                     ],
@@ -185,7 +186,7 @@
                             "content":{
                                 "application/json": {
                                     "schema":{
-                                        "$ref": "#/Schemas/CampaignWithoutId" 
+                                        "$ref": "#/components/schemas/CampaignWithoutId" 
                                     }
                                 }
                             }
@@ -214,7 +215,7 @@
                                     "schema":{
                                         "type": "array",
                                         "items":{
-                                            "$ref": "#/Schemas/AdWithoutId" 
+                                            "$ref": "#/components/schemas/AdWithoutId" 
                                         }
                                     }
                                 }
@@ -229,18 +230,16 @@
                         "campaign"
                     ],
                     "summary": "Update an existing campaign",
-                    "parameters": [
-                        {
-                            "in" : "body",
-                            "name": "body",
-                            "description": "Campaign object that needs to be added to the database",
-                            "required": true,
-                            "schema": {
-                                "$ref": "#/Schemas/Campaign"
+                    "requestBody": {
+                        "required": true,
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Campaign"
+                                }
                             }
-
                         }
-                    ],
+                    },
                     "responses": {
                         "200": {
                             "description": "Successful Operation",
@@ -253,7 +252,7 @@
                                 }
                             }
                         },
-                        "503": {
+                        "500": {
                             "description": "Improper data inputs"
                         }
                     }
@@ -265,18 +264,17 @@
                         "campaign"
                     ],
                     "summary": "Create a new campaign",
-                    "description": "If the campaign already exists, update with new campaign",
-                    "parameters": [
-                        {
-                            "in" : "body",
-                            "name": "body",
-                            "description": "Campaign object that needs to be added to the database",
-                            "required": true,
-                            "schema": {
-                                "$ref": "#/Schemas/Campaign"
+                    "requestBody": {
+                        "required": true,
+                        "description": "If the campaign already exists, update with new campaign",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Campaign"
+                                }
                             }
                         }
-                    ],
+                    },
                     "responses": {
                         "200": {
                             "description": "Successful Operation",
@@ -289,7 +287,7 @@
                                 }
                             }
                         },
-                        "503": {
+                        "500": {
                             "description": "Improper data inputs"
                         }
                     }
@@ -302,17 +300,17 @@
                     ],
                     "summary": "Create a new ad",
                     "description": "If the ad already exists, update with new ad",
-                    "parameters": [
-                        {
-                            "in" : "body",
-                            "name": "body",
-                            "description": "Ad object that needs to be added to the database",
-                            "required": true,
-                            "schema": {
-                                "$ref": "#/Schemas/Ad"
+                    "requestBody": {
+                        "required": true,
+                        "description": "Ad object that needs to be added to the database",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Ad"
+                                }
                             }
                         }
-                    ],
+                    },
                     "responses": {
                         "200": {
                             "description": "Successful Operation",
@@ -325,7 +323,7 @@
                                 }
                             }
                         },
-                        "503": {
+                        "500": {
                             "description": "Improper data inputs"
                         }
                     }
@@ -337,17 +335,17 @@
                         "ad"
                     ],
                     "summary": "Update an existing ad",
-                    "parameters": [
-                        {
-                            "in" : "body",
-                            "name": "body",
-                            "description": "Ad object that needs to be updated to the database",
-                            "required": true,
-                            "schema": {
-                                "$ref": "#/Schemas/Ad"
+                    "requestBody": {
+                        "required": true,
+                        "description": "Ad object that needs to be updated to the database",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Ad"
+                                }
                             }
                         }
-                    ],
+                    },
                     "responses": {
                         "200": {
                             "description": "Successful Operation",
@@ -360,7 +358,7 @@
                                 }
                             }
                         },
-                        "503": {
+                        "500": {
                             "description": "Improper data inputs"
                         }
                     }
@@ -378,7 +376,9 @@
                             "in": "path",
                             "description": "ID of ad to delete",
                             "required": true,
-                            "type": "string",
+                            "schema":{
+                                "type": "string"
+                            },
                             "example": "xGpTCGJSIDX0Z8RbMbkb"
                         }
                     ],
@@ -394,7 +394,7 @@
                                 }
                             }
                         },
-                        "503": {
+                        "500": {
                             "description": "Improper data inputs"
                         }
                     }
@@ -426,7 +426,7 @@
                                     "schema":{
                                         "type": "array",
                                         "items":{
-                                            "$ref": "#/Schemas/AdWithoutId" 
+                                            "$ref": "#/components/schemas/AdWithoutId" 
                                         }
                                     }
                                 }
@@ -441,28 +441,33 @@
                         "ad"
                     ],
                     "summary": "Get the ad by ID",
-                    "Description": "If any flags are added to the URL it may also update the impressions related to a given ad",
                     "parameters": [
                         {
                             "in": "path",
                             "name": "adId",
                             "description": "ID of ad to return",
                             "required": true,
-                            "type": "string",
+                            "schema": {
+                                "type": "string"
+                            },
                             "example": "vEXzgrwMg1TIsBPacmo6"
                         },
                         {
                             "in": "query",
                             "name": "impression",
                             "required": false,
-                            "type": "boolean",
+                            "schema":{
+                                "type": "boolean"
+                            },
                             "example": true
                         },
                         {
                             "in": "query",
                             "name": "clicked",
                             "required": false,
-                            "type": "boolean",
+                            "schema": {
+                                "type": "boolean"
+                            },
                             "example": true
                         }
                     ],
@@ -472,12 +477,12 @@
                             "content":{
                                 "application/json": {
                                     "schema":{
-                                        "$ref": "#/Schemas/AdWithoutId" 
+                                        "$ref": "#/components/schemas/AdWithoutId" 
                                     }
                                 }
                             }
                         },
-                        "503": {
+                        "500": {
                             "description": "Error retrieving info"
                         }
                     }
@@ -489,17 +494,17 @@
                         "user"
                     ],
                     "summary": "Create a new user",
-                    "parameters": [
-                        {
-                            "in" : "body",
-                            "name": "body",
-                            "description": "New user needs to be added to database",
-                            "required": true,
-                            "schema": {
-                                "$ref": "#/Schemas/User"
+                    "requestBody": {
+                        "required": true,
+                        "description": "New user needs to be added to database",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
                             }
                         }
-                    ],
+                    },
                     "responses": {
                         "200": {
                             "description": "Successful Operation"
