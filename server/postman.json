@@ -149,7 +149,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/campaign/7QKUcWNNRkIQ89jUzqo2",
+					"raw": "http://localhost:3000/campaign/7QKUcWNNRkIQ89jUzqo7",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -157,7 +157,7 @@
 					"port": "3000",
 					"path": [
 						"campaign",
-						"7QKUcWNNRkIQ89jUzqo2"
+						"7QKUcWNNRkIQ89jUzqo7"
 					]
 				}
 			},
