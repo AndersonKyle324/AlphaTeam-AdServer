@@ -16,6 +16,7 @@ export default () => {
   const [showCampaign, setShowCampaign] = useState(false);
 
   const [showAddModal, setShowAddModal] = useState(false);
+
   const closeAddModal = () => {
     setShowAddModal(false);
     setShowAdTable(true);
@@ -60,7 +61,10 @@ export default () => {
               <h3 className="open-ad-table" onClick={() => openAdTable()}>
                 Ad Board
               </h3>
-              <AddModal show={showAddModal} closeModal={closeAddModal} />
+              <AddModal
+                show={showAddModal}
+                onHide={() => setShowAddModal(false)}
+              />
               <AdTable show={showAdTable} closeModal={closeAdTable} />
               <CampaignModal
                 show={showCampaign}
