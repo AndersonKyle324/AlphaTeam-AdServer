@@ -38,7 +38,7 @@ function Table({ columns, data }) {
     headerGroups,
     rows,
     prepareRow,
-  } = useTable({ columns, data }, useGroupBy, useExpanded)
+  } = useTable({ columns, data }, useGroupBy, useSortBy, useExpanded)
 
   return (
     <table {...getTableProps()}>
@@ -49,10 +49,16 @@ function Table({ columns, data }) {
               <th {...column.getHeaderProps()}>
                 {column.canGroupBy ? (
                   <span {...column.getGroupByToggleProps()}>
-                    {column.isGrouped ? '🛑' : '👊'}
+                    {column.isGrouped ? 'X ' : 'O '}
                   </span>
                 ) : null }
                 {column.render("Header")}
+                <span {...column.getSortByToggleProps()}>
+                  {column.isSorted ? column.isSortedDesc
+                    ? ' ↓'
+                    : ' ↑'
+                  : ' ---'}
+                </span>
               </th>
             ))}
           </tr>
@@ -80,7 +86,7 @@ function Table({ columns, data }) {
                     {cell.isGrouped ? (
                       <>
                         <span {...row.getToggleRowExpandedProps()}>
-                          {row.isExpanded ? '👇' : '👉'}
+                          {row.isExpanded ? '⇩' : '⇨'}
                         </span>{' '}
                         {cell.render('Cell')} ({row.subRows.length})
                       </>
@@ -128,20 +134,26 @@ function AdTable({ show }) {
       {
         Header: "Ad Name",
         accessor: "adName",
+        aggregate: "uniqueCount",
+        Aggregated: ({ value }) => `${value} unique name(s)`
       },
       {
         Header: "Ad Size",
         accessor: "adSize",
+        aggregate: "uniqueCount",
+        Aggregated: ({ value }) => `${value} unique ad sizes`
       },
       {
         Header: "Last Modified",
         accessor: "lastModified",
-      },
-      
+        aggregate: "uniqueCount",
+        Aggregated: ({ value }) => `${value} unique date(s)`
+      },   
     ],
     []
   );
 
+  // Change to GET all ads from the database on ManagementPage
   const data = React.useMemo(
     () => [
       {
