@@ -141,7 +141,18 @@
                 "get": {
                     "tags": ["campaign"],
                     "summary": "Get a list of campaign objects",
-                    "parameters": [],
+                    "parameters": [
+                        {
+                            "in": "query",
+                            "name": "title",
+                            "schema": {
+                                "type": "string"
+                            },
+                            "required": false,
+                            "description": "The title for a specific campaign or a list of campaigns",
+                            "example": "Winter2020"
+                        }
+                    ],
                     "responses": {
                         "200": {
                             "description": "Successful Operation",
@@ -155,6 +166,36 @@
                                     }
                                 }
                             }
+                        }
+                    }
+                },
+                "put": {
+                    "tags": ["campaign"],
+                    "summary": "Update an existing campaign",
+                    "requestBody": {
+                        "required": true,
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Campaign"
+                                }
+                            }
+                        }
+                    },
+                    "responses": {
+                        "200": {
+                            "description": "Successful Operation",
+                            "content": {
+                                "text/plain": {
+                                    "schema": {
+                                        "type": "string",
+                                        "example": "Success"
+                                    }
+                                }
+                            }
+                        },
+                        "500": {
+                            "description": "Improper data inputs"
                         }
                     }
                 }
@@ -213,38 +254,6 @@
                                     }
                                 }
                             }
-                        }
-                    }
-                }
-            },
-            "/campaign/edit": {
-                "put": {
-                    "tags": ["campaign"],
-                    "summary": "Update an existing campaign",
-                    "requestBody": {
-                        "required": true,
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Campaign"
-                                }
-                            }
-                        }
-                    },
-                    "responses": {
-                        "200": {
-                            "description": "Successful Operation",
-                            "content": {
-                                "text/plain": {
-                                    "schema": {
-                                        "type": "string",
-                                        "example": "Success"
-                                    }
-                                }
-                            }
-                        },
-                        "500": {
-                            "description": "Improper data inputs"
                         }
                     }
                 }

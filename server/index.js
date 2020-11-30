@@ -37,40 +37,37 @@ const db = admin.firestore()
 
 //Get the campaign information
 app.get('/campaign', async (req, res) => {
-    //We gather the whole campaign collection and return a list of campaign objects
-    const campaignRef = db.collection('campaign')
-    var campaignData = []
-    await campaignRef
-        .get()
-        .then((snapshot) => {
-            snapshot.forEach((doc) => {
-                campaignData.push(doc.data())
-            })
-        })
-        //catching an error if api request fails
-        .catch((err) => {
-            console.log(err)
-        })
-
-    res.json(campaignData)
-})
-
-/**
- * Allows user to search for a campaign by title.
- */
-app.get('/campaign/search', async (req, res) => {
     try {
-        const title = req.query.title
+        //We gather the whole campaign collection and return a list of campaign objects
         const campaignRef = db.collection('campaign')
-        const queryRef = await campaignRef.where('title', '==', title).get()
-        finalData = []
-        queryRef.forEach((doc) => {
-            finalData.push(doc.data())
-        })
-        res.status(200).send(finalData)
+
+        if (req.query.title) {
+            const title = req.query.title
+            const queryRef = await campaignRef.where('title', '==', title).get()
+            matches = []
+            queryRef.forEach((doc) => {
+                matches.push(doc.data())
+            })
+            res.status(200).send(matches)
+        }
+
+        var campaignData = []
+        await campaignRef
+            .get()
+            .then((snapshot) => {
+                snapshot.forEach((doc) => {
+                    campaignData.push(doc.data())
+                })
+            })
+            //catching an error if api request fails
+            .catch((err) => {
+                console.log(err)
+            })
+
+        res.json(campaignData)
     } catch (e) {
-        console.log(e)
-        res.send(503).send({ error: 'Error retrieving search info' })
+        console.error(e)
+        res.status(503).send({ error: 'Internal server error', errorCode: 503 })
     }
 })
 
@@ -119,7 +116,7 @@ app.get('/ad', async (req, res) => {
 })
 
 //Edits data with given resposne data and campaignID
-app.put('/campaign/edit', async (req, res) => {
+app.put('/campaign', async (req, res) => {
     //We get the campaignID from the request and replace the old data with the new.
     try {
         const campaignDoc = db.collection('campaign').doc(req.body.campaignId)
@@ -143,7 +140,7 @@ app.put('/campaign/edit', async (req, res) => {
             })
         res.status(200).send('Success')
     } catch (e) {
-        res.status(500).send({ error: 'Improper data inputs', errorCode: 503 })
+        res.status(503).send({ error: 'Improper data inputs', errorCode: 503 })
     }
 })
 
@@ -191,7 +188,10 @@ app.put('/ad/edit', async (req, res) => {
         const adDoc = db.collection('ads').doc(req.body.adId)
         const adExists = await adDoc.get()
         if (!adExists.exists) {
-            throw new Error('Ad does not exist')
+            res.status(404).send({
+                error: 'Cannot find ad by ad ID',
+                errorCode: 404,
+            })
         }
         await adDoc
             .set(req.body.adData)
