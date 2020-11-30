@@ -318,10 +318,6 @@ app.post('/user/create', async (req, res) => {
         })
 })
 
-app.post('/user/login', async (req, res) => {
-    admin
-})
-
 //Automated postman test, runs everystime when server start
 newman.run(
     {
