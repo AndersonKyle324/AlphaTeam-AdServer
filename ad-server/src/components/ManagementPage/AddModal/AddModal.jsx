@@ -1,178 +1,134 @@
-import React from "react";
+import React, { useState } from "react";
+import { Modal, Button, Form, Row, Col } from "react-bootstrap";
 import "./AddModal.css";
 
-class AddModal extends React.Component {
-  // JavaScript goes here
-  // i.e. declaring variables, functions, etc.
-  constructor(props) {
-    super(props);
-    this.state = {
-      id: "",
-      campaign: "",
-      size: "",
-      imageFile: null,
-      altText: "",
-      title: "",
-      subtitle: "",
-      buttonKind: null,
-      buttonText: "",
-      buttonUrl: "",
-    };
+export default (props) => {
+  const [ad, setAd] = useState({
+    name: "",
+    campaign: "",
+    size: "",
+    imageFile: null,
+    altText: "",
+    title: "",
+    subtitle: "",
+    buttonAlign: null,
+    buttonText: "",
+    buttonUrl: "",
+    placeholder: "",
+  });  
 
-    this.handleInputChange = this.handleInputChange.bind(this);
+  const handleInputChange = (e) => {
   }
 
-  handleInputChange(event) {
-    this.setState({ [event.target.name]: event.target.value });
-  }
-
-  handleFileChange(event) {
-    this.setState({ imageFile: event.target.files[0] });
+  const handleFileChange = () => {
   }
 
   // Create an object of formData and post it to the server
-  handFileUpload() {}
-
-  handleSubmit(event) {
-    event.preventDefault();
+  const handFileUpload = () => {
   }
 
-  render() {
-    return (
-      // JSX goes here
-
-      <form
-        onSumbit={this.handleSubmit}
-        style={{
-          display: this.props.show ? "block" : "none",
-        }}
-      >
-        <div className="container">
-          <div className="title">
-            <h2>New Ad</h2>
-          </div>
-
-          <div className="actionButtons">
-            <input type="submit" value="Save" />
-            <button onClick={this.props.closeModal} className="grayButton">
-              Cancel
-            </button>
-          </div>
-
-          <div className="info">
-            <label for="adName">Ad Name</label>
-            <input
-              name="adName"
-              type="text"
-              value={this.state.adName}
-              onChange={this.handleInputChange}
-            />
-            <label for="adSize">Ad Size</label>
-            <select
-              name="adSize"
-              value={this.state.adSize}
-              onChange={this.handleInputChange}
-            >
-              <option value="" disabled selected hidden>
-                Select size
-              </option>
-              <option value="small">Small</option>
-              <option value="medium">Medium</option>
-              <option value="large">Large</option>
-            </select>{" "}
-            <label for="campaignKind">Campaign</label>
-            <select
-              name="campaignKind"
-              value={this.state.campaignKind}
-              onChange={this.handleInputChange}
-            >
-              <option value="" disabled selected hidden>
-                Select campaign
-              </option>
-              <option value="General">General</option>
-              <option value="Nintendo Switch Kit">Nintendo Switch Kit</option>
-              <option value="Repair Kit Sale">Repair Kit Sale</option>
-            </select>
-          </div>
-
-          <div className="preview">
-            <div className="blacksquare">
-              This is a placeholder for the Ad Preview!
-            </div>
-          </div>
-
-          <div className="imageUp">
-            <label for="imageFile">Upload Image</label>
-            <input
-              name="imageFile"
-              type="file"
-              onChange={this.handleFileChange}
-            />
-            <p>File Type: .png, .jpg, .jpeg</p>
-            <p>File Size: Less than 1 GB</p>
-            <textarea
-              name="altText"
-              value={this.state.altText}
-              cols="40"
-              placeholder="Describe your image for screen readers..."
-              onChange={this.handleInputChange}
-            />
-            <button onClick={this.handleFileUpload}>
-              Post Image on Server
-            </button>
-          </div>
-
-          <div className="design1">
-            <label for="adTitle">Ad Title</label>
-            <input
-              name="adTitle"
-              type="text"
-              value={this.state.adTitle}
-              onChange={this.handleInputChange}
-            />
-            <label for="adSubtitle">Ad Subtitle</label>
-            <input
-              name="adSubtitle"
-              type="text"
-              value={this.state.adSubtitle}
-              onChange={this.handleInputChange}
-            />
-          </div>
-
-          <div className="design2">
-            <label for="buttonKind">Button Style</label>
-            <select
-              name="buttonKind"
-              value={this.state.buttonKind}
-              onChange={this.handleInputChange}
-            >
-              <option value="" disabled selected hidden>
-                Select style
-              </option>
-              <option value="center">Center</option>
-              <option value="left">Left</option>
-              <option value="right">Right</option>
-            </select>
-            <label for="buttonText">Button Text</label>
-            <input
-              name="buttonText"
-              type="text"
-              value={this.state.buttonText}
-              onChange={this.handleInputChange}
-            />
-            <label for="buttonUrl">Button Click Destination</label>
-            <input
-              name="buttonUrl"
-              type="text"
-              placeholder="http://"
-              value={this.state.buttonUrl}
-              onChange={this.handleInputChange}
-            />
-          </div>
-        </div>
-      </form>
-    );
+  const handleSubmit = () => {
+    console.log(ad.name);
+    if (ad.name == "") {
+      alert("Provide an Ad Name");
+    } else {
+      let data = new Object();
+      data.adId = ad.name;
+    }
   }
-}
 
-export default AddModal;
+  const onHide = () => {
+
+  }
+
+  return (
+    // JSX goes here
+    <Modal {...props} size="lg" centered backdrop="static" keyboard={false}>
+      <Modal.Header closeButton>
+        <Modal.Title id="contained-modal-title-vcenter">
+          New Ad
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form>
+          <Row>
+            <Col sm={4}>
+              <Form.Group controlId="ad.name">
+                <Form.Label>Ad Name</Form.Label>
+                <Form.Control placeholder="Enter ad name"/>
+              </Form.Group>
+              <Form.Group controlId="ad.size">
+                <Form.Label>Ad Size</Form.Label>
+                <Form.Control as="select">
+                  <option>Select Ad Size</option>
+                  <option>Large: 961px x 200px</option>
+                  <option>Small: 400px x 200px</option>
+                </Form.Control>
+              </Form.Group>
+              <Form.Group controlId="ad.campaign">
+                <Form.Label>Campaign</Form.Label>
+                <Form.Control as="select">
+                  <option>Select Campaign</option>
+                  <option>Repair Kit Sale</option>
+                  <option>Nintendo Switch</option>
+                </Form.Control>
+              </Form.Group>
+              <Form.Group>
+                <Form.File id="ad.imageFile" label="Upload background image..." />
+              </Form.Group>
+              <Form.Group controlId="ad.altText">
+                <Form.Label>Alt text for image</Form.Label>
+                <Form.Control as="textarea" rows={2} placeholder="Describe your image for screen readers..."/>
+              </Form.Group>
+            </Col>
+            <Col sm={8}>
+              <Form.Group controlId="ad.placeholder">
+                <Form.Label>Placeholder for preview</Form.Label>
+                <Form.Control as="textarea" rows={8} placeholder="This is a placeholder"/>
+              </Form.Group>
+              <Row>
+                <Col sm={6}>
+                  <Form.Group controlId="ad.title">
+                    <Form.Label>Title</Form.Label>
+                    <Form.Control placeholder="Enter Title"/>
+                  </Form.Group>
+                  <Form.Group controlId="ad.subtitle">
+                    <Form.Label>Subtitle</Form.Label>
+                    <Form.Control placeholder="Enter Subtitle"/>
+                  </Form.Group>
+                </Col>
+                <Col sm={6}>
+                  <Form.Group controlId="ad.buttonAlign">
+                    <Form.Label>Button Alignment</Form.Label>
+                    <Form.Control as="select">
+                      <option>Select Button Alignment</option>
+                      <option>Left</option>
+                      <option>Center</option>
+                      <option>Right</option>
+                    </Form.Control>
+                  </Form.Group>
+                  <Form.Group controlId="ad.buttonText">
+                    <Form.Label>Button Text</Form.Label>
+                    <Form.Control placeholder="Enter Button Text"/>
+                  </Form.Group>
+                  <Form.Group controlId="ad.buttonUrl">
+                    <Form.Label>Button Click Destination</Form.Label>
+                    <Form.Control placeholder="http://"/>
+                  </Form.Group>
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+        </Form>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={props.onHide}>
+          Close
+        </Button>
+        <Button variant="primary" onClick={() => handleSubmit()}>
+          Submit
+        </Button>
+      </Modal.Footer>
+    </Modal>   
+  );
+};
