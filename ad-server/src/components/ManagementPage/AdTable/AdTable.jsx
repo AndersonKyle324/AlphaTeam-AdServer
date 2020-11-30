@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { useSortBy, useTable } from "react-table";
+import { useSortBy, useTable, useGroupBy, useExpanded } from "react-table";
 
 const Styles = styled.div`
   padding: 1rem;
@@ -38,7 +38,7 @@ function Table({ columns, data }) {
     headerGroups,
     rows,
     prepareRow,
-  } = useTable({ columns, data }, useSortBy);
+  } = useTable({ columns, data }, useGroupBy, useExpanded)
 
   return (
     <table {...getTableProps()}>
@@ -46,11 +46,13 @@ function Table({ columns, data }) {
         {headerGroups.map((headerGroup) => (
           <tr {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map((column) => (
-              <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+              <th {...column.getHeaderProps()}>
+                {column.canGroupBy ? (
+                  <span {...column.getGroupByToggleProps()}>
+                    {column.isGrouped ? '🛑' : '👊'}
+                  </span>
+                ) : null }
                 {column.render("Header")}
-                <span>
-                  {column.isSorted ? (column.isSortedDesc ? " ↓" : " ↑") : ""}
-                </span>
               </th>
             ))}
           </tr>
@@ -62,7 +64,33 @@ function Table({ columns, data }) {
           return (
             <tr {...row.getRowProps()}>
               {row.cells.map((cell) => {
-                return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
+                return (
+                  <td 
+                    {...cell.getCellProps()}
+                    style={{
+                        background: cell.isGrouped
+                          ? '#0aff0082'
+                          : cell.isAggregated
+                          ? '#ffa50078'
+                          : cell.isPlaceholder
+                          ? '#ff000042'
+                          : 'white',
+                    }}
+                  >
+                    {cell.isGrouped ? (
+                      <>
+                        <span {...row.getToggleRowExpandedProps()}>
+                          {row.isExpanded ? '👇' : '👉'}
+                        </span>{' '}
+                        {cell.render('Cell')} ({row.subRows.length})
+                      </>
+                    ) : cell.isAggregated ? (
+                      cell.render('Aggregated')
+                    ) : cell.isPlaceholder ? null : (
+                      cell.render('Cell')
+                    )}
+                  </td>
+                )
               })}
             </tr>
           );
@@ -76,6 +104,28 @@ function AdTable({ show }) {
   const columns = React.useMemo(
     () => [
       {
+        Header: "Campaign",
+        accessor: "campaign",
+      },
+      {
+        Header: "Impressions",
+        accessor: "impressions",
+        aggregate: "sum",
+        Aggregated: ({ value }) => `${value} (total)`
+      },
+      {
+        Header: "Clicks",
+        accessor: "clicks",
+        aggregate: "sum",
+        Aggregated: ({ value }) => `${value} (total)`
+      },
+      {
+        Header: "Conversions",
+        accessor: "conversions",
+        aggregate: "sum",
+        Aggregated: ({ value }) => `${value} (total)`
+      },
+      {
         Header: "Ad Name",
         accessor: "adName",
       },
@@ -84,13 +134,10 @@ function AdTable({ show }) {
         accessor: "adSize",
       },
       {
-        Header: "Campaign",
-        accessor: "campaign",
-      },
-      {
         Header: "Last Modified",
         accessor: "lastModified",
       },
+      
     ],
     []
   );
@@ -98,22 +145,40 @@ function AdTable({ show }) {
   const data = React.useMemo(
     () => [
       {
-        adName: "Hello",
-        adSize: "World",
+        adName: "SwitchItUp",
+        adSize: "Small",
         campaign: "Nintendo Switch",
         lastModified: "10-10-2020",
+        impressions: 100,
+        clicks: 10,
+        conversions: 1,
       },
       {
-        adName: "this",
-        adSize: "works",
-        campaign: "Nintendo Switch",
+        adName: "Apples4U",
+        adSize: "Medium",
+        campaign: "Apples",
         lastModified: "10-10-2020",
+        impressions: 2000,
+        clicks: 300,
+        conversions: 50,
       },
       {
-        adName: "whatever",
-        adSize: "you want",
-        campaign: "Nintendo Switch",
+        adName: "OrangesRCool",
+        adSize: "Large",
+        campaign: "Oranges",
         lastModified: "10-10-2020",
+        impressions: 10,
+        clicks: 0,
+        conversions: 0,
+      },
+      {
+        adName: "BigSwitch",
+        adSize: "Large",
+        campaign: "Nintendo Switch",
+        lastModified: "01-21-2020",
+        impressions: 400,
+        clicks: 300,
+        conversions: 290,
       },
     ],
     []
