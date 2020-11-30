@@ -133,6 +133,19 @@
                             "example": "test@gmail.com"
                         }
                     }
+                },
+                "Error": {
+                    "type": "object",
+                    "properties": {
+                        "error": {
+                            "type": "string",
+                            "example": "Ad with given ad ID already exists"
+                        },
+                        "errorCode": {
+                            "type": "number",
+                            "example": 403
+                        }
+                    }
                 }
             }
         },
@@ -198,6 +211,37 @@
                             "description": "Improper data inputs"
                         }
                     }
+                },
+                "post": {
+                    "tags": ["campaign"],
+                    "summary": "Create a new campaign",
+                    "requestBody": {
+                        "required": true,
+                        "description": "If the campaign already exists, update with new campaign",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Campaign"
+                                }
+                            }
+                        }
+                    },
+                    "responses": {
+                        "200": {
+                            "description": "Successful Operation",
+                            "content": {
+                                "text/plain": {
+                                    "schema": {
+                                        "type": "string",
+                                        "example": "Success"
+                                    }
+                                }
+                            }
+                        },
+                        "500": {
+                            "description": "Improper data inputs"
+                        }
+                    }
                 }
             },
             "/campaign/{campaignId}": {
@@ -234,6 +278,38 @@
                             "description": "Error retrieving info"
                         }
                     }
+                },
+                "delete": {
+                    "tags": ["campaign"],
+                    "summary": "Delete a campaign",
+                    "parameters": [
+                        {
+                            "name": "campaignId",
+                            "in": "path",
+                            "description": "ID of campaign to delete",
+                            "required": true,
+                            "schema": {
+                                "type": "string"
+                            },
+                            "example": "7QKUcWNNRkIQ89jUzqo2"
+                        }
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "Successful Operation",
+                            "content": {
+                                "text/plain": {
+                                    "schema": {
+                                        "type": "string",
+                                        "example": "Success"
+                                    }
+                                }
+                            }
+                        },
+                        "500": {
+                            "description": "Improper data inputs"
+                        }
+                    }
                 }
             },
             "/ad": {
@@ -256,46 +332,11 @@
                             }
                         }
                     }
-                }
-            },
-            "/campaign/create": {
-                "put": {
-                    "tags": ["campaign"],
-                    "summary": "Create a new campaign",
-                    "requestBody": {
-                        "required": true,
-                        "description": "If the campaign already exists, update with new campaign",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Campaign"
-                                }
-                            }
-                        }
-                    },
-                    "responses": {
-                        "200": {
-                            "description": "Successful Operation",
-                            "content": {
-                                "text/plain": {
-                                    "schema": {
-                                        "type": "string",
-                                        "example": "Success"
-                                    }
-                                }
-                            }
-                        },
-                        "500": {
-                            "description": "Improper data inputs"
-                        }
-                    }
-                }
-            },
-            "/ad/create": {
-                "put": {
+                },
+                "post": {
                     "tags": ["ad"],
                     "summary": "Create a new ad",
-                    "description": "If the ad already exists, update with new ad",
+                    "description": "Creates a new ad if one does not exist",
                     "requestBody": {
                         "required": true,
                         "description": "Ad object that needs to be added to the database",
@@ -319,13 +360,14 @@
                                 }
                             }
                         },
-                        "500": {
-                            "description": "Improper data inputs"
+                        "403": {
+                            "description": "The ad with a given Ad ID already exists"
+                        },
+                        "503": {
+                            "description": "Server Error"
                         }
                     }
-                }
-            },
-            "/ad/edit": {
+                },
                 "put": {
                     "tags": ["ad"],
                     "summary": "Update an existing ad",
@@ -351,6 +393,9 @@
                                     }
                                 }
                             }
+                        },
+                        "404": {
+                            "description": "Cannot find an ad with a given ID"
                         },
                         "500": {
                             "description": "Improper data inputs"
@@ -392,40 +437,7 @@
                     }
                 }
             },
-            "/campaign/delete/{campaignId}": {
-                "delete": {
-                    "tags": ["campaign"],
-                    "summary": "Delete a campaign",
-                    "parameters": [
-                        {
-                            "name": "campaignId",
-                            "in": "path",
-                            "description": "ID of campaign to delete",
-                            "required": true,
-                            "schema": {
-                                "type": "string"
-                            },
-                            "example": "7QKUcWNNRkIQ89jUzqo2"
-                        }
-                    ],
-                    "responses": {
-                        "200": {
-                            "description": "Successful Operation",
-                            "content": {
-                                "text/plain": {
-                                    "schema": {
-                                        "type": "string",
-                                        "example": "Success"
-                                    }
-                                }
-                            }
-                        },
-                        "500": {
-                            "description": "Improper data inputs"
-                        }
-                    }
-                }
-            },
+            "/campaign/delete/{campaignId}": {},
             "/ad/search": {
                 "get": {
                     "tags": ["ad"],

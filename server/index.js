@@ -49,6 +49,7 @@ app.get('/campaign', async (req, res) => {
                 matches.push(doc.data())
             })
             res.status(200).send(matches)
+            return
         }
 
         var campaignData = []
@@ -145,7 +146,7 @@ app.put('/campaign', async (req, res) => {
 })
 
 //Creates data with given resposne data and adId
-app.put('/campaign/create', async (req, res) => {
+app.post('/campaign', async (req, res) => {
     try {
         const campaignDoc = db.collection('campaign').doc(req.body.campaignId)
         await campaignDoc
@@ -165,44 +166,53 @@ app.put('/campaign/create', async (req, res) => {
 })
 
 //Creates data with given resposne data and adId
-app.put('/ad/create', async (req, res) => {
+app.post('/ad', async (req, res) => {
     try {
         const adDoc = db.collection('ads').doc(req.body.adId)
-        await adDoc
-            .set(req.body.adData)
-            .then(console.log(`Succesfully created data for ${req.body.adId}`))
-            //Catches error in the case api request fails
-            .catch((err) => {
-                console.log(err)
-            })
-        res.status(200).send('Success')
+        const ad = await adDoc.get()
+        if (!ad.exists) {
+            await adDoc
+                .set(req.body.adData)
+                .then(
+                    console.log(`Succesfully created data for ${req.body.adId}`)
+                )
+                //Catches error in the case api request fails
+                .catch((err) => {
+                    console.log(err)
+                })
+            res.status(200).send('Success')
+        } else {
+            res.status(403).send({ error: 'Ad already exists', errorCode: 403 })
+        }
     } catch (e) {
+        console.error(e)
         res.status(500).send({ error: 'Improper data inputs', errorCode: 503 })
     }
 })
 
 //Edits data with given resposne data and adId
-app.put('/ad/edit', async (req, res) => {
-    //We get the adID from the request and replace the old data with the new.
+app.put('/ad', async (req, res) => {
     try {
         const adDoc = db.collection('ads').doc(req.body.adId)
-        const adExists = await adDoc.get()
-        if (!adExists.exists) {
+        const ad = await adDoc.get()
+        if (!ad.exists) {
             res.status(404).send({
-                error: 'Cannot find ad by ad ID',
+                error: `Cannot find ad with ID ${req.body.adId}`,
                 errorCode: 404,
             })
+            return
         }
         await adDoc
             .set(req.body.adData)
-            .then(console.log(`Succesfully edited data for ${req.body.adId}`))
+            .then(console.log(`Succesfully modified ad ${req.body.adId}`))
             //Catches error in the case api request fails
             .catch((err) => {
                 console.log(err)
             })
         res.status(200).send('Success')
     } catch (e) {
-        res.status(500).send({ error: 'Improper data inputs', errorCode: 503 })
+        console.error(e)
+        res.status(503).send({ error: 'Improper data inputs', errorCode: 503 })
     }
 })
 
@@ -227,7 +237,7 @@ app.delete('/ad/delete/:id', async (req, res) => {
     }
 })
 
-app.delete('/campaign/delete/:id', async (req, res) => {
+app.delete('/campaign/:id', async (req, res) => {
     try {
         const docId = req.params.id
         const adDoc = db.collection('campaign').doc(docId)
@@ -318,19 +328,19 @@ app.post('/user/create', async (req, res) => {
         })
 })
 
-//Automated postman test, runs everystime when server start
-newman.run(
-    {
-        collection: require('./postman.json'),
-        reporters: 'cli',
-    },
-    function (err) {
-        if (err) {
-            throw err
-        }
-        console.log('collection run complete!')
-    }
-)
+// //Automated postman test, runs everystime when server start
+// newman.run(
+//     {
+//         collection: require('./postman.json'),
+//         reporters: 'cli',
+//     },
+//     function (err) {
+//         if (err) {
+//             throw err
+//         }
+//         console.log('collection run complete!')
+//     }
+// )
 
 app.listen(port, () => {
     console.log(`Alpha Team Ad Server listening on port ${port}`)
