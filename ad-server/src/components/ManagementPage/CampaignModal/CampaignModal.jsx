@@ -34,7 +34,7 @@ export default (props) => {
               placeholder="Enter campaign"
               onChange={(e) => setCampaign({ campaignName: e.target.value })}
               value={campaign.campaignName}
-            />     
+            />
           </Form.Group>
         </Form>
       </Modal.Body>
