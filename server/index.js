@@ -98,22 +98,37 @@ app.get('/campaign/:id', async (req, res) => {
 })
 
 app.get('/ad', async (req, res) => {
-    //We gather the whole ads collection and return a list of ad objects
-    const adRef = db.collection('ads')
-    var adData = []
-    await adRef
-        .get()
-        .then((snapshot) => {
-            snapshot.forEach((doc) => {
-                adData.push(doc.data())
+    try {
+        //We gather the whole ads collection and return a list of ad objects
+        const adRef = db.collection('ads')
+        if (req.query.title) {
+            const title = req.query.title
+            const queryRef = await adRef.where('title', '==', title).get()
+            const matches = []
+            queryRef.forEach((doc) => {
+                matches.push(doc.data())
             })
-        })
-        //catching an error if api request fails
-        .catch((err) => {
-            console.log(err)
-        })
+            res.status(200).send(matches)
+            return
+        }
+        var adData = []
+        await adRef
+            .get()
+            .then((snapshot) => {
+                snapshot.forEach((doc) => {
+                    adData.push(doc.data())
+                })
+            })
+            //catching an error if api request fails
+            .catch((err) => {
+                console.log(err)
+            })
 
-    res.json(adData)
+        res.status(200).send(adData)
+    } catch (e) {
+        console.error(e)
+        res.status(503).send({ error: 'Internal server error', errorCode: 503 })
+    }
 })
 
 //Edits data with given resposne data and campaignID
@@ -216,7 +231,10 @@ app.put('/ad', async (req, res) => {
     }
 })
 
-app.delete('/ad/delete/:id', async (req, res) => {
+/**
+ * Deletes an ad with a specified ID
+ */
+app.delete('/ad/:id', async (req, res) => {
     try {
         const docId = req.params.id
         const adDoc = db.collection('ads').doc(docId)
@@ -255,25 +273,6 @@ app.delete('/campaign/:id', async (req, res) => {
         res.status(200).send('Success')
     } catch (e) {
         res.status(500).send({ error: 'Error retreiving info', errorCode: 503 })
-    }
-})
-
-/**
- * Gets an ad by the ad title
- */
-app.get('/ad/search', async (req, res) => {
-    try {
-        const title = req.query.title
-        const adRef = db.collection('ads')
-        const queryRef = await adRef.where('title', '==', title).get()
-        finalData = []
-        queryRef.forEach((doc) => {
-            finalData.push(doc.data())
-        })
-        res.status(200).send(finalData)
-    } catch (e) {
-        console.log(e)
-        res.status(500).send({ error: 'Error retrieving search info' })
     }
 })
 

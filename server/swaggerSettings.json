@@ -316,7 +316,17 @@
                 "get": {
                     "tags": ["ad"],
                     "summary": "Get a list of ad objects",
-                    "parameters": [],
+                    "parameters": [
+                        {
+                            "name": "title",
+                            "in": "query",
+                            "schema": {
+                                "type": "string"
+                            },
+                            "required": false,
+                            "example": "None"
+                        }
+                    ],
                     "responses": {
                         "200": {
                             "description": "Successful Operation",
@@ -403,73 +413,7 @@
                     }
                 }
             },
-            "/ad/delete/{adId}": {
-                "delete": {
-                    "tags": ["ad"],
-                    "summary": "Delete an ad",
-                    "parameters": [
-                        {
-                            "name": "adId",
-                            "in": "path",
-                            "description": "ID of ad to delete",
-                            "required": true,
-                            "schema": {
-                                "type": "string"
-                            },
-                            "example": "xGpTCGJSIDX0Z8RbMbkb"
-                        }
-                    ],
-                    "responses": {
-                        "200": {
-                            "description": "Successful Operation",
-                            "content": {
-                                "text/plain": {
-                                    "schema": {
-                                        "type": "string",
-                                        "example": "Success"
-                                    }
-                                }
-                            }
-                        },
-                        "500": {
-                            "description": "Improper data inputs"
-                        }
-                    }
-                }
-            },
             "/campaign/delete/{campaignId}": {},
-            "/ad/search": {
-                "get": {
-                    "tags": ["ad"],
-                    "summary": "Get an ad list by their title",
-                    "parameters": [
-                        {
-                            "name": "title",
-                            "in": "query",
-                            "schema": {
-                                "type": "string"
-                            },
-                            "required": true,
-                            "example": "testTitle"
-                        }
-                    ],
-                    "responses": {
-                        "200": {
-                            "description": "Successful Operation",
-                            "content": {
-                                "application/json": {
-                                    "schema": {
-                                        "type": "array",
-                                        "items": {
-                                            "$ref": "#/components/schemas/AdWithoutId"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
             "/ad/{adId}": {
                 "get": {
                     "tags": ["ad"],
@@ -517,6 +461,38 @@
                         },
                         "500": {
                             "description": "Error retrieving info"
+                        }
+                    }
+                },
+                "delete": {
+                    "tags": ["ad"],
+                    "summary": "Delete an ad",
+                    "parameters": [
+                        {
+                            "name": "adId",
+                            "in": "path",
+                            "description": "ID of ad to delete",
+                            "required": true,
+                            "schema": {
+                                "type": "string"
+                            },
+                            "example": "xGpTCGJSIDX0Z8RbMbkb"
+                        }
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "Successful Operation",
+                            "content": {
+                                "text/plain": {
+                                    "schema": {
+                                        "type": "string",
+                                        "example": "Success"
+                                    }
+                                }
+                            }
+                        },
+                        "500": {
+                            "description": "Improper data inputs"
                         }
                     }
                 }
