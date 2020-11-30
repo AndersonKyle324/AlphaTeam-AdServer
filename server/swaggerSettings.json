@@ -31,7 +31,6 @@
             {
                 "name": "user",
                 "description": "Everything about user"
-
             }
         ],
         "components": {
@@ -65,8 +64,8 @@
                         },
                         "adData": {
                             "type": "object",
-                            "properties":{
-                                "impressions":{
+                            "properties": {
+                                "impressions": {
                                     "$ref": "#/components/schemas/Impressions"
                                 },
                                 "title": {
@@ -77,13 +76,13 @@
                         }
                     }
                 },
-                "AdWithoutId":{
+                "AdWithoutId": {
                     "type": "object",
                     "properties": {
                         "adData": {
                             "type": "object",
-                            "properties":{
-                                "impressions":{
+                            "properties": {
+                                "impressions": {
                                     "$ref": "#/components/schemas/Impressions"
                                 },
                                 "title": {
@@ -104,7 +103,7 @@
                         "campaignData": {
                             "type": "array",
                             "items": {
-                                "type" : "string"
+                                "type": "string"
                             },
                             "example": ["1st ad id", "2nd ad id", "3rd ad id"]
                         }
@@ -116,7 +115,7 @@
                         "campaignData": {
                             "type": "array",
                             "items": {
-                                "type" : "string"
+                                "type": "string"
                             },
                             "example": ["1st ad id", "2nd ad id", "3rd ad id"]
                         }
@@ -139,21 +138,19 @@
         },
         "paths": {
             "/campaign": {
-                "get":{
-                    "tags": [ 
-                        "campaign"
-                    ],
+                "get": {
+                    "tags": ["campaign"],
                     "summary": "Get a list of campaign objects",
                     "parameters": [],
                     "responses": {
                         "200": {
                             "description": "Successful Operation",
-                            "content":{
+                            "content": {
                                 "application/json": {
-                                    "schema":{
+                                    "schema": {
                                         "type": "array",
-                                        "items":{
-                                            "$ref": "#/components/schemas/CampaignWithoutId" 
+                                        "items": {
+                                            "$ref": "#/components/schemas/CampaignWithoutId"
                                         }
                                     }
                                 }
@@ -163,16 +160,14 @@
                 }
             },
             "/campaign/{campaignId}": {
-                "get":{
-                    "tags": [ 
-                        "campaign"
-                    ],
+                "get": {
+                    "tags": ["campaign"],
                     "summary": "Get the campaign by ID",
                     "parameters": [
                         {
                             "in": "path",
                             "name": "campaignId",
-                            "schema":{
+                            "schema": {
                                 "type": "string"
                             },
                             "required": true,
@@ -183,10 +178,10 @@
                     "responses": {
                         "200": {
                             "description": "Successful Operation",
-                            "content":{
+                            "content": {
                                 "application/json": {
-                                    "schema":{
-                                        "$ref": "#/components/schemas/CampaignWithoutId" 
+                                    "schema": {
+                                        "$ref": "#/components/schemas/CampaignWithoutId"
                                     }
                                 }
                             }
@@ -201,21 +196,19 @@
                 }
             },
             "/ad": {
-                "get":{
-                    "tags": [ 
-                        "ad"
-                    ],
+                "get": {
+                    "tags": ["ad"],
                     "summary": "Get a list of ad objects",
                     "parameters": [],
                     "responses": {
                         "200": {
                             "description": "Successful Operation",
-                            "content":{
+                            "content": {
                                 "application/json": {
-                                    "schema":{
+                                    "schema": {
                                         "type": "array",
-                                        "items":{
-                                            "$ref": "#/components/schemas/AdWithoutId" 
+                                        "items": {
+                                            "$ref": "#/components/schemas/AdWithoutId"
                                         }
                                     }
                                 }
@@ -225,10 +218,8 @@
                 }
             },
             "/campaign/edit": {
-                "put":{
-                    "tags": [ 
-                        "campaign"
-                    ],
+                "put": {
+                    "tags": ["campaign"],
                     "summary": "Update an existing campaign",
                     "requestBody": {
                         "required": true,
@@ -243,7 +234,7 @@
                     "responses": {
                         "200": {
                             "description": "Successful Operation",
-                            "content":{
+                            "content": {
                                 "text/plain": {
                                     "schema": {
                                         "type": "string",
@@ -259,10 +250,8 @@
                 }
             },
             "/campaign/create": {
-                "put":{
-                    "tags": [ 
-                        "campaign"
-                    ],
+                "put": {
+                    "tags": ["campaign"],
                     "summary": "Create a new campaign",
                     "requestBody": {
                         "required": true,
@@ -278,7 +267,7 @@
                     "responses": {
                         "200": {
                             "description": "Successful Operation",
-                            "content":{
+                            "content": {
                                 "text/plain": {
                                     "schema": {
                                         "type": "string",
@@ -294,10 +283,8 @@
                 }
             },
             "/ad/create": {
-                "put":{
-                    "tags": [ 
-                        "ad"
-                    ],
+                "put": {
+                    "tags": ["ad"],
                     "summary": "Create a new ad",
                     "description": "If the ad already exists, update with new ad",
                     "requestBody": {
@@ -314,7 +301,7 @@
                     "responses": {
                         "200": {
                             "description": "Successful Operation",
-                            "content":{
+                            "content": {
                                 "text/plain": {
                                     "schema": {
                                         "type": "string",
@@ -330,10 +317,8 @@
                 }
             },
             "/ad/edit": {
-                "put":{
-                    "tags": [ 
-                        "ad"
-                    ],
+                "put": {
+                    "tags": ["ad"],
                     "summary": "Update an existing ad",
                     "requestBody": {
                         "required": true,
@@ -349,7 +334,7 @@
                     "responses": {
                         "200": {
                             "description": "Successful Operation",
-                            "content":{
+                            "content": {
                                 "text/plain": {
                                     "schema": {
                                         "type": "string",
@@ -365,10 +350,8 @@
                 }
             },
             "/ad/delete/{adId}": {
-                "delete":{
-                    "tags": [
-                        "ad"
-                    ],
+                "delete": {
+                    "tags": ["ad"],
                     "summary": "Delete an ad",
                     "parameters": [
                         {
@@ -376,7 +359,7 @@
                             "in": "path",
                             "description": "ID of ad to delete",
                             "required": true,
-                            "schema":{
+                            "schema": {
                                 "type": "string"
                             },
                             "example": "xGpTCGJSIDX0Z8RbMbkb"
@@ -385,7 +368,7 @@
                     "responses": {
                         "200": {
                             "description": "Successful Operation",
-                            "content":{
+                            "content": {
                                 "text/plain": {
                                     "schema": {
                                         "type": "string",
@@ -401,10 +384,8 @@
                 }
             },
             "/campaign/delete/{campaignId}": {
-                "delete":{
-                    "tags": [
-                        "campaign"
-                    ],
+                "delete": {
+                    "tags": ["campaign"],
                     "summary": "Delete a campaign",
                     "parameters": [
                         {
@@ -412,7 +393,7 @@
                             "in": "path",
                             "description": "ID of campaign to delete",
                             "required": true,
-                            "schema":{
+                            "schema": {
                                 "type": "string"
                             },
                             "example": "7QKUcWNNRkIQ89jUzqo2"
@@ -421,7 +402,7 @@
                     "responses": {
                         "200": {
                             "description": "Successful Operation",
-                            "content":{
+                            "content": {
                                 "text/plain": {
                                     "schema": {
                                         "type": "string",
@@ -437,32 +418,29 @@
                 }
             },
             "/ad/search": {
-                "get":{
-                    "tags": [ 
-                        "ad"
-                    ],
+                "get": {
+                    "tags": ["ad"],
                     "summary": "Get an ad list by their title",
                     "parameters": [
                         {
                             "name": "title",
                             "in": "query",
-                            "schema":{
+                            "schema": {
                                 "type": "string"
                             },
                             "required": true,
                             "example": "testTitle"
-                            
                         }
                     ],
                     "responses": {
                         "200": {
                             "description": "Successful Operation",
-                            "content":{
+                            "content": {
                                 "application/json": {
-                                    "schema":{
+                                    "schema": {
                                         "type": "array",
-                                        "items":{
-                                            "$ref": "#/components/schemas/AdWithoutId" 
+                                        "items": {
+                                            "$ref": "#/components/schemas/AdWithoutId"
                                         }
                                     }
                                 }
@@ -472,10 +450,8 @@
                 }
             },
             "/ad/{adId}": {
-                "get":{
-                    "tags": [ 
-                        "ad"
-                    ],
+                "get": {
+                    "tags": ["ad"],
                     "summary": "Get the ad by ID",
                     "parameters": [
                         {
@@ -492,7 +468,7 @@
                             "in": "query",
                             "name": "impression",
                             "required": false,
-                            "schema":{
+                            "schema": {
                                 "type": "boolean"
                             },
                             "example": true
@@ -510,10 +486,10 @@
                     "responses": {
                         "200": {
                             "description": "Successful Operation",
-                            "content":{
+                            "content": {
                                 "application/json": {
-                                    "schema":{
-                                        "$ref": "#/components/schemas/AdWithoutId" 
+                                    "schema": {
+                                        "$ref": "#/components/schemas/AdWithoutId"
                                     }
                                 }
                             }
@@ -524,11 +500,9 @@
                     }
                 }
             },
-            "/user/create":{
-                "post":{
-                    "tags": [ 
-                        "user"
-                    ],
+            "/user/create": {
+                "post": {
+                    "tags": ["user"],
                     "summary": "Create a new user",
                     "requestBody": {
                         "required": true,
@@ -548,13 +522,10 @@
                         "500": {
                             "description": "Cannot create user"
                         }
-                        
                     }
                 }
             }
-
         }
-
     },
     "apis": ["./*.js"]
 }

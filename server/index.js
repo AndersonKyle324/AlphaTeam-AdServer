@@ -23,6 +23,7 @@ app.get('/docs')
 
 // Load credentials from firebase
 const serviceAccount = require('./serviceAccountKey.json')
+const { query } = require('express')
 
 // Create the firebase connection
 admin.initializeApp({
@@ -52,6 +53,25 @@ app.get('/campaign', async (req, res) => {
         })
 
     res.json(campaignData)
+})
+
+/**
+ * Allows user to search for a campaign by title.
+ */
+app.get('/campaign/search', async (req, res) => {
+    try {
+        const title = req.query.title
+        const campaignRef = db.collection('campaign')
+        const queryRef = await campaignRef.where('title', '==', title).get()
+        finalData = []
+        queryRef.forEach((doc) => {
+            finalData.push(doc.data())
+        })
+        res.status(200).send(finalData)
+    } catch (e) {
+        console.log(e)
+        res.send(503).send({ error: 'Error retrieving search info' })
+    }
 })
 
 /**
@@ -105,7 +125,10 @@ app.put('/campaign/edit', async (req, res) => {
         const campaignDoc = db.collection('campaign').doc(req.body.campaignId)
         const campaignExists = await campaignDoc.get()
         if (!campaignExists.exists) {
-            throw new Error('Campaign does not exist')
+            res.status(404).send({
+                error: 'Campaign does not exist',
+                errorCode: 404,
+            })
         }
         await campaignDoc
             .set(req.body.campaignData)
@@ -189,7 +212,7 @@ app.delete('/ad/delete/:id', async (req, res) => {
         const adDoc = db.collection('ads').doc(docId)
         const adExists = await adDoc.get()
         if (!adExists.exists) {
-            throw new Error('Ad does not exist')
+            res.status(404).send({ error: 'Ad does not exist', errorCode: 404 })
         }
         await adDoc
             .delete()
@@ -225,6 +248,9 @@ app.delete('/campaign/delete/:id', async (req, res) => {
     }
 })
 
+/**
+ * Gets an ad by the ad title
+ */
 app.get('/ad/search', async (req, res) => {
     try {
         const title = req.query.title
@@ -281,7 +307,7 @@ app.post('/user/create', async (req, res) => {
         .then(function (userRecord) {
             // See the UserRecord reference doc for the contents of userRecord.
             console.log('Successfully created new user:', userRecord.uid)
-            res.status(200).send({ user: userRecord })
+            res.status(200).send(userRecord)
         })
         .catch(function (error) {
             res.status(500).send({
@@ -292,15 +318,24 @@ app.post('/user/create', async (req, res) => {
         })
 })
 
+app.post('/user/login', async (req, res) => {
+    admin
+})
+
 //Automated postman test, runs everystime when server start
-newman.run({
-    collection: require('./postman.json'),
-    reporters: 'cli'
-}, function (err) {
-	if (err) { throw err; }
-    console.log('collection run complete!');
-});
+newman.run(
+    {
+        collection: require('./postman.json'),
+        reporters: 'cli',
+    },
+    function (err) {
+        if (err) {
+            throw err
+        }
+        console.log('collection run complete!')
+    }
+)
 
 app.listen(port, () => {
-    console.log(`Example listening on port ${port}`)
+    console.log(`Alpha Team Ad Server listening on port ${port}`)
 })
