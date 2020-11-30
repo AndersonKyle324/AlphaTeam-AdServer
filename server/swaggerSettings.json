@@ -31,7 +31,6 @@
             {
                 "name": "user",
                 "description": "Everything about user"
-
             }
         ],
         "components": {
@@ -65,8 +64,8 @@
                         },
                         "adData": {
                             "type": "object",
-                            "properties":{
-                                "impressions":{
+                            "properties": {
+                                "impressions": {
                                     "$ref": "#/components/schemas/Impressions"
                                 },
                                 "title": {
@@ -77,13 +76,13 @@
                         }
                     }
                 },
-                "AdWithoutId":{
+                "AdWithoutId": {
                     "type": "object",
                     "properties": {
                         "adData": {
                             "type": "object",
-                            "properties":{
-                                "impressions":{
+                            "properties": {
+                                "impressions": {
                                     "$ref": "#/components/schemas/Impressions"
                                 },
                                 "title": {
@@ -104,7 +103,7 @@
                         "campaignData": {
                             "type": "array",
                             "items": {
-                                "type" : "string"
+                                "type": "string"
                             },
                             "example": ["1st ad id", "2nd ad id", "3rd ad id"]
                         }
@@ -116,7 +115,7 @@
                         "campaignData": {
                             "type": "array",
                             "items": {
-                                "type" : "string"
+                                "type": "string"
                             },
                             "example": ["1st ad id", "2nd ad id", "3rd ad id"]
                         }
@@ -134,101 +133,57 @@
                             "example": "test@gmail.com"
                         }
                     }
+                },
+                "Error": {
+                    "type": "object",
+                    "properties": {
+                        "error": {
+                            "type": "string",
+                            "example": "Ad with given ad ID already exists"
+                        },
+                        "errorCode": {
+                            "type": "number",
+                            "example": 403
+                        }
+                    }
                 }
             }
         },
         "paths": {
             "/campaign": {
-                "get":{
-                    "tags": [ 
-                        "campaign"
-                    ],
+                "get": {
+                    "tags": ["campaign"],
                     "summary": "Get a list of campaign objects",
-                    "parameters": [],
-                    "responses": {
-                        "200": {
-                            "description": "Successful Operation",
-                            "content":{
-                                "application/json": {
-                                    "schema":{
-                                        "type": "array",
-                                        "items":{
-                                            "$ref": "#/components/schemas/CampaignWithoutId" 
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "/campaign/{campaignId}": {
-                "get":{
-                    "tags": [ 
-                        "campaign"
-                    ],
-                    "summary": "Get the campaign by ID",
                     "parameters": [
                         {
-                            "in": "path",
-                            "name": "campaignId",
-                            "schema":{
+                            "in": "query",
+                            "name": "title",
+                            "schema": {
                                 "type": "string"
                             },
-                            "required": true,
-                            "description": "ID of campaign to return",
-                            "example": "7QKUcWNNRkIQ89jUzqo2"
+                            "required": false,
+                            "description": "The title for a specific campaign or a list of campaigns",
+                            "example": "Winter2020"
                         }
                     ],
                     "responses": {
                         "200": {
                             "description": "Successful Operation",
-                            "content":{
+                            "content": {
                                 "application/json": {
-                                    "schema":{
-                                        "$ref": "#/components/schemas/CampaignWithoutId" 
-                                    }
-                                }
-                            }
-                        },
-                        "404": {
-                            "description": "Campaign does not exist by given ID"
-                        },
-                        "500": {
-                            "description": "Error retrieving info"
-                        }
-                    }
-                }
-            },
-            "/ad": {
-                "get":{
-                    "tags": [ 
-                        "ad"
-                    ],
-                    "summary": "Get a list of ad objects",
-                    "parameters": [],
-                    "responses": {
-                        "200": {
-                            "description": "Successful Operation",
-                            "content":{
-                                "application/json": {
-                                    "schema":{
+                                    "schema": {
                                         "type": "array",
-                                        "items":{
-                                            "$ref": "#/components/schemas/AdWithoutId" 
+                                        "items": {
+                                            "$ref": "#/components/schemas/CampaignWithoutId"
                                         }
                                     }
                                 }
                             }
                         }
                     }
-                }
-            },
-            "/campaign/edit": {
-                "put":{
-                    "tags": [ 
-                        "campaign"
-                    ],
+                },
+                "put": {
+                    "tags": ["campaign"],
                     "summary": "Update an existing campaign",
                     "requestBody": {
                         "required": true,
@@ -243,7 +198,7 @@
                     "responses": {
                         "200": {
                             "description": "Successful Operation",
-                            "content":{
+                            "content": {
                                 "text/plain": {
                                     "schema": {
                                         "type": "string",
@@ -256,13 +211,9 @@
                             "description": "Improper data inputs"
                         }
                     }
-                }
-            },
-            "/campaign/create": {
-                "put":{
-                    "tags": [ 
-                        "campaign"
-                    ],
+                },
+                "post": {
+                    "tags": ["campaign"],
                     "summary": "Create a new campaign",
                     "requestBody": {
                         "required": true,
@@ -278,7 +229,7 @@
                     "responses": {
                         "200": {
                             "description": "Successful Operation",
-                            "content":{
+                            "content": {
                                 "text/plain": {
                                     "schema": {
                                         "type": "string",
@@ -293,13 +244,109 @@
                     }
                 }
             },
-            "/ad/create": {
-                "put":{
-                    "tags": [ 
-                        "ad"
+            "/campaign/{campaignId}": {
+                "get": {
+                    "tags": ["campaign"],
+                    "summary": "Get the campaign by ID",
+                    "parameters": [
+                        {
+                            "in": "path",
+                            "name": "campaignId",
+                            "schema": {
+                                "type": "string"
+                            },
+                            "required": true,
+                            "description": "ID of campaign to return",
+                            "example": "7QKUcWNNRkIQ89jUzqo2"
+                        }
                     ],
+                    "responses": {
+                        "200": {
+                            "description": "Successful Operation",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "$ref": "#/components/schemas/CampaignWithoutId"
+                                    }
+                                }
+                            }
+                        },
+                        "404": {
+                            "description": "Campaign does not exist by given ID"
+                        },
+                        "500": {
+                            "description": "Error retrieving info"
+                        }
+                    }
+                },
+                "delete": {
+                    "tags": ["campaign"],
+                    "summary": "Delete a campaign",
+                    "parameters": [
+                        {
+                            "name": "campaignId",
+                            "in": "path",
+                            "description": "ID of campaign to delete",
+                            "required": true,
+                            "schema": {
+                                "type": "string"
+                            },
+                            "example": "7QKUcWNNRkIQ89jUzqo2"
+                        }
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "Successful Operation",
+                            "content": {
+                                "text/plain": {
+                                    "schema": {
+                                        "type": "string",
+                                        "example": "Success"
+                                    }
+                                }
+                            }
+                        },
+                        "500": {
+                            "description": "Improper data inputs"
+                        }
+                    }
+                }
+            },
+            "/ad": {
+                "get": {
+                    "tags": ["ad"],
+                    "summary": "Get a list of ad objects",
+                    "parameters": [
+                        {
+                            "name": "title",
+                            "in": "query",
+                            "schema": {
+                                "type": "string"
+                            },
+                            "required": false,
+                            "example": "None"
+                        }
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "Successful Operation",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "type": "array",
+                                        "items": {
+                                            "$ref": "#/components/schemas/AdWithoutId"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "post": {
+                    "tags": ["ad"],
                     "summary": "Create a new ad",
-                    "description": "If the ad already exists, update with new ad",
+                    "description": "Creates a new ad if one does not exist",
                     "requestBody": {
                         "required": true,
                         "description": "Ad object that needs to be added to the database",
@@ -314,7 +361,7 @@
                     "responses": {
                         "200": {
                             "description": "Successful Operation",
-                            "content":{
+                            "content": {
                                 "text/plain": {
                                     "schema": {
                                         "type": "string",
@@ -323,17 +370,16 @@
                                 }
                             }
                         },
-                        "500": {
-                            "description": "Improper data inputs"
+                        "403": {
+                            "description": "The ad with a given Ad ID already exists"
+                        },
+                        "503": {
+                            "description": "Server Error"
                         }
                     }
-                }
-            },
-            "/ad/edit": {
-                "put":{
-                    "tags": [ 
-                        "ad"
-                    ],
+                },
+                "put": {
+                    "tags": ["ad"],
                     "summary": "Update an existing ad",
                     "requestBody": {
                         "required": true,
@@ -349,7 +395,7 @@
                     "responses": {
                         "200": {
                             "description": "Successful Operation",
-                            "content":{
+                            "content": {
                                 "text/plain": {
                                     "schema": {
                                         "type": "string",
@@ -358,41 +404,8 @@
                                 }
                             }
                         },
-                        "500": {
-                            "description": "Improper data inputs"
-                        }
-                    }
-                }
-            },
-            "/ad/delete/{adId}": {
-                "delete":{
-                    "tags": [
-                        "ad"
-                    ],
-                    "summary": "Delete an ad",
-                    "parameters": [
-                        {
-                            "name": "adId",
-                            "in": "path",
-                            "description": "ID of ad to delete",
-                            "required": true,
-                            "schema":{
-                                "type": "string"
-                            },
-                            "example": "xGpTCGJSIDX0Z8RbMbkb"
-                        }
-                    ],
-                    "responses": {
-                        "200": {
-                            "description": "Successful Operation",
-                            "content":{
-                                "text/plain": {
-                                    "schema": {
-                                        "type": "string",
-                                        "example": "Success"
-                                    }
-                                }
-                            }
+                        "404": {
+                            "description": "Cannot find an ad with a given ID"
                         },
                         "500": {
                             "description": "Improper data inputs"
@@ -400,82 +413,10 @@
                     }
                 }
             },
-            "/campaign/delete/{campaignId}": {
-                "delete":{
-                    "tags": [
-                        "campaign"
-                    ],
-                    "summary": "Delete a campaign",
-                    "parameters": [
-                        {
-                            "name": "campaignId",
-                            "in": "path",
-                            "description": "ID of campaign to delete",
-                            "required": true,
-                            "schema":{
-                                "type": "string"
-                            },
-                            "example": "7QKUcWNNRkIQ89jUzqo2"
-                        }
-                    ],
-                    "responses": {
-                        "200": {
-                            "description": "Successful Operation",
-                            "content":{
-                                "text/plain": {
-                                    "schema": {
-                                        "type": "string",
-                                        "example": "Success"
-                                    }
-                                }
-                            }
-                        },
-                        "500": {
-                            "description": "Improper data inputs"
-                        }
-                    }
-                }
-            },
-            "/ad/search": {
-                "get":{
-                    "tags": [ 
-                        "ad"
-                    ],
-                    "summary": "Get an ad list by their title",
-                    "parameters": [
-                        {
-                            "name": "title",
-                            "in": "query",
-                            "schema":{
-                                "type": "string"
-                            },
-                            "required": true,
-                            "example": "testTitle"
-                            
-                        }
-                    ],
-                    "responses": {
-                        "200": {
-                            "description": "Successful Operation",
-                            "content":{
-                                "application/json": {
-                                    "schema":{
-                                        "type": "array",
-                                        "items":{
-                                            "$ref": "#/components/schemas/AdWithoutId" 
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
+            "/campaign/delete/{campaignId}": {},
             "/ad/{adId}": {
-                "get":{
-                    "tags": [ 
-                        "ad"
-                    ],
+                "get": {
+                    "tags": ["ad"],
                     "summary": "Get the ad by ID",
                     "parameters": [
                         {
@@ -492,7 +433,7 @@
                             "in": "query",
                             "name": "impression",
                             "required": false,
-                            "schema":{
+                            "schema": {
                                 "type": "boolean"
                             },
                             "example": true
@@ -510,10 +451,10 @@
                     "responses": {
                         "200": {
                             "description": "Successful Operation",
-                            "content":{
+                            "content": {
                                 "application/json": {
-                                    "schema":{
-                                        "$ref": "#/components/schemas/AdWithoutId" 
+                                    "schema": {
+                                        "$ref": "#/components/schemas/AdWithoutId"
                                     }
                                 }
                             }
@@ -522,13 +463,43 @@
                             "description": "Error retrieving info"
                         }
                     }
+                },
+                "delete": {
+                    "tags": ["ad"],
+                    "summary": "Delete an ad",
+                    "parameters": [
+                        {
+                            "name": "adId",
+                            "in": "path",
+                            "description": "ID of ad to delete",
+                            "required": true,
+                            "schema": {
+                                "type": "string"
+                            },
+                            "example": "xGpTCGJSIDX0Z8RbMbkb"
+                        }
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "Successful Operation",
+                            "content": {
+                                "text/plain": {
+                                    "schema": {
+                                        "type": "string",
+                                        "example": "Success"
+                                    }
+                                }
+                            }
+                        },
+                        "500": {
+                            "description": "Improper data inputs"
+                        }
+                    }
                 }
             },
-            "/user/create":{
-                "post":{
-                    "tags": [ 
-                        "user"
-                    ],
+            "/user/create": {
+                "post": {
+                    "tags": ["user"],
                     "summary": "Create a new user",
                     "requestBody": {
                         "required": true,
@@ -548,13 +519,10 @@
                         "500": {
                             "description": "Cannot create user"
                         }
-                        
                     }
                 }
             }
-
         }
-
     },
     "apis": ["./*.js"]
 }

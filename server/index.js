@@ -23,6 +23,7 @@ app.get('/docs')
 
 // Load credentials from firebase
 const serviceAccount = require('./serviceAccountKey.json')
+const { query } = require('express')
 
 // Create the firebase connection
 admin.initializeApp({
@@ -36,22 +37,39 @@ const db = admin.firestore()
 
 //Get the campaign information
 app.get('/campaign', async (req, res) => {
-    //We gather the whole campaign collection and return a list of campaign objects
-    const campaignRef = db.collection('campaign')
-    var campaignData = []
-    await campaignRef
-        .get()
-        .then((snapshot) => {
-            snapshot.forEach((doc) => {
-                campaignData.push(doc.data())
-            })
-        })
-        //catching an error if api request fails
-        .catch((err) => {
-            console.log(err)
-        })
+    try {
+        //We gather the whole campaign collection and return a list of campaign objects
+        const campaignRef = db.collection('campaign')
 
-    res.json(campaignData)
+        if (req.query.title) {
+            const title = req.query.title
+            const queryRef = await campaignRef.where('title', '==', title).get()
+            matches = []
+            queryRef.forEach((doc) => {
+                matches.push(doc.data())
+            })
+            res.status(200).send(matches)
+            return
+        }
+
+        var campaignData = []
+        await campaignRef
+            .get()
+            .then((snapshot) => {
+                snapshot.forEach((doc) => {
+                    campaignData.push(doc.data())
+                })
+            })
+            //catching an error if api request fails
+            .catch((err) => {
+                console.log(err)
+            })
+
+        res.json(campaignData)
+    } catch (e) {
+        console.error(e)
+        res.status(503).send({ error: 'Internal server error', errorCode: 503 })
+    }
 })
 
 /**
@@ -80,32 +98,50 @@ app.get('/campaign/:id', async (req, res) => {
 })
 
 app.get('/ad', async (req, res) => {
-    //We gather the whole ads collection and return a list of ad objects
-    const adRef = db.collection('ads')
-    var adData = []
-    await adRef
-        .get()
-        .then((snapshot) => {
-            snapshot.forEach((doc) => {
-                adData.push(doc.data())
+    try {
+        //We gather the whole ads collection and return a list of ad objects
+        const adRef = db.collection('ads')
+        if (req.query.title) {
+            const title = req.query.title
+            const queryRef = await adRef.where('title', '==', title).get()
+            const matches = []
+            queryRef.forEach((doc) => {
+                matches.push(doc.data())
             })
-        })
-        //catching an error if api request fails
-        .catch((err) => {
-            console.log(err)
-        })
+            res.status(200).send(matches)
+            return
+        }
+        var adData = []
+        await adRef
+            .get()
+            .then((snapshot) => {
+                snapshot.forEach((doc) => {
+                    adData.push(doc.data())
+                })
+            })
+            //catching an error if api request fails
+            .catch((err) => {
+                console.log(err)
+            })
 
-    res.json(adData)
+        res.status(200).send(adData)
+    } catch (e) {
+        console.error(e)
+        res.status(503).send({ error: 'Internal server error', errorCode: 503 })
+    }
 })
 
 //Edits data with given resposne data and campaignID
-app.put('/campaign/edit', async (req, res) => {
+app.put('/campaign', async (req, res) => {
     //We get the campaignID from the request and replace the old data with the new.
     try {
         const campaignDoc = db.collection('campaign').doc(req.body.campaignId)
         const campaignExists = await campaignDoc.get()
         if (!campaignExists.exists) {
-            throw new Error('Campaign does not exist')
+            res.status(404).send({
+                error: 'Campaign does not exist',
+                errorCode: 404,
+            })
         }
         await campaignDoc
             .set(req.body.campaignData)
@@ -120,12 +156,12 @@ app.put('/campaign/edit', async (req, res) => {
             })
         res.status(200).send('Success')
     } catch (e) {
-        res.status(500).send({ error: 'Improper data inputs', errorCode: 503 })
+        res.status(503).send({ error: 'Improper data inputs', errorCode: 503 })
     }
 })
 
 //Creates data with given resposne data and adId
-app.put('/campaign/create', async (req, res) => {
+app.post('/campaign', async (req, res) => {
     try {
         const campaignDoc = db.collection('campaign').doc(req.body.campaignId)
         await campaignDoc
@@ -145,51 +181,66 @@ app.put('/campaign/create', async (req, res) => {
 })
 
 //Creates data with given resposne data and adId
-app.put('/ad/create', async (req, res) => {
+app.post('/ad', async (req, res) => {
     try {
         const adDoc = db.collection('ads').doc(req.body.adId)
-        await adDoc
-            .set(req.body.adData)
-            .then(console.log(`Succesfully created data for ${req.body.adId}`))
-            //Catches error in the case api request fails
-            .catch((err) => {
-                console.log(err)
-            })
-        res.status(200).send('Success')
+        const ad = await adDoc.get()
+        if (!ad.exists) {
+            await adDoc
+                .set(req.body.adData)
+                .then(
+                    console.log(`Succesfully created data for ${req.body.adId}`)
+                )
+                //Catches error in the case api request fails
+                .catch((err) => {
+                    console.log(err)
+                })
+            res.status(200).send('Success')
+        } else {
+            res.status(403).send({ error: 'Ad already exists', errorCode: 403 })
+        }
     } catch (e) {
+        console.error(e)
         res.status(500).send({ error: 'Improper data inputs', errorCode: 503 })
     }
 })
 
 //Edits data with given resposne data and adId
-app.put('/ad/edit', async (req, res) => {
-    //We get the adID from the request and replace the old data with the new.
+app.put('/ad', async (req, res) => {
     try {
         const adDoc = db.collection('ads').doc(req.body.adId)
-        const adExists = await adDoc.get()
-        if (!adExists.exists) {
-            throw new Error('Ad does not exist')
+        const ad = await adDoc.get()
+        if (!ad.exists) {
+            res.status(404).send({
+                error: `Cannot find ad with ID ${req.body.adId}`,
+                errorCode: 404,
+            })
+            return
         }
         await adDoc
             .set(req.body.adData)
-            .then(console.log(`Succesfully edited data for ${req.body.adId}`))
+            .then(console.log(`Succesfully modified ad ${req.body.adId}`))
             //Catches error in the case api request fails
             .catch((err) => {
                 console.log(err)
             })
         res.status(200).send('Success')
     } catch (e) {
-        res.status(500).send({ error: 'Improper data inputs', errorCode: 503 })
+        console.error(e)
+        res.status(503).send({ error: 'Improper data inputs', errorCode: 503 })
     }
 })
 
-app.delete('/ad/delete/:id', async (req, res) => {
+/**
+ * Deletes an ad with a specified ID
+ */
+app.delete('/ad/:id', async (req, res) => {
     try {
         const docId = req.params.id
         const adDoc = db.collection('ads').doc(docId)
         const adExists = await adDoc.get()
         if (!adExists.exists) {
-            throw new Error('Ad does not exist')
+            res.status(404).send({ error: 'Ad does not exist', errorCode: 404 })
         }
         await adDoc
             .delete()
@@ -204,7 +255,7 @@ app.delete('/ad/delete/:id', async (req, res) => {
     }
 })
 
-app.delete('/campaign/delete/:id', async (req, res) => {
+app.delete('/campaign/:id', async (req, res) => {
     try {
         const docId = req.params.id
         const adDoc = db.collection('campaign').doc(docId)
@@ -222,22 +273,6 @@ app.delete('/campaign/delete/:id', async (req, res) => {
         res.status(200).send('Success')
     } catch (e) {
         res.status(500).send({ error: 'Error retreiving info', errorCode: 503 })
-    }
-})
-
-app.get('/ad/search', async (req, res) => {
-    try {
-        const title = req.query.title
-        const adRef = db.collection('ads')
-        const queryRef = await adRef.where('title', '==', title).get()
-        finalData = []
-        queryRef.forEach((doc) => {
-            finalData.push(doc.data())
-        })
-        res.status(200).send(finalData)
-    } catch (e) {
-        console.log(e)
-        res.status(500).send({ error: 'Error retrieving search info' })
     }
 })
 
@@ -281,7 +316,7 @@ app.post('/user/create', async (req, res) => {
         .then(function (userRecord) {
             // See the UserRecord reference doc for the contents of userRecord.
             console.log('Successfully created new user:', userRecord.uid)
-            res.status(200).send({ user: userRecord })
+            res.status(200).send(userRecord)
         })
         .catch(function (error) {
             res.status(500).send({
@@ -292,15 +327,20 @@ app.post('/user/create', async (req, res) => {
         })
 })
 
-//Automated postman test, runs everystime when server start
-newman.run({
-    collection: require('./postman.json'),
-    reporters: 'cli'
-}, function (err) {
-	if (err) { throw err; }
-    console.log('collection run complete!');
-});
+// //Automated postman test, runs everystime when server start
+// newman.run(
+//     {
+//         collection: require('./postman.json'),
+//         reporters: 'cli',
+//     },
+//     function (err) {
+//         if (err) {
+//             throw err
+//         }
+//         console.log('collection run complete!')
+//     }
+// )
 
 app.listen(port, () => {
-    console.log(`Example listening on port ${port}`)
+    console.log(`Alpha Team Ad Server listening on port ${port}`)
 })
