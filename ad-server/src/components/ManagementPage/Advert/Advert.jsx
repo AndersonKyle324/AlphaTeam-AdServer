@@ -2,15 +2,6 @@ import React from "react";
 import { Card, Button } from "react-bootstrap";
 
 export default (props) => {
-  const ad = {
-    url: "",
-    size: "",
-    image: "",
-    altText: "",
-    title: "",
-    subtitle: "",
-  };
-
   return (
     <Card
       {...props}

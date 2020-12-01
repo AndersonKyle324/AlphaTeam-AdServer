@@ -4,7 +4,7 @@ const admin = require('firebase-admin')
 const newman = require('newman')
 
 const app = express()
-const port = process.env.port || 3000
+const port = process.env.port || 3001
 
 const swaggerSettings = require('./swaggerSettings.json')
 const swaggerJsdoc = require('swagger-jsdoc')
