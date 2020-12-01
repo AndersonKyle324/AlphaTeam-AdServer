@@ -106,7 +106,7 @@ function Table({ columns, data }) {
   );
 }
 
-function AdTable({ show }) {
+function AdTable({ adTableData }) {
   const columns = React.useMemo(
     () => [
       {
@@ -153,52 +153,9 @@ function AdTable({ show }) {
     []
   );
 
-  // Change to GET all ads from the database on ManagementPage
-  const data = React.useMemo(
-    () => [
-      {
-        adName: "SwitchItUp",
-        adSize: "Small",
-        campaign: "Nintendo Switch",
-        lastModified: "10-10-2020",
-        impressions: 100,
-        clicks: 10,
-        conversions: 1,
-      },
-      {
-        adName: "Apples4U",
-        adSize: "Medium",
-        campaign: "Apples",
-        lastModified: "10-10-2020",
-        impressions: 2000,
-        clicks: 300,
-        conversions: 50,
-      },
-      {
-        adName: "OrangesRCool",
-        adSize: "Large",
-        campaign: "Oranges",
-        lastModified: "10-10-2020",
-        impressions: 10,
-        clicks: 0,
-        conversions: 0,
-      },
-      {
-        adName: "BigSwitch",
-        adSize: "Large",
-        campaign: "Nintendo Switch",
-        lastModified: "01-21-2020",
-        impressions: 400,
-        clicks: 300,
-        conversions: 290,
-      },
-    ],
-    []
-  );
-
   return (
     <Styles>
-      <Table columns={columns} data={data} />
+      <Table columns={columns} data={adTableData} />
     </Styles>
   );
 }
