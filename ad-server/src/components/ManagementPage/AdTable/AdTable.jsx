@@ -197,11 +197,7 @@ function AdTable({ show }) {
   );
 
   return (
-    <Styles
-      style={{
-        display: show ? "block" : "none",
-      }}
-    >
+    <Styles>
       <Table columns={columns} data={data} />
     </Styles>
   );

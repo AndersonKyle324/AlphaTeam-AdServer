@@ -8,7 +8,6 @@ import CampaignModal from "./CampaignModal/CampaignModal";
 import Advert from "./Advert/Advert";
 
 export default () => {
-  const [showAdTable, setShowAdTable] = useState(true);
   const [showPub, setShowPub] = useState(false);
   const [showCampaign, setShowCampaign] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -46,7 +45,7 @@ export default () => {
                 show={showAddModal}
                 onHide={() => setShowAddModal(false)}
               />
-              <AdTable show={showAdTable} />
+              <AdTable/>
               <CampaignModal
                 show={showCampaign}
                 onHide={() => setShowCampaign(false)}
