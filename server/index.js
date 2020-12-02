@@ -40,7 +40,6 @@ app.get('/campaign', async (req, res) => {
     try {
         //We gather the whole campaign collection and return a list of campaign objects
         const campaignRef = db.collection('campaign')
-
         if (req.query.title) {
             const title = req.query.title
             const queryRef = await campaignRef.where('title', '==', title).get()
@@ -163,19 +162,25 @@ app.put('/campaign', async (req, res) => {
 //Creates data with given resposne data and adId
 app.post('/campaign', async (req, res) => {
     try {
-        const campaignDoc = db.collection('campaign').doc(req.body.campaignId)
-        await campaignDoc
-            .set(req.body.campaignData)
-            .then(
+        const campaignDoc = db.collection('campaign')
+        if (!req.body.campaignData) {
+            res.status(400).send({ error: 'Body is missing field: campaignData', errorCode: 400 })
+            return
+        }
+        const doc = await campaignDoc
+            .add(req.body.campaignData)
+            .then((campaign) => {
                 console.log(
-                    `Succesfully edited data for ${req.body.campaignId}`
+                    `Succesfully created campaign ${campaign.id}`
                 )
-            )
+                return campaign
+            })
             .catch((err) => {
                 console.log(err)
             })
-        res.status(200).send('Success')
+        res.status(200).send({id: doc.id})
     } catch (e) {
+        console.log(e)
         res.status(500).send({ error: 'Improper data inputs', errorCode: 503 })
     }
 })
@@ -183,25 +188,26 @@ app.post('/campaign', async (req, res) => {
 //Creates data with given resposne data and adId
 app.post('/ad', async (req, res) => {
     try {
-        const adDoc = db.collection('ads').doc(req.body.adId)
-        const ad = await adDoc.get()
-        if (!ad.exists) {
-            await adDoc
-                .set(req.body.adData)
-                .then(
-                    console.log(`Succesfully created data for ${req.body.adId}`)
-                )
-                //Catches error in the case api request fails
-                .catch((err) => {
-                    console.log(err)
-                })
-            res.status(200).send('Success')
-        } else {
-            res.status(403).send({ error: 'Ad already exists', errorCode: 403 })
+        if (!req.body.adData) {
+            res.status(400).send({ error: 'Body is missing field: adData', errorCode: 400 })
+            return
         }
+        const adDoc = db.collection('ads')
+        const doc = await adDoc
+            .add(req.body.adData)
+            .then((ad) => {
+                    console.log(`Succesfully created ad ${ad.id}`)
+                    return ad
+                }
+            )
+            //Catches error in the case api request fails
+            .catch((err) => {
+                console.log(err)
+            })
+        res.status(200).send({id: doc.id})
     } catch (e) {
         console.error(e)
-        res.status(500).send({ error: 'Improper data inputs', errorCode: 503 })
+        res.status(503).send({ error: 'Internal Server Error', errorCode: 503 })
     }
 })
 
@@ -261,7 +267,8 @@ app.delete('/campaign/:id', async (req, res) => {
         const adDoc = db.collection('campaign').doc(docId)
         const adExists = await adDoc.get()
         if (!adExists.exists) {
-            throw new Error('Campaign does not exist')
+            res.status(404).send({error: `campaign with id ${docId} does not exist`, errorCode: 404 })
+            return
         }
         await adDoc
             .delete()
