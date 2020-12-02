@@ -15,7 +15,7 @@ export default (props) => {
       //provide json with ad react component
       axios.post('/ad', data ).then(res => {
         console.log(res);
-        res == error ? alert(res.error) : props.onHide;
+        // res == error ? alert(res.error) : props.onHide;
       });
     }
   };

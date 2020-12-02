@@ -16,7 +16,7 @@ export default (props) => {
       console.log("Posting " + campaign.campaignId);
       axios.post('/campaign', campaign ).then(res => {
         console.log(res);
-        res == error ? alert(res.error) : props.onHide;
+        // res == error ? alert(res.error) : props.onHide;
       });
     }
   };
