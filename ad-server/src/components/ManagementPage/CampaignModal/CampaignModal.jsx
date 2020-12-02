@@ -14,7 +14,10 @@ export default (props) => {
       alert("A name must be provided");
     } else {
       console.log("Posting " + campaign.campaignId);
-      axios.post('/campaign', campaign );
+      axios.post('/campaign', campaign ).then(res => {
+        console.log(res);
+        // res == error ? alert(res.error) : props.onHide;
+      });
     }
   };
 

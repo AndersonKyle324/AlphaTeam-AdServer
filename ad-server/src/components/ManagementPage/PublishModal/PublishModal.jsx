@@ -13,7 +13,10 @@ export default (props) => {
       alert("A url must be provided");
     } else {
       //provide json with ad react component
-      // axios.post('/ad', data );
+      axios.post('/ad', ad ).then(res => {
+        console.log(res);
+        // res == error ? alert(res.error) : props.onHide;
+      });
     }
   };
 
