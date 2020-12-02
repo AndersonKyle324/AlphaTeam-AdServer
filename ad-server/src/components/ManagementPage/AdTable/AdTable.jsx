@@ -138,51 +138,41 @@ const columns = [
     },
     {
       Header: "Ad Size",
-      accessor: "adSize",
+      accessor: "size",
       aggregate: "uniqueCount",
       Aggregated: ({ value }) => `${value} unique ad sizes`
     },
-    {
-      Header: "Last Modified",
-      accessor: "lastModified",
-      aggregate: "uniqueCount",
-      Aggregated: ({ value }) => `${value} unique date(s)`
-    },   
   ];
 
 const tableData = [
   {
     adName: "SwitchItUp",
-    adSize: "Small",
+    size: "Small",
     campaign: "Nintendo Switch",
-    lastModified: "10-10-2020",
     impressions: 100,
     clicks: 10,
     conversions: 1,
   },
   {
     adName: "Apples4U",
-    adSize: "Medium",
+    size: "Medium",
     campaign: "Apples",
-    lastModified: "10-10-2020",
     impressions: 2000,
     clicks: 300,
     conversions: 50,
   },
   {
     adName: "OrangesRCool",
-    adSize: "Large",
+    size: "Large",
     campaign: "Oranges",
-    lastModified: "10-10-2020",
     impressions: 10,
     clicks: 0,
     conversions: 0,
   },
   {
     adName: "BigSwitch",
-    adSize: "Large",
+    size: "Large",
     campaign: "Nintendo Switch",
-    lastModified: "01-21-2020",
     impressions: 400,
     clicks: 300,
     conversions: 290,
@@ -197,13 +187,33 @@ class AdTable extends React.Component {
       .then(res => {
         const ads = res.data;
         console.log(ads);
-        this.setState({ ads })
+
+        const tempArray = [];
+        ads.forEach(ad => {
+          var tempAd = {
+            adName: ad.adName,
+            altText: ad.altText,
+            buttonAlign: ad.buttonAlign,
+            buttonText: ad.buttonText,
+            campaign: ad.campaign,
+            size: ad.size,
+            impressions: ad.statistics.impressions.seen,
+            clicks: ad.statistics.impressions.clicks,
+            conversions: ad.statistics.impressions.ctr,
+            subtitle: ad.subtitle,
+            title: ad.title,
+            url: ad.url,
+          }
+          tempArray.push(tempAd);
+        }) 
+        this.setState({ ads: tempArray });
         console.log(this.state.ads);
       })
       .catch(err => {
         console.log(err);
       })
   }
+
 
   // Change tableData to ads once headers and attributes are solidified
   render() {
