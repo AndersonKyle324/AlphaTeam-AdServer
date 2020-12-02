@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Button, Form, Alert } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import "./LoginPage.css";
+import firebase from '../../../firebase'
+
 
 export default () => {
   const [inputs, setInputs] = useState({
@@ -13,14 +15,18 @@ export default () => {
   const history = useHistory();
   const handleSubmit = async () => {
     if (inputs.username.trim() && inputs.password.trim()) {
-      const body = {
-        username: inputs.username,
-        password: inputs.password,
-      };
+      firebase.auth()
+        .signInWithEmailAndPassword(inputs.username, inputs.password)
+        .then(() => {
+          //signed in
+          history.push("/management");
 
-      // send body to POST request for authentication
-      console.log(body);
-      history.push("/management");
+        })
+        .catch((error) => {
+          const errorCode = error.code
+          const errorMessage = error.message
+          console.error(`${errorCode}: ${errorMessage}`)
+        })
     } else {
       setInputs({ ...inputs, error: true });
     }
