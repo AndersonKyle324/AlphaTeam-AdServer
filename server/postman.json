@@ -9,6 +9,122 @@
 			"name": "Struture Test",
 			"item": [
 				{
+					"name": "Create ad",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e10ce223-0d3a-4aca-8397-8f82ade07bb0",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let obj = pm.response.json();",
+									"",
+									"pm.test(\"return an object with newly created ad id\", function () {",
+									"    pm.expect(obj).to.be.an('object')",
+									"    pm.expect(obj).to.have.property('id')",
+									"    pm.expect(obj.id).to.be.an('string')",
+									"});",
+									"",
+									"pm.collectionVariables.set(\"adID\", obj.id);",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"adData\" : {\n        \"adName\": \"testName\",\n        \"campaign\": \"testCampaign\",\n        \"size\": \"small\",\n        \"title\" : \"testKai\",\n        \"subtitle\" : \"testSubtitle\",\n        \"buttonAlign\": \"left\",\n        \"buttonText\": \"testText\",\n        \"url\": \"testUrl\",\n        \"altText\": \"testText\",\n        \"statistics\" : {   \n            \"impressions\": {\n                \"clicks\" : 0,\n                \"seen\" : 0,\n                \"ctr\" : 0\n            }  \n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/ad",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"ad"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create campaign",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7153d974-f334-4f95-a745-cbf4933e4081",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let obj = pm.response.json();",
+									"",
+									"pm.test(\"return an object with newly created campaign id\", function () {",
+									"    pm.expect(obj).to.be.an('object')",
+									"    pm.expect(obj).to.have.property('id')",
+									"    pm.expect(obj.id).to.be.an('string')",
+									"});",
+									"",
+									"pm.collectionVariables.set(\"campaignID\", obj.id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n    \"campaignData\": {\n        \"ads\":  [\"tizIVvccQynWGGMzKgt0\", \"GaQ1qjAu8Y0eGM8jamQV\",\"5pOCSHCwbRPxoRZhu3AG\"]\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/campaign/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"campaign",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Get campaign list",
 					"event": [
 						{
@@ -165,7 +281,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3001/campaign/7QKUcWNNRkIQ89jUzqo7",
+							"raw": "http://localhost:3001/campaign/{{campaignID}}",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -173,7 +289,7 @@
 							"port": "3001",
 							"path": [
 								"campaign",
-								"7QKUcWNNRkIQ89jUzqo7"
+								"{{campaignID}}"
 							]
 						}
 					},
@@ -241,7 +357,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3001/ad/7Tb6EhVW3Ontu4JoGLR6",
+							"raw": "http://localhost:3001/ad/{{adID}}",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -249,7 +365,7 @@
 							"port": "3001",
 							"path": [
 								"ad",
-								"7Tb6EhVW3Ontu4JoGLR6"
+								"{{adID}}"
 							],
 							"query": [
 								{
@@ -361,117 +477,6 @@
 					"response": []
 				},
 				{
-					"name": "Create ad",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "e10ce223-0d3a-4aca-8397-8f82ade07bb0",
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"",
-									"let obj = pm.response.json();",
-									"",
-									"pm.test(\"return an object with newly created ad id\", function () {",
-									"    pm.expect(obj).to.be.an('object')",
-									"    pm.expect(obj).to.have.property('id')",
-									"    pm.expect(obj.id).to.be.an('string')",
-									"});",
-									"",
-									"",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text",
-								"disabled": true
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"adData\" : {\n        \"adName\": \"testName\",\n        \"campaign\": \"testCampaign\",\n        \"size\": \"small\",\n        \"title\" : \"testKai\",\n        \"subtitle\" : \"testSubtitle\",\n        \"buttonAlign\": \"left\",\n        \"buttonText\": \"testText\",\n        \"url\": \"testUrl\",\n        \"altText\": \"testText\",\n        \"statistics\" : {   \n            \"impressions\": {\n                \"clicks\" : 0,\n                \"seen\" : 0,\n                \"ctr\" : 0\n            }  \n        }\n    }\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:3001/ad",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "3001",
-							"path": [
-								"ad"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Create campaign",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "7153d974-f334-4f95-a745-cbf4933e4081",
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"",
-									"let obj = pm.response.json();",
-									"",
-									"pm.test(\"return an object with newly created campaign id\", function () {",
-									"    pm.expect(obj).to.be.an('object')",
-									"    pm.expect(obj).to.have.property('id')",
-									"    pm.expect(obj.id).to.be.an('string')",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{ \n    \"campaignData\": {\n        \"ads\":  [\"tizIVvccQynWGGMzKgt0\", \"GaQ1qjAu8Y0eGM8jamQV\",\"5pOCSHCwbRPxoRZhu3AG\"]\n    }\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:3001/campaign/",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "3001",
-							"path": [
-								"campaign",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Edit ad",
 					"event": [
 						{
@@ -505,7 +510,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3001/ad/6SuWMVvqHQDQ7te5Jt3r",
+							"raw": "http://localhost:3001/ad/{{adID}}",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -513,7 +518,7 @@
 							"port": "3001",
 							"path": [
 								"ad",
-								"6SuWMVvqHQDQ7te5Jt3r"
+								"{{adID}}"
 							]
 						}
 					},
@@ -553,7 +558,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3001/campaign/7QKUcWNNRkIQ89jUzqo7",
+							"raw": "http://localhost:3001/campaign/{{campaignID}}",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -561,7 +566,75 @@
 							"port": "3001",
 							"path": [
 								"campaign",
-								"7QKUcWNNRkIQ89jUzqo7"
+								"{{campaignID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete ad",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2f90d7b1-d6c2-4333-b7f7-797dbf716b1c",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/ad/{{adID}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"ad",
+								"{{adID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete campaign",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "73c545e1-43ce-4884-ba98-cb214c43161d",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/campaign/{{campaignID}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"campaign",
+								"{{campaignID}}"
 							]
 						}
 					},
@@ -619,9 +692,256 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get an ad with wrong id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b80d040c-d6ce-40fb-9778-07a28e10542c",
+								"exec": [
+									"pm.test(\"Status Code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"//Get the returned json Data",
+									"let jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Return type is in correct format\", function () {",
+									"    pm.expect(jsonData).to.be.an(\"object\");",
+									"    pm.expect(jsonData).to.have.property(\"error\")",
+									"    pm.expect(jsonData).to.have.property(\"errorCode\")",
+									"    pm.expect(jsonData.errorCode).to.eql(404)",
+									"});",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/ad/12345",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"ad",
+								"12345"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete an ad with wrong id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "483520ba-5bcc-4cb2-a73d-2d60d66b46d9",
+								"exec": [
+									"pm.test(\"Status Code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"//Get the returned json Data",
+									"let jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Return type is in correct format\", function () {",
+									"    pm.expect(jsonData).to.be.an(\"object\");",
+									"    pm.expect(jsonData).to.have.property(\"error\")",
+									"    pm.expect(jsonData).to.have.property(\"errorCode\")",
+									"    pm.expect(jsonData.errorCode).to.eql(404)",
+									"});",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/ad/12345",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"ad",
+								"12345"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete an campaign with wrong id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ff77963f-273b-4583-a160-589aec91511c",
+								"exec": [
+									"pm.test(\"Status Code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"//Get the returned json Data",
+									"let jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Return type is in correct format\", function () {",
+									"    pm.expect(jsonData).to.be.an(\"object\");",
+									"    pm.expect(jsonData).to.have.property(\"error\")",
+									"    pm.expect(jsonData).to.have.property(\"errorCode\")",
+									"    pm.expect(jsonData.errorCode).to.eql(404)",
+									"});",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/campaign/12345",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"campaign",
+								"12345"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit an ad wirh wrong id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fcd527c8-5efe-42e4-afa8-faccb1b69a5c",
+								"exec": [
+									"pm.test(\"Status Code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"//Get the returned json Data",
+									"let jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Return type is in correct format\", function () {",
+									"    pm.expect(jsonData).to.be.an(\"object\");",
+									"    pm.expect(jsonData).to.have.property(\"error\")",
+									"    pm.expect(jsonData).to.have.property(\"errorCode\")",
+									"    pm.expect(jsonData.errorCode).to.eql(404)",
+									"});",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/ad/12345",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"ad",
+								"12345"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit a campaign with wrong id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "971f2d8a-f1e9-418e-8ebb-fc84cad06b61",
+								"exec": [
+									"pm.test(\"Status Code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"//Get the returned json Data",
+									"let jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Return type is in correct format\", function () {",
+									"    pm.expect(jsonData).to.be.an(\"object\");",
+									"    pm.expect(jsonData).to.have.property(\"error\")",
+									"    pm.expect(jsonData).to.have.property(\"errorCode\")",
+									"    pm.expect(jsonData.errorCode).to.eql(404)",
+									"});",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/campaign/12345",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"campaign",
+								"12345"
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"protocolProfileBehavior": {}
+		}
+	],
+	"variable": [
+		{
+			"id": "1be7649b-27dc-4bbe-b821-4f4f93a51067",
+			"key": "adID",
+			"value": "AyEQdItcVPhBfXRV0BL0"
+		},
+		{
+			"id": "025e04d3-5356-4ba3-8991-73ea63248089",
+			"key": "campaignID",
+			"value": "CKsWQClA8gBzMtfDTOqj"
 		}
 	],
 	"protocolProfileBehavior": {}
