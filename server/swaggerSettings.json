@@ -108,10 +108,6 @@
                 "Campaign": {
                     "type": "object",
                     "properties": {
-                        "campaignId": {
-                            "type": "string",
-                            "example": "7QKUcWNNRkIQ89jUzqo2"
-                        },
                         "campaignData": {
                             "type": "array",
                             "items": {
@@ -166,36 +162,6 @@
                                     }
                                 }
                             }
-                        }
-                    }
-                },
-                "put": {
-                    "tags": ["campaign"],
-                    "summary": "Update an existing campaign",
-                    "requestBody": {
-                        "required": true,
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Campaign"
-                                }
-                            }
-                        }
-                    },
-                    "responses": {
-                        "200": {
-                            "description": "Successful Operation",
-                            "content": {
-                                "text/plain": {
-                                    "schema": {
-                                        "type": "string",
-                                        "example": "Success"
-                                    }
-                                }
-                            }
-                        },
-                        "500": {
-                            "description": "Improper data inputs"
                         }
                     }
                 },
@@ -263,6 +229,36 @@
                         },
                         "500": {
                             "description": "Error retrieving info"
+                        }
+                    }
+                },
+                "put": {
+                    "tags": ["campaign"],
+                    "summary": "Update an existing campaign",
+                    "requestBody": {
+                        "required": true,
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Campaign"
+                                }
+                            }
+                        }
+                    },
+                    "responses": {
+                        "200": {
+                            "description": "Successful Operation",
+                            "content": {
+                                "text/plain": {
+                                    "schema": {
+                                        "type": "string",
+                                        "example": "Success"
+                                    }
+                                }
+                            }
+                        },
+                        "500": {
+                            "description": "Improper data inputs"
                         }
                     }
                 },
@@ -364,6 +360,58 @@
                             "description": "Server Error"
                         }
                     }
+                }
+            },
+            "/campaign/delete/{campaignId}": {},
+            "/ad/{adId}": {
+                "get": {
+                    "tags": ["ad"],
+                    "summary": "Get the ad by ID",
+                    "parameters": [
+                        {
+                            "in": "path",
+                            "name": "adId",
+                            "description": "ID of ad to return",
+                            "required": true,
+                            "schema": {
+                                "type": "string"
+                            },
+                            "example": "vEXzgrwMg1TIsBPacmo6"
+                        },
+                        {
+                            "in": "query",
+                            "name": "impression",
+                            "required": false,
+                            "schema": {
+                                "type": "boolean"
+                            },
+                            "example": true
+                        },
+                        {
+                            "in": "query",
+                            "name": "clicked",
+                            "required": false,
+                            "schema": {
+                                "type": "boolean"
+                            },
+                            "example": true
+                        }
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "Successful Operation",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "$ref": "#/components/schemas/AdWithoutId"
+                                    }
+                                }
+                            }
+                        },
+                        "500": {
+                            "description": "Error retrieving info"
+                        }
+                    }
                 },
                 "put": {
                     "tags": ["ad"],
@@ -375,12 +423,7 @@
                             "application/json": {
                                 "schema": {
                                     "type": "object",   
-                                    "required": ["adId"],
                                     "properties": {
-                                        "adId": {
-                                            "type": "string",
-                                            "example": "xGpTCGJSIDX0Z8RbMbkb"
-                                        },
                                         "adName": {
                                             "type": "string",
                                             "example":"iPhoneWinter2020"
@@ -444,58 +487,6 @@
                         },
                         "500": {
                             "description": "Improper data inputs"
-                        }
-                    }
-                }
-            },
-            "/campaign/delete/{campaignId}": {},
-            "/ad/{adId}": {
-                "get": {
-                    "tags": ["ad"],
-                    "summary": "Get the ad by ID",
-                    "parameters": [
-                        {
-                            "in": "path",
-                            "name": "adId",
-                            "description": "ID of ad to return",
-                            "required": true,
-                            "schema": {
-                                "type": "string"
-                            },
-                            "example": "vEXzgrwMg1TIsBPacmo6"
-                        },
-                        {
-                            "in": "query",
-                            "name": "impression",
-                            "required": false,
-                            "schema": {
-                                "type": "boolean"
-                            },
-                            "example": true
-                        },
-                        {
-                            "in": "query",
-                            "name": "clicked",
-                            "required": false,
-                            "schema": {
-                                "type": "boolean"
-                            },
-                            "example": true
-                        }
-                    ],
-                    "responses": {
-                        "200": {
-                            "description": "Successful Operation",
-                            "content": {
-                                "application/json": {
-                                    "schema": {
-                                        "$ref": "#/components/schemas/AdWithoutId"
-                                    }
-                                }
-                            }
-                        },
-                        "500": {
-                            "description": "Error retrieving info"
                         }
                     }
                 },
