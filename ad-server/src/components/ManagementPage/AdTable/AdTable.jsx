@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useSortBy, useTable, useGroupBy, useExpanded } from "react-table";
+import axios from "axios";
 
 const Styles = styled.div`
   padding: 1rem;
@@ -106,58 +107,112 @@ function Table({ columns, data }) {
   );
 }
 
-function AdTable({ adTableData }) {
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: "Campaign",
-        accessor: "campaign",
-      },
-      {
-        Header: "Impressions",
-        accessor: "impressions",
-        aggregate: "sum",
-        Aggregated: ({ value }) => `${value} (total)`
-      },
-      {
-        Header: "Clicks",
-        accessor: "clicks",
-        aggregate: "sum",
-        Aggregated: ({ value }) => `${value} (total)`
-      },
-      {
-        Header: "Conversions",
-        accessor: "conversions",
-        aggregate: "sum",
-        Aggregated: ({ value }) => `${value} (total)`
-      },
-      {
-        Header: "Ad Name",
-        accessor: "adName",
-        aggregate: "uniqueCount",
-        Aggregated: ({ value }) => `${value} unique name(s)`
-      },
-      {
-        Header: "Ad Size",
-        accessor: "adSize",
-        aggregate: "uniqueCount",
-        Aggregated: ({ value }) => `${value} unique ad sizes`
-      },
-      {
-        Header: "Last Modified",
-        accessor: "lastModified",
-        aggregate: "uniqueCount",
-        Aggregated: ({ value }) => `${value} unique date(s)`
-      },   
-    ],
-    []
-  );
+const columns = [
+    {
+      Header: "Campaign",
+      accessor: "campaign",
+    },
+    {
+      Header: "Impressions",
+      accessor: "impressions",
+      aggregate: "sum",
+      Aggregated: ({ value }) => `${value} (total)`
+    },
+    {
+      Header: "Clicks",
+      accessor: "clicks",
+      aggregate: "sum",
+      Aggregated: ({ value }) => `${value} (total)`
+    },
+    {
+      Header: "Conversions",
+      accessor: "conversions",
+      aggregate: "sum",
+      Aggregated: ({ value }) => `${value} (total)`
+    },
+    {
+      Header: "Ad Name",
+      accessor: "adName",
+      aggregate: "uniqueCount",
+      Aggregated: ({ value }) => `${value} unique name(s)`
+    },
+    {
+      Header: "Ad Size",
+      accessor: "adSize",
+      aggregate: "uniqueCount",
+      Aggregated: ({ value }) => `${value} unique ad sizes`
+    },
+    {
+      Header: "Last Modified",
+      accessor: "lastModified",
+      aggregate: "uniqueCount",
+      Aggregated: ({ value }) => `${value} unique date(s)`
+    },   
+  ];
 
-  return (
-    <Styles>
-      <Table columns={columns} data={adTableData} />
-    </Styles>
-  );
+const tableData = [
+  {
+    adName: "SwitchItUp",
+    adSize: "Small",
+    campaign: "Nintendo Switch",
+    lastModified: "10-10-2020",
+    impressions: 100,
+    clicks: 10,
+    conversions: 1,
+  },
+  {
+    adName: "Apples4U",
+    adSize: "Medium",
+    campaign: "Apples",
+    lastModified: "10-10-2020",
+    impressions: 2000,
+    clicks: 300,
+    conversions: 50,
+  },
+  {
+    adName: "OrangesRCool",
+    adSize: "Large",
+    campaign: "Oranges",
+    lastModified: "10-10-2020",
+    impressions: 10,
+    clicks: 0,
+    conversions: 0,
+  },
+  {
+    adName: "BigSwitch",
+    adSize: "Large",
+    campaign: "Nintendo Switch",
+    lastModified: "01-21-2020",
+    impressions: 400,
+    clicks: 300,
+    conversions: 290,
+  },
+];
+
+class AdTable extends React.Component {
+  state = { ads: [] }
+  
+  componentDidMount() {
+    axios.get('/ad')
+      .then(res => {
+        const ads = res.data;
+        console.log(ads);
+        this.setState({ ads })
+        console.log(this.state.ads);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+
+  // Change tableData to ads once headers and attributes are solidified
+  render() {
+    return (
+      <Styles>
+        <Table columns={columns} data={tableData} />
+      </Styles>
+    )
+  };
 }
 
 export default AdTable;
