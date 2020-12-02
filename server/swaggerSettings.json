@@ -367,14 +367,62 @@
                 },
                 "put": {
                     "tags": ["ad"],
-                    "summary": "Update an existing ad",
+                    "summary": "Update an existing ad, the adId field is required to send a PUT",
                     "requestBody": {
                         "required": true,
                         "description": "Ad object that needs to be updated to the database",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Ad"
+                                    "type": "object",   
+                                    "required": ["adId"],
+                                    "properties": {
+                                        "adId": {
+                                            "type": "string",
+                                            "example": "xGpTCGJSIDX0Z8RbMbkb"
+                                        },
+                                        "adName": {
+                                            "type": "string",
+                                            "example":"iPhoneWinter2020"
+                                        },
+                                        "campaign": {
+                                            "type": "string",
+                                            "example": "7QKUcWNNRkIQ89jUzqo7"
+                                        },
+                                        "size": {
+                                            "type": "string",
+                                            "enum": ["small", "medium", "large"]
+                                        },
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Repair your iPhone with just this one kit"
+                                        },
+                                        "subtitle": {
+                                            "type": "string",
+                                            "example": "iFixIt has all the tools you need to repair your iPhone yourself"
+                                        },
+                                        "buttonAlign": {
+                                            "type": "string",
+                                            "enum": ["left", "center", "right"]
+                                        },
+                                        "buttonText": {
+                                            "type": "string",
+                                            "example": "Click here"
+                                        },
+                                        "url": {
+                                            "type": "string"
+                                        },
+                                        "altText": {
+                                            "type": "string"
+                                        },
+                                        "imageFile": {
+                                            "type": "TODO"
+                                        },
+                                        "statistics": {
+                                            "type": "object",
+                                            "$ref": "#/components/schemas/Impressions"
+                                        }
+                                    }
                                 }
                             }
                         }

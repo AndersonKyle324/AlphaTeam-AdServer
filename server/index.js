@@ -32,6 +32,19 @@ admin.initializeApp({
         'firebase-adminsdk-1vnku@ifixit-ad-server-edd98.iam.gserviceaccount.com',
 })
 
+const missingDataError = (item) => {
+    return {
+        error: `${item} does not exist`,
+        errorCode: 404
+    }
+}
+
+const serverError = {
+    error: `Internal Server Error`,
+    errorCode: 503
+}
+
+
 // Initialize our DB
 const db = admin.firestore()
 
@@ -81,18 +94,12 @@ app.get('/campaign/:id', async (req, res) => {
         const docRef = db.collection('campaign').doc(campaignId)
         const campaignSnapshot = await docRef.get()
         if (!campaignSnapshot.exists) {
-            res.status(404).send({
-                error: 'campaign does not exist',
-                errorCode: 404,
-            })
+            res.status(404).send(missingDataError('campaign'))
         }
         const campaign = campaignSnapshot.data()
         res.status(200).send(campaign)
     } catch (e) {
-        res.status(500).send({
-            error: 'Error retriving ad info',
-            errorCode: 503,
-        })
+        res.status(500).send(serverError)
     }
 })
 
@@ -185,6 +192,50 @@ app.post('/campaign', async (req, res) => {
     }
 })
 
+//Edits data with given resposne data and adId
+app.put('/ad', async (req, res) => {
+    try {
+        const adDoc = db.collection('ads').doc(req.body.adId)
+        const ad = await adDoc.get()
+        if (!ad.exists) {
+            res.status(404).send(missingDataError('Ad'))
+            return
+        }
+        if (req.body.impression || req.body.clicked) {
+            let impressions = ad.impressions
+            if (!impressions) {
+                impressions = {
+                    seen: 0,
+                    clicks: 0,
+                    ctr: 0
+                }
+            }
+            if (req.body.impression) {
+                impressions.seen += 1
+            }
+            if (req.body.clicked) {
+                impressions.clicks += 1
+            }
+            impressions.ctr =
+                impressions.clicks !== 0
+                    ? impressions.clicks / impressions.seen
+                    : 0
+            req.body.adData = {...req.body.adData, ...impressions}
+        }
+        await adDoc
+            .set(req.body.adData)
+            .then(console.log(`Succesfully modified ad ${req.body.adId}`))
+            //Catches error in the case api request fails
+            .catch((err) => {
+                console.log(err)
+            })
+        res.status(200).send('Success')
+    } catch (e) {
+        console.log(e)
+        res.status(503).send({ error: 'Return this', errorCode: 503 })
+    }
+})
+
 //Creates data with given resposne data and adId
 app.post('/ad', async (req, res) => {
     try {
@@ -208,32 +259,6 @@ app.post('/ad', async (req, res) => {
     } catch (e) {
         console.error(e)
         res.status(503).send({ error: 'Internal Server Error', errorCode: 503 })
-    }
-})
-
-//Edits data with given resposne data and adId
-app.put('/ad', async (req, res) => {
-    try {
-        const adDoc = db.collection('ads').doc(req.body.adId)
-        const ad = await adDoc.get()
-        if (!ad.exists) {
-            res.status(404).send({
-                error: `Cannot find ad with ID ${req.body.adId}`,
-                errorCode: 404,
-            })
-            return
-        }
-        await adDoc
-            .set(req.body.adData)
-            .then(console.log(`Succesfully modified ad ${req.body.adId}`))
-            //Catches error in the case api request fails
-            .catch((err) => {
-                console.log(err)
-            })
-        res.status(200).send('Success')
-    } catch (e) {
-        console.error(e)
-        res.status(503).send({ error: 'Improper data inputs', errorCode: 503 })
     }
 })
 
@@ -293,23 +318,9 @@ app.get('/ad/:id', async (req, res) => {
         const docRef = db.collection('ads').doc(docId)
         const adSnapshot = await docRef.get()
         if (!adSnapshot.exists) {
-            throw new Error('BROKEN')
+            res.status(404).send({error: ''})
         }
         const ad = adSnapshot.data()
-        if (req.query.impression || req.query.clicked) {
-            const impressions = ad.impressions
-            if (req.query.impression) {
-                impressions.seen += 1
-            }
-            if (req.query.clicked) {
-                impressions.clicks += 1
-            }
-            impressions.ctr =
-                impressions.clicks !== 0
-                    ? impressions.clicks / impressions.seen
-                    : 0
-            docRef.update({ impressions })
-        }
         res.status(200).send(ad)
     } catch (e) {
         res.status(500).send({ error: 'Error retrieving ad info' })
@@ -334,19 +345,19 @@ app.post('/user/create', async (req, res) => {
         })
 })
 
-// //Automated postman test, runs everystime when server start
-// newman.run(
-//     {
-//         collection: require('./postman.json'),
-//         reporters: 'cli',
-//     },
-//     function (err) {
-//         if (err) {
-//             throw err
-//         }
-//         console.log('collection run complete!')
-//     }
-// )
+//Automated postman test, runs everystime when server start
+newman.run(
+    {
+        collection: require('./postman.json'),
+        reporters: 'cli',
+    },
+    function (err) {
+        if (err) {
+            throw err
+        }
+        console.log('collection run complete!')
+    }
+)
 
 app.listen(port, () => {
     console.log(`Alpha Team Ad Server listening on port ${port}`)
