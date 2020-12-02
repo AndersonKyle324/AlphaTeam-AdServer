@@ -318,7 +318,7 @@ app.get('/ad/:id', async (req, res) => {
         const docRef = db.collection('ads').doc(docId)
         const adSnapshot = await docRef.get()
         if (!adSnapshot.exists) {
-            res.status(404).send({error: ''})
+            res.status(404).send(missingDataError('ad'))
         }
         const ad = adSnapshot.data()
         res.status(200).send(ad)
