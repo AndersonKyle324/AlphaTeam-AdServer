@@ -138,10 +138,10 @@ app.get('/ad', async (req, res) => {
 })
 
 //Edits data with given resposne data and campaignID
-app.put('/campaign', async (req, res) => {
+app.put('/campaign/:id', async (req, res) => {
     //We get the campaignID from the request and replace the old data with the new.
     try {
-        const campaignDoc = db.collection('campaign').doc(req.body.campaignId)
+        const campaignDoc = db.collection('campaign').doc(req.params.id)
         const campaignExists = await campaignDoc.get()
         if (!campaignExists.exists) {
             res.status(404).send({
@@ -193,9 +193,9 @@ app.post('/campaign', async (req, res) => {
 })
 
 //Edits data with given resposne data and adId
-app.put('/ad', async (req, res) => {
+app.put('/ad/:id', async (req, res) => {
     try {
-        const adDoc = db.collection('ads').doc(req.body.adId)
+        const adDoc = db.collection('ads').doc(req.params.id)
         const ad = await adDoc.get()
         if (!ad.exists) {
             res.status(404).send(missingDataError('Ad'))
