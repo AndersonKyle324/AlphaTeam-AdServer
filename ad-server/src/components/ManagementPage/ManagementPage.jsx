@@ -7,8 +7,47 @@ import PublishModal from "./PublishModal/PublishModal";
 import CampaignModal from "./CampaignModal/CampaignModal";
 import Advert from "./Advert/Advert";
 
+// Change to GET from database
+const tableData = [
+  {
+    adName: "SwitchItUp",
+    adSize: "Small",
+    campaign: "Nintendo Switch",
+    lastModified: "10-10-2020",
+    impressions: 100,
+    clicks: 10,
+    conversions: 1,
+  },
+  {
+    adName: "Apples4U",
+    adSize: "Medium",
+    campaign: "Apples",
+    lastModified: "10-10-2020",
+    impressions: 2000,
+    clicks: 300,
+    conversions: 50,
+  },
+  {
+    adName: "OrangesRCool",
+    adSize: "Large",
+    campaign: "Oranges",
+    lastModified: "10-10-2020",
+    impressions: 10,
+    clicks: 0,
+    conversions: 0,
+  },
+  {
+    adName: "BigSwitch",
+    adSize: "Large",
+    campaign: "Nintendo Switch",
+    lastModified: "01-21-2020",
+    impressions: 400,
+    clicks: 300,
+    conversions: 290,
+  },
+];
+
 export default () => {
-  const [showAdTable, setShowAdTable] = useState(true);
   const [showPub, setShowPub] = useState(false);
   const [showCampaign, setShowCampaign] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -46,7 +85,7 @@ export default () => {
                 show={showAddModal}
                 onHide={() => setShowAddModal(false)}
               />
-              <AdTable show={showAdTable} />
+              <AdTable adTableData={tableData}/>
               <CampaignModal
                 show={showCampaign}
                 onHide={() => setShowCampaign(false)}
