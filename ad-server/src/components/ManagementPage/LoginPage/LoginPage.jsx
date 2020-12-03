@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { Button, Form, Alert } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
-import "./LoginPage.css";
 import firebase from "firebase";
-
+import "./LoginPage.css";
 
 export default () => {
   const [inputs, setInputs] = useState({
@@ -15,18 +14,18 @@ export default () => {
   const history = useHistory();
   const handleSubmit = async () => {
     if (inputs.username.trim() && inputs.password.trim()) {
-      firebase.auth()
+      firebase
+        .auth()
         .signInWithEmailAndPassword(inputs.username, inputs.password)
         .then(() => {
           //signed in
           history.push("/management");
-
         })
         .catch((error) => {
-          const errorCode = error.code
-          const errorMessage = error.message
-          console.error(`${errorCode}: ${errorMessage}`)
-        })
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.error(`${errorCode}: ${errorMessage}`);
+        });
     } else {
       setInputs({ ...inputs, error: true });
     }
