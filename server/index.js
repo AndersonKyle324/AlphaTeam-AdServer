@@ -257,7 +257,7 @@ app.post('/ad', async (req, res) => {
             .catch((err) => {
                 console.log(err)
             })
-        //Add the campaign Id exist, add the add to the campaign
+        //Add the campaign Id exist, add the ad to the campaign
         if (req.body.adData.campaign) {
             const docRef = db.collection('campaign').doc(req.body.adData.campaign)
             const campaignSnapshot = await docRef.get()
@@ -292,6 +292,17 @@ app.delete('/ad/:id', async (req, res) => {
             .catch((err) => {
                 console.log(err)
             })
+        const ad = adExists.data()
+        //Update the campaign ads array
+        if (ad.campaign) {
+            const docRef = db.collection('campaign').doc(ad.campaign)
+            const campaignSnapshot = await docRef.get()
+            if (campaignSnapshot.exists) {
+                const unionRes = await docRef.update({
+                    ads: admin.firestore.FieldValue.arrayRemove(docId)
+                });
+            }
+        }
         res.status(200).send('Success')
     } catch (e) {
         res.status(503).send({ error: 'Error retreiving info', errorCode: 503 })
