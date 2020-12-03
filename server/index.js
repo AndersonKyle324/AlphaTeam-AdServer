@@ -368,19 +368,19 @@ app.post('/user/', async (req, res) => {
         })
 })
 
-// //Automated postman test, runs everystime when server start
-// newman.run(
-//     {
-//         collection: require('./postman.json'),
-//         reporters: 'cli',
-//     },
-//     function (err) {
-//         if (err) {
-//             throw err
-//         }
-//         console.log('collection run complete!')
-//     }
-// )
+//Automated postman test, runs everystime when server start
+newman.run(
+    {
+        collection: require('./postman.json'),
+        reporters: 'cli',
+    },
+    function (err) {
+        if (err) {
+            throw err
+        }
+        console.log('collection run complete!')
+    }
+)
 
 app.listen(port, () => {
     console.log(`Alpha Team Ad Server listening on port ${port}`)
