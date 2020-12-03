@@ -262,7 +262,6 @@ app.post('/ad', async (req, res) => {
             const docRef = db.collection('campaign').doc(req.body.adData.campaign)
             const campaignSnapshot = await docRef.get()
             if (campaignSnapshot.exists) {
-                console.log(adId)
                 const unionRes = await docRef.update({
                     ads: admin.firestore.FieldValue.arrayUnion(adId)
                 });
