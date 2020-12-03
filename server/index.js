@@ -188,7 +188,7 @@ app.post('/campaign', async (req, res) => {
         res.status(200).send({id: doc.id})
     } catch (e) {
         console.log(e)
-        res.status(500).send({ error: 'Improper data inputs', errorCode: 503 })
+        res.status(503).send({ error: 'Improper data inputs', errorCode: 503 })
     }
 })
 
@@ -244,9 +244,11 @@ app.post('/ad', async (req, res) => {
             return
         }
         const adDoc = db.collection('ads')
+        let adId = ""
         const doc = await adDoc
             .add(req.body.adData)
             .then((ad) => {
+                    adId = ad.id
                     console.log(`Succesfully created ad ${ad.id}`)
                     return ad
                 }
@@ -255,6 +257,17 @@ app.post('/ad', async (req, res) => {
             .catch((err) => {
                 console.log(err)
             })
+        //Add the campaign Id exist, add the add to the campaign
+        if (req.body.adData.campaign) {
+            const docRef = db.collection('campaign').doc(req.body.adData.campaign)
+            const campaignSnapshot = await docRef.get()
+            if (campaignSnapshot.exists) {
+                console.log(adId)
+                const unionRes = await docRef.update({
+                    ads: admin.firestore.FieldValue.arrayUnion(adId)
+                });
+            }
+        }
         res.status(200).send({id: doc.id})
     } catch (e) {
         console.error(e)
@@ -282,7 +295,7 @@ app.delete('/ad/:id', async (req, res) => {
             })
         res.status(200).send('Success')
     } catch (e) {
-        res.status(500).send({ error: 'Error retreiving info', errorCode: 503 })
+        res.status(503).send({ error: 'Error retreiving info', errorCode: 503 })
     }
 })
 
@@ -304,7 +317,7 @@ app.delete('/campaign/:id', async (req, res) => {
             })
         res.status(200).send('Success')
     } catch (e) {
-        res.status(500).send({ error: 'Error retreiving info', errorCode: 503 })
+        res.status(503).send({ error: 'Error retreiving info', errorCode: 503 })
     }
 })
 
@@ -327,7 +340,7 @@ app.get('/ad/:id', async (req, res) => {
     }
 })
 
-app.post('/user/create', async (req, res) => {
+app.post('/user/', async (req, res) => {
     admin
         .auth()
         .createUser(req.body)
@@ -337,7 +350,7 @@ app.post('/user/create', async (req, res) => {
             res.status(200).send(userRecord)
         })
         .catch(function (error) {
-            res.status(500).send({
+            res.status(503).send({
                 error: 'Cannot create user',
                 errorCode: 503,
             })
@@ -345,19 +358,19 @@ app.post('/user/create', async (req, res) => {
         })
 })
 
-//Automated postman test, runs everystime when server start
-newman.run(
-    {
-        collection: require('./postman.json'),
-        reporters: 'cli',
-    },
-    function (err) {
-        if (err) {
-            throw err
-        }
-        console.log('collection run complete!')
-    }
-)
+// //Automated postman test, runs everystime when server start
+// newman.run(
+//     {
+//         collection: require('./postman.json'),
+//         reporters: 'cli',
+//     },
+//     function (err) {
+//         if (err) {
+//             throw err
+//         }
+//         console.log('collection run complete!')
+//     }
+// )
 
 app.listen(port, () => {
     console.log(`Alpha Team Ad Server listening on port ${port}`)
