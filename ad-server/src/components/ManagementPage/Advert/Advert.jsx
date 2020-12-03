@@ -5,7 +5,7 @@ export default (props) => {
   var width=400;
   var height=200;
   
-  if(props.ad.size === "lg"){
+  if(props.ad.size === "Large"){
     width=960;
   }
   

@@ -14,6 +14,21 @@ export default () => {
   const [showCampaign, setShowCampaign] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
 
+  const testAd = {
+    adName: "testAd",
+    altText: "No picture",
+    buttonAlign: "Left",
+    buttonText: "Go Here",
+    campaign: "TestCampaign",
+    size: "Large",
+    impressions: 100,
+    clicks: 20,
+    conversions: 30,
+    subtitle: "this is the subtitle",
+    title: "TestAd Title",
+    url: "http://www.Google.com",
+  };
+
   const history = useHistory();
   const logout = () => {
     firebase
@@ -62,7 +77,7 @@ export default () => {
                 onHide={() => setShowCampaign(false)}
               />
               <PublishModal
-                ad={{ id: "name1", campaignId: "Test2" }}
+                ad={testAd}
                 show={showPub}
                 onHide={() => setShowPub(false)}
               />
