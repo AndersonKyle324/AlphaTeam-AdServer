@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Form, Button, Modal } from "react-bootstrap";
-import axios from 'axios';
+import axios from "axios";
 
 export default (props) => {
   const [ad, setAd] = useState({
@@ -13,7 +13,7 @@ export default (props) => {
       alert("A url must be provided");
     } else {
       //provide json with ad react component
-      axios.post('/ad', ad ).then(res => {
+      axios.post("/ad", ad).then((res) => {
         console.log(res);
         // res == error ? alert(res.error) : props.onHide;
       });

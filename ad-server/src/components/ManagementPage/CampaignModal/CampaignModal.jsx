@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
-import axios from 'axios';
+import axios from "axios";
 
 export default (props) => {
   const [campaign, setCampaign] = useState({
@@ -14,7 +14,7 @@ export default (props) => {
       alert("A name must be provided");
     } else {
       console.log("Posting " + campaign.campaignId);
-      axios.post('/campaign', campaign ).then(res => {
+      axios.post("/campaign", campaign).then((res) => {
         console.log(res);
         // res == error ? alert(res.error) : props.onHide;
       });

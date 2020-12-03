@@ -38,14 +38,12 @@ export default () => {
         <Row>
           <Col sm={9}>
             <div className="nav-bar">
-              <h3 className="open-ad-table">
-                Ad Board
-              </h3>
+              <h3 className="open-ad-table">Ad Board</h3>
               <AddModal
                 show={showAddModal}
                 onHide={() => setShowAddModal(false)}
               />
-              <AdTable/>
+              <AdTable />
               <CampaignModal
                 show={showCampaign}
                 onHide={() => setShowCampaign(false)}

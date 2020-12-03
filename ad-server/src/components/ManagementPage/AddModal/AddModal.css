@@ -1,198 +1,64 @@
-/* CSS Style for Modal: Add/Edit an Ad */
-
-/* Padding and background-color for containers */
-.design,
-.info,
-.preview,
-.design1,
-.design2,
-.imageUp,
-.altText,
-.buttonUrl {
-  padding: 0.5rem 1rem;
-  background-color: inherit;
-  width: auto;
-}
-
-/* Left column background */
-.info,
-.imageUp,
-.altText {
-  margin-left: 0.5rem;
-  background-color: #eceff1;
-}
-
-/* Ad Elements Editing Area Max Width */
-.design1,
-.design2 {
-  max-width: 600px;
-}
-
-/* Upload Image Description Text */
-p {
-  margin: 0.25rem;
-  font-size: 0.75rem;
-}
-
-h2 {
-  margin: 1rem 0;
-}
-
-/* Form Labels */
-label {
-  font-size: 0.875rem;
-  font-weight: 600;
-}
-
-/* Form Items are block elements */
-label,
-input,
-button {
-  display: block;
-}
-
-/* Ad Preview Placeholder */
-.blacksquare {
-  color: #f1f1f1;
-  text-align: center;
-  padding: 18%;
-  background-color: #333;
-  width: 64%;
-  height: auto;
-  border-radius: 4px;
-}
-
-/* Grid Area Stuff */
-.title {
-  grid-area: title;
-  padding: 0 1rem;
-  align-self: end;
-  text-transform: uppercase;
-}
-
-.actionButtons {
-  grid-area: actionButtons;
-  justify-self: right;
-  font-size: 1rem;
-  min-width: 280px;
-}
-
-.info {
-  grid-area: info;
-  border-radius: 8px 8px 0 0;
-  padding: 1rem 1rem 0.5rem 1rem;
-}
-
 .preview {
-  grid-area: preview;
-  padding: 0 1rem;
-}
-
-.imageUp {
-  grid-area: imageUp;
-  padding-bottom: 2rem;
-}
-
-.design1 {
-  grid-area: design1;
-}
-
-.design2 {
-  grid-area: design2;
-}
-
-.altText {
-  grid-area: altText;
-  border-radius: 0 0 8px 8px;
-}
-
-.buttonUrl {
-  grid-area: buttonUrl;
-}
-/* End Grid Area stuff */
-
-/* GRID SYSTEM and MAIN CONTAINER Modal*/
-.container {
-  font-family: "Lato", sans-serif;
-  color: #212121;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: auto;
-  grid-template-areas:
-    "title title actionButtons"
-    "info preview preview"
-    "imageUp design1 design2"
-    "altText buttonUrl buttonUrl";
-  padding: 1rem 1rem 0 1rem;
-  margin: 1rem;
-  border-radius: 1rem 1rem 0 0;
-  background-color: #fbfbfb;
-  border: 1px solid #eceff1;
-  box-shadow: 0 -2px 4px #eceff1;
-  max-width: 1000px;
-  min-width: 700px;
-  width: auto;
-}
-
-/* Input Field Styles */
-input[type="text"],
-select,
-textarea {
-  font-size: 0.875rem;
-  font-weight: 400;
   width: 100%;
-  padding: 8px 8px;
-  margin: 0 0 8px 0;
-  display: inline-block;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-  background-color: #fbfbfb;
+  height: 200px;
+  text-align: center;
+  margin: auto;
+  background-image: url(https://images.app.goo.gl/1eGeix2Q7nznNdJJ7);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  border: 1px solid #e0e0e0;
+  background-color: #eee;
+  border-radius: 2px;
 }
 
-/* Button Style */
-input[type="submit"],
-.grayButton {
-  padding: 12px;
-  margin: 0.5rem;
-  width: 120px;
-  font-family: inherit;
-  border: none;
-  font-weight: 600;
-  text-transform: uppercase;
-  text-decoration: none;
-  border-radius: 4px;
-  float: right;
-}
-
-/* Blue Button Style */
-input[type="submit"] {
-  background-color: #1975f1;
+.previewText {
   color: #fff;
-  margin: 8px 16px 8px 8px;
-}
-input[type="submit"]:hover {
-  background-color: #1c7eff;
-}
-
-/* Gray Button Style */
-.grayButton {
-  padding: 11px;
-  margin-right: 0;
-  background-color: inherit;
-  border: 2px solid #eceff1;
-  color: #212121;
+  padding: 2em auto;
+  padding-top: 2em;
+  padding-left: 1em;
 }
 
-/* File Upload Border */
-input[type="file"] {
-  border: 1px solid #e1e1e1;
-  padding: 2rem;
+.fakeButton {
+  background-color: rgb(8, 95, 217);
+  color: #fff;
+  border-radius: 4px;
+  padding: 0.5em;
+  margin: 0 auto;
+  width: auto;
+  max-width: 260px;
+  display: inline-block;
+  text-align: center !important;
+  font-weight: 600;
 }
 
-/* Textarea Style */
-textarea {
-  resize: none;
-  font-family: inherit;
-  font-size: 0.875rem;
+.fakeButtonLeft {
+  background-color: rgb(8, 95, 217);
+  color: #fff;
+  border-radius: 4px;
+  padding: 0.5em 1em;
+  margin: 0 auto 0 1em;
+  width: auto;
+  max-width: 260px;
+  display: inline-block;
+  text-align: center !important;
+  font-weight: 600;
+}
+
+.fakeButton p,
+.fakeButtonLeft p {
+  margin: 0;
+}
+
+.form-label,
+.form-file-label {
+  padding-top: 0.5em;
+}
+
+.form-control-file:hover {
+  cursor: pointer;
+}
+
+h3 {
+  font-weight: 800;
 }
