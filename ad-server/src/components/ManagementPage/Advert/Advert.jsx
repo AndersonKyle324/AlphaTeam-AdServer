@@ -1,44 +1,42 @@
 import React from "react";
 import { Card, Button } from "react-bootstrap";
-import { Container } from "react-grid-system";
 
 export default (props) => {
+  var width=400;
+  var height=200;
+  
+  if(props.ad.size === "lg"){
+    width=960;
+  }
+  
   return (
     <Card
       {...props}
       variant="Light"
       border="secondary"
-      // size={props.ad.size}
       style={{
-        height: "150px",
-        width: "500px",
+        "height": height,
+        "width": width,
+        "text-align": props.ad.buttonAlign, 
+        "padding":"2em auto", 
+        "padding-top":"2em", 
+        "padding-left":"1em",
+        "padding-right":"1em", 
+        "font-family": "inherit"
       }}
     >
-      <Card.Img src={props.ad.image} alt={props.ad.altText} />
-      <Card.ImgOverlay>
-        <Container
-          style={{
-            "text-align": "center",
-            "font-family": "inherit",
-            "margin-top": "20px",
-          }}
-          // fluid={props.ad.size}
-        >
-          <Card.Title>{props.ad.title}</Card.Title>
-          <Card.Text>{props.ad.subtitle} </Card.Text>
-          <div
-            className="btn-pos"
-            style={{ "text-align": props.ad.buttonAlign }}
-          >
-            <Button
-              onClick={() => window.open(props.ad.url)}
-              style={{ "": props.ad.buttonAlign }}
-            >
-              {props.ad.buttonText}
-            </Button>
-          </div>
-        </Container>
-      </Card.ImgOverlay>
+      {/* <Card.Img src={props.ad.image} alt={props.ad.altText} /> */}
+      {/* <Card.ImgOverlay> */}
+        <div className="ad-text">
+          <h3>{props.ad.title}</h3>
+          <h5>{props.ad.subtitle}</h5>
+        </div>
+        <div className="redirect-btn">
+          <Button onClick={() => window.open(props.ad.url)}>
+            {props.ad.buttonText}
+          </Button>
+        </div>
+      {/* </Card.ImgOverlay> */}
     </Card>
   );
 };
