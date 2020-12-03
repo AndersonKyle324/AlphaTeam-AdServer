@@ -20,7 +20,6 @@ export default () => {
         .then(() => {
           //signed in
           history.push("/management");
-
         })
         .catch((error) => {
           const errorCode = error.code
