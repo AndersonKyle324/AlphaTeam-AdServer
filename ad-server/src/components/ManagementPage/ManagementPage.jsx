@@ -5,6 +5,8 @@ import AddModal from "./AddModal/AddModal";
 import AdTable from "./AdTable/AdTable";
 import PublishModal from "./PublishModal/PublishModal";
 import CampaignModal from "./CampaignModal/CampaignModal";
+import { useHistory } from "react-router-dom";
+import firebase from "firebase";
 import Advert from "./Advert/Advert";
 
 export default () => {
@@ -12,8 +14,19 @@ export default () => {
   const [showCampaign, setShowCampaign] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
 
+  const history = useHistory();
   const logout = () => {
-    //to do
+    firebase
+      .auth()
+      .signOut()
+      .then(() => {
+        history.push("/");
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.error(`${errorCode}: ${errorMessage}`);
+      });
   };
 
   return (
