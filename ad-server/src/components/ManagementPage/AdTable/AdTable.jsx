@@ -244,41 +244,6 @@ const columns = [
   },
 ];
 
-const tableData = [
-  {
-    adName: "SwitchItUp",
-    size: "Small",
-    campaign: "Nintendo Switch",
-    impressions: 100,
-    clicks: 10,
-    conversions: 1,
-  },
-  {
-    adName: "Apples4U",
-    size: "Medium",
-    campaign: "Apples",
-    impressions: 2000,
-    clicks: 300,
-    conversions: 50,
-  },
-  {
-    adName: "OrangesRCool",
-    size: "Large",
-    campaign: "Oranges",
-    impressions: 10,
-    clicks: 0,
-    conversions: 0,
-  },
-  {
-    adName: "BigSwitch",
-    size: "Large",
-    campaign: "Nintendo Switch",
-    impressions: 400,
-    clicks: 300,
-    conversions: 290,
-  },
-];
-
 class AdTable extends React.Component {
   state = { ads: [] };
 
@@ -287,20 +252,19 @@ class AdTable extends React.Component {
       .get("/ad")
       .then((res) => {
         const ads = res.data;
-        console.log(ads);
 
         const tempArray = [];
         ads.forEach((ad) => {
           var tempAd = {
             adName: ad.adName,
             altText: ad.altText,
-            buttonAlign: ad.buttonAlign,
+            alignment: ad.alignment,
             buttonText: ad.buttonText,
             campaign: ad.campaign,
             size: ad.size,
-            impressions: ad.statistics.impressions.seen,
-            clicks: ad.statistics.impressions.clicks,
-            conversions: ad.statistics.impressions.ctr,
+            impressions: ad.statistics.seen,
+            clicks: ad.statistics.clicks,
+            conversions: ad.statistics.ctr,
             subtitle: ad.subtitle,
             title: ad.title,
             url: ad.url,
@@ -308,18 +272,16 @@ class AdTable extends React.Component {
           tempArray.push(tempAd);
         });
         this.setState({ ads: tempArray });
-        console.log(this.state.ads);
       })
       .catch((err) => {
         console.log(err);
       });
   }
 
-  // Change tableData to ads once headers and attributes are solidified
   render() {
     return (
       <Styles>
-        <Table columns={columns} data={tableData} />
+        <Table columns={columns} data={this.state.ads} />
       </Styles>
     );
   }
