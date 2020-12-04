@@ -8,15 +8,18 @@ export default (props) => {
   });
 
   const handleSubmit = (event) => {
-    //to do for handling form submit
     if (adLocation.url == "") {
       alert("A url must be provided");
     } else {
       //provide json with ad react component
-      axios.post(adLocation.url, props.ad).then((res) => {
-        console.log(res);
-        // res == error ? alert(res.error) : props.onHide;
-      });
+      axios.post(adLocation.url, props.ad)
+        .then((res) => {
+          alert(props.ad.adName + " was successfully uploaded to " + adLocation.url);
+          props.onHide();
+        })
+        .catch(err => {
+          alert(err.message);
+        });
     }
   };
 

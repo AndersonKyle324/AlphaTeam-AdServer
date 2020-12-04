@@ -4,18 +4,20 @@ import axios from "axios";
 
 export default (props) => {
   const [campaign, setCampaign] = useState({
-    campaignName: "",
-    campaignData: [],
+    name: "",
   });
 
   const handleSubmit = () => {
     //to do for handling form submit
-    if (campaign.campaignName == "") {
+    if (campaign.name == "") {
       alert("A name must be provided");
     } else {
-      axios.post("/campaign", campaign).then((res) => {
-        // res.errorCode != 200 ? alert(res.error) : props.onHide;
-      });
+      axios.post("/campaign", {"campaignName": campaign.name})
+        .then((res) => {
+          alert(campaign.name + " campaign was create successfully");
+          props.onHide();
+        })
+        .catch(err => {alert(err.message) });
     }
   };
 
@@ -33,8 +35,8 @@ export default (props) => {
             <Form.Control
               controlId="campaign"
               placeholder="Enter campaign"
-              onChange={(e) => setCampaign({ campaignName: e.target.value })}
-              value={campaign.campaignName}
+              onChange={(e) => setCampaign({ name: e.target.value })}
+              value={campaign.name}
             />
           </Form.Group>
         </Form>
