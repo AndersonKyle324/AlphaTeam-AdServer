@@ -396,8 +396,10 @@ app.post('/ad/upload', upload.single('image'), async(req, res, next) => {
         const blob = bucket.file(req.file.originalname)
         const blobWriter = blob.createWriteStream({
             metadata: {
-                conentType: req.file.mimetype,
-                firebaseStorageDownloadTokens: downloadToken
+                content: req.file.mimetype,
+                metadata: {
+                    firebaseStorageDownloadTokens: downloadToken
+                }
             }
         })
         blobWriter.on('error', (err) => next(err))
