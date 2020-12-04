@@ -131,6 +131,7 @@ app.get('/ad', async (req, res) => {
             const matches = []
             queryRef.forEach((doc) => {
                 matches.push(doc.data())
+                matches[matches.length()-1].id = doc.id
             })
             res.status(200).send(matches)
             return
@@ -141,6 +142,7 @@ app.get('/ad', async (req, res) => {
             .then((snapshot) => {
                 snapshot.forEach((doc) => {
                     adData.push(doc.data())
+                    adData[adData.length - 1].id = doc.id
                 })
             })
             //catching an error if api request fails
