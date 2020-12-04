@@ -1,12 +1,21 @@
 import React from "react";
 import styled from "styled-components";
-import { useSortBy, useTable, useGroupBy, useExpanded } from "react-table";
+import { Button, Alert } from "react-bootstrap";
+import {
+  useRowSelect,
+  useSortBy,
+  useTable,
+  useGroupBy,
+  useExpanded,
+} from "react-table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSort,
   faSortAmountDown,
   faSortAmountDownAlt,
 } from "@fortawesome/free-solid-svg-icons";
+import PublishModal from "../PublishModal/PublishModal";
+import AddModal from "../AddModal/AddModal";
 import axios from "axios";
 
 const Styles = styled.div`
@@ -38,81 +47,163 @@ const Styles = styled.div`
   }
 `;
 
+const IndeterminateCheckbox = React.forwardRef(
+  ({ indeterminate, ...rest }, ref) => {
+    const defaultRef = React.useRef();
+    const resolvedRef = ref || defaultRef;
+
+    React.useEffect(() => {
+      resolvedRef.current.indeterminate = indeterminate;
+    }, [resolvedRef, indeterminate]);
+
+    return (
+      <>
+        <input type="checkbox" ref={resolvedRef} {...rest} />
+      </>
+    );
+  }
+);
+
 function Table({ columns, data }) {
+  const [inputs, setInputs] = React.useState({
+    showPub: false,
+    showAdd: false,
+    selectedAd: {},
+    error: false,
+  });
+
   const {
     getTableProps,
     getTableBodyProps,
     headerGroups,
     rows,
     prepareRow,
-  } = useTable({ columns, data }, useGroupBy, useSortBy, useExpanded);
+    selectedFlatRows,
+  } = useTable(
+    { columns, data },
+    useGroupBy,
+    useSortBy,
+    useExpanded,
+    useRowSelect,
+    (hooks) => {
+      hooks.visibleColumns.push((columns) => [
+        // Create a column for selection
+        {
+          id: "selection",
+          Cell: ({ row }) => (
+            <div>
+              <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+            </div>
+          ),
+        },
+        ...columns,
+      ]);
+    }
+  );
+
+  const openAddModal = () => {
+    if (selectedFlatRows.length !== 1) {
+      setInputs({ ...inputs, error: true });
+    } else {
+      const ad = selectedFlatRows[0].original;
+      setInputs({ ...inputs, selectedAd: ad, showAdd: true, error: false });
+    }
+  };
+
+  const openPublishModal = () => {
+    if (selectedFlatRows.length !== 1) {
+      setInputs({ ...inputs, error: true });
+    } else {
+      const ad = selectedFlatRows[0].original;
+      setInputs({ ...inputs, selectedAd: ad, showPub: true, error: false });
+    }
+  };
 
   return (
-    <table {...getTableProps()}>
-      <thead>
-        {headerGroups.map((headerGroup) => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map((column) => (
-              <th {...column.getHeaderProps()}>
-                {column.canGroupBy ? (
-                  <span {...column.getGroupByToggleProps()}>Σ</span>
-                ) : null}{" "}
-                {column.render("Header")}{" "}
-                <span {...column.getSortByToggleProps()}>
-                  {column.isSorted ? (
-                    column.isSortedDesc ? (
-                      <FontAwesomeIcon icon={faSortAmountDown} />
+    <>
+      <table {...getTableProps()}>
+        <thead>
+          {headerGroups.map((headerGroup) => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map((column) => (
+                <th {...column.getHeaderProps()}>
+                  {column.canGroupBy ? (
+                    <span {...column.getGroupByToggleProps()}>Σ</span>
+                  ) : null}{" "}
+                  {column.render("Header")}{" "}
+                  <span {...column.getSortByToggleProps()}>
+                    {column.isSorted ? (
+                      column.isSortedDesc ? (
+                        <FontAwesomeIcon icon={faSortAmountDown} />
+                      ) : (
+                        <FontAwesomeIcon icon={faSortAmountDownAlt} />
+                      )
                     ) : (
-                      <FontAwesomeIcon icon={faSortAmountDownAlt} />
-                    )
-                  ) : (
-                    <FontAwesomeIcon icon={faSort} />
-                  )}
-                </span>
-              </th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody {...getTableBodyProps()}>
-        {rows.map((row, i) => {
-          prepareRow(row);
-          return (
-            <tr {...row.getRowProps()}>
-              {row.cells.map((cell) => {
-                return (
-                  <td
-                    {...cell.getCellProps()}
-                    style={{
-                      background: cell.isGrouped
-                        ? "#0aff0082"
-                        : cell.isAggregated
-                        ? "#ffa50078"
-                        : cell.isPlaceholder
-                        ? "#ff000042"
-                        : "white",
-                    }}
-                  >
-                    {cell.isGrouped ? (
-                      <>
-                        <span {...row.getToggleRowExpandedProps()}>
-                          {row.isExpanded ? "⇩" : "⇨"}
-                        </span>{" "}
-                        {cell.render("Cell")} ({row.subRows.length})
-                      </>
-                    ) : cell.isAggregated ? (
-                      cell.render("Aggregated")
-                    ) : cell.isPlaceholder ? null : (
-                      cell.render("Cell")
+                      <FontAwesomeIcon icon={faSort} />
                     )}
-                  </td>
-                );
-              })}
+                  </span>
+                </th>
+              ))}
             </tr>
-          );
-        })}
-      </tbody>
-    </table>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {rows.map((row, i) => {
+            prepareRow(row);
+            return (
+              <tr {...row.getRowProps()}>
+                {row.cells.map((cell) => {
+                  return (
+                    <td
+                      {...cell.getCellProps()}
+                      style={{
+                        background: cell.isGrouped
+                          ? "#0aff0082"
+                          : cell.isAggregated
+                          ? "#ffa50078"
+                          : cell.isPlaceholder
+                          ? "#ff000042"
+                          : "white",
+                      }}
+                    >
+                      {cell.isGrouped ? (
+                        <>
+                          <span {...row.getToggleRowExpandedProps()}>
+                            {row.isExpanded ? "⇩" : "⇨"}
+                          </span>{" "}
+                          {cell.render("Cell")} ({row.subRows.length})
+                        </>
+                      ) : cell.isAggregated ? (
+                        cell.render("Aggregated")
+                      ) : cell.isPlaceholder ? null : (
+                        cell.render("Cell")
+                      )}
+                    </td>
+                  );
+                })}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+      <Button onClick={() => openAddModal()} style={{ margin: "10px" }}>Edit Selected Ad</Button>
+      <Button onClick={() => openPublishModal()}>Publish Selected Ad</Button>
+      {inputs.error ? (
+        <Alert variant="warning" className="p-2">
+          Select 1 valid ad
+        </Alert>
+      ) : null}
+      <PublishModal
+        ad={inputs.selectedAd}
+        show={inputs.showPub}
+        onHide={() => setInputs({ ...inputs, showPub: false })}
+      />
+      <AddModal
+        ad={inputs.selectedAd}
+        show={inputs.showAdd}
+        onHide={() => setInputs({ ...inputs, showAdd: false })}
+      />
+    </>
   );
 }
 
@@ -153,41 +244,6 @@ const columns = [
   },
 ];
 
-const tableData = [
-  {
-    adName: "SwitchItUp",
-    size: "Small",
-    campaign: "Nintendo Switch",
-    impressions: 100,
-    clicks: 10,
-    conversions: 1,
-  },
-  {
-    adName: "Apples4U",
-    size: "Medium",
-    campaign: "Apples",
-    impressions: 2000,
-    clicks: 300,
-    conversions: 50,
-  },
-  {
-    adName: "OrangesRCool",
-    size: "Large",
-    campaign: "Oranges",
-    impressions: 10,
-    clicks: 0,
-    conversions: 0,
-  },
-  {
-    adName: "BigSwitch",
-    size: "Large",
-    campaign: "Nintendo Switch",
-    impressions: 400,
-    clicks: 300,
-    conversions: 290,
-  },
-];
-
 class AdTable extends React.Component {
   state = { ads: [] };
 
@@ -196,20 +252,19 @@ class AdTable extends React.Component {
       .get("/ad")
       .then((res) => {
         const ads = res.data;
-        console.log(ads);
 
         const tempArray = [];
         ads.forEach((ad) => {
           var tempAd = {
             adName: ad.adName,
             altText: ad.altText,
-            buttonAlign: ad.buttonAlign,
+            alignment: ad.alignment,
             buttonText: ad.buttonText,
             campaign: ad.campaign,
             size: ad.size,
-            impressions: ad.statistics.impressions.seen,
-            clicks: ad.statistics.impressions.clicks,
-            conversions: ad.statistics.impressions.ctr,
+            impressions: ad.statistics.seen,
+            clicks: ad.statistics.clicks,
+            conversions: ad.statistics.ctr,
             subtitle: ad.subtitle,
             title: ad.title,
             url: ad.url,
@@ -217,18 +272,16 @@ class AdTable extends React.Component {
           tempArray.push(tempAd);
         });
         this.setState({ ads: tempArray });
-        console.log(this.state.ads);
       })
       .catch((err) => {
         console.log(err);
       });
   }
 
-  // Change tableData to ads once headers and attributes are solidified
   render() {
     return (
       <Styles>
-        <Table columns={columns} data={tableData} />
+        <Table columns={columns} data={this.state.ads} />
       </Styles>
     );
   }

@@ -11,15 +11,17 @@ export default (props) => {
     if (adLocation.url == "") {
       alert("A url must be provided");
     } else {
-      //provide json with ad react component
-      axios.post(adLocation.url, props.ad)
-        .then((res) => {
-          alert(props.ad.adName + " was successfully uploaded to " + adLocation.url);
-          props.onHide();
-        })
-        .catch(err => {
-          alert(err.message);
-        });
+      //This is what we would do if a site was prepared to accept our ad object
+      // axios.post(adLocation.url, props.ad)
+      //   .then((res) => {
+      //     alert(props.ad.adName + " was successfully uploaded to " + adLocation.url);
+      //     props.onHide();
+      //   })
+      //   .catch(err => {
+      //     alert(err.message);
+      //   });
+      
+      console.log("Ad published here: "+adLocation.url+" Ad: "+props.ad);
     }
   };
 

@@ -108,12 +108,15 @@
 							}
 						}
 					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{ \n    \"campaignData\": {\n        \"ads\":  [\"tizIVvccQynWGGMzKgt0\", \"GaQ1qjAu8Y0eGM8jamQV\",\"5pOCSHCwbRPxoRZhu3AG\"]\n    }\n}",
+							"raw": "\n{\n    \"campaignName\": \"Test\"\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -263,7 +266,7 @@
 					"response": []
 				},
 				{
-					"name": "Get compaign by id",
+					"name": "Get campaign by id",
 					"event": [
 						{
 							"listen": "test",
@@ -603,7 +606,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"campaignData\": {\n        \"ads\" : [\"bXbuQY6TgfLzxIIPm7vq\", \"tuWAFoxVhONXzLujSDRn\", \"KdBvlc1EbetC8R5Zy8ca\"]\n    }\n}",
+							"raw": "{\n    \"campaignName\": \"Test\",\n    \"ads\": [\"aaaaaaaaaaaaaaaaaaaa\"]\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1030,17 +1033,17 @@
 	],
 	"variable": [
 		{
-			"id": "6270023d-3046-45e2-8409-9d624f41a55e",
+			"id": "d7c2e92d-8220-4323-a22f-eb1c10741051",
 			"key": "adID",
-			"value": "gm7uD34eVzqj6viovsqp"
+			"value": "x2rObBLog2OT1zT6KPhZ"
 		},
 		{
-			"id": "f0c9c1d5-b659-481a-813c-e15e38e0c557",
+			"id": "b7fefc48-f667-4105-8066-659b7781f0eb",
 			"key": "campaignID",
-			"value": "TSu4ipjcIhyZoJfcYiQ5"
+			"value": "22nNIbcM8yhhjncsa1q6"
 		},
 		{
-			"id": "9c97dc7d-caeb-4387-a9f6-817c07a02b0b",
+			"id": "486697eb-93b5-4e81-a68b-2f9c8857a1a2",
 			"key": "adCampaign",
 			"value": "7QKUcWNNRkIQ89jUzqo7"
 		}

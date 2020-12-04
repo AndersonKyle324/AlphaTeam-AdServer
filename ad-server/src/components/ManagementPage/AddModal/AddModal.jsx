@@ -16,29 +16,33 @@ export default (props) => {
     buttonUrl: "",
     imageFile: false,
     src: false, // for preview
+    imageToken: ""
   });
 
-  const handleInputChange = (e) => {};
+  React.useEffect(() => {
+    setAd({ ...ad, 
+            name: props.ad.adName,
+            campaign: props.ad.campaign,
+            size: props.ad.size,
+            altText: props.ad.altText,
+            title: props.ad.title,
+            subtitle: props.ad.subtitle,
+            alignment: props.ad.alignment,
+            buttonText: props.ad.buttonText,
+            buttonUrl: props.ad.url,
+          });
+  }, [props.ad])
 
   // Create an object of formData and post it to the server
   const handleImageUpload = async (e) => {
+    // Set states for image preview
     var imageFile = e.target.files[0];
-    console.log(imageFile)
-    let fileData = new FormData();
-    fileData.set('image', imageFile, `${Date.now()}-${imageFile.name}`)
-    await Axios({
-      method: 'post',
-      url: 'http://localhost:3001/ad/upload',
-      data: fileData,
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
     var src = URL.createObjectURL(imageFile);
-
-    // setAd({ ...ad, imageFile: imageFile, src: src });
+    setAd({ ...ad, imageFile: imageFile, src: src, imageToken: `${Date.now()}-${imageFile.name}`});
+    // Image token created
   };
 
+  // Preview based on alignment
   const renderPreview = () => {
     let align = { backgroundImage: `url(${ad.src})`};
     if (ad.src && ad.alignment !== "" && ad.alignment !== "Select Alignment") {
@@ -70,30 +74,68 @@ export default (props) => {
     }
   };
 
-  const handleSubmit = () => {
+  const clearState = () =>{
+    setAd({
+      name: "",
+      campaign: "",
+      size: "",
+      altText: "",
+      title: "",
+      subtitle: "",
+      alignment: "",
+      buttonText: "",
+      buttonUrl: "",
+      imageFile: false,
+      src: false, // for preview
+      imageToken: ""
+    });
+  }
+
+  // Post ad
+  const handleSubmit = async () => {
     if (ad.name === "") {
-      alert("Provide an Ad Name");
+      alert("Ad Name Required");
     } else {
       const data = {
-        adId: ad.name,
-        adName: ad.name,
-        campaign: ad.campaign,
-        size: ad.size,
-        title: ad.title,
-        subtitle: ad.subtitle,
-        alignment: ad.alignment,
-        buttonText: ad.buttonText,
-        url: ad.buttonUrl,
-        altText: ad.altText,
-        imageFile: null,
-        statistics: {
-          clicks: 0,
-          seen: 0,
-          ctr: 0,
-        },
+          adName: ad.name,
+          campaign: ad.campaign,
+          size: ad.size,
+          title: ad.title,
+          subtitle: ad.subtitle,
+          alignment: ad.alignment,
+          buttonText: ad.buttonText,
+          url: ad.buttonUrl,
+          altText: ad.altText,
+          imageFile: ad.imageFile,
+          imageToken: ad.imageToken,
+          statistics: {
+            clicks: 0,
+            seen: 0,
+            ctr: 0,
+          }
+
       };
       console.log(data);
-      //post ad data to server
+      // Post ad data
+      await Axios.post('http://localhost:3001/ad', data)
+        .then((response) => console.log(response))
+        .catch((error) => console.log(error));
+      
+      // Post image
+      console.log("ImageToken: " + ad.imageToken)
+      let fileData = new FormData();
+      fileData.set('image', ad.imageFile, ad.imageToken);
+      await Axios({
+        method: 'post',
+        url: 'http://localhost:3001/ad/upload',
+        data: fileData,
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then((response) => console.log(response)).catch((error) => console.log(error));
+
+      props.onHide();
+      clearState();
     }
   };
 

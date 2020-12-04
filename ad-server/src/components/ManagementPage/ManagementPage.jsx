@@ -3,7 +3,6 @@ import { Button, Container, Row, Col } from "react-bootstrap";
 import "./ManagementPage.css";
 import AddModal from "./AddModal/AddModal";
 import AdTable from "./AdTable/AdTable";
-import PublishModal from "./PublishModal/PublishModal";
 import CampaignModal from "./CampaignModal/CampaignModal";
 import { useHistory } from "react-router-dom";
 import firebase from "firebase";
@@ -11,7 +10,6 @@ import Advert from "./Advert/Advert";
 import ifixitLogo from "../../images/ifixit_logo.svg";
 
 export default () => {
-  const [showPub, setShowPub] = useState(false);
   const [showCampaign, setShowCampaign] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
 
@@ -69,6 +67,7 @@ export default () => {
         <Col sm={8}>
           <div>
             <AddModal
+              ad={{ adName: "", campaign: "", size: "" }}
               show={showAddModal}
               onHide={() => setShowAddModal(false)}
             />
@@ -76,11 +75,6 @@ export default () => {
             <CampaignModal
               show={showCampaign}
               onHide={() => setShowCampaign(false)}
-            />
-            <PublishModal
-              ad={{ id: "name1", campaignId: "Test2" }}
-              show={showPub}
-              onHide={() => setShowPub(false)}
             />
           </div>
         </Col>
@@ -91,9 +85,6 @@ export default () => {
             </Button>
             <Button variant="secondary" onClick={() => setShowCampaign(true)} style={floatLeft}>
               Create New Campaign
-            </Button>
-            <Button variant="secondary" onClick={() => setShowPub(true)} style={floatLeft}>
-              Publish Ad
             </Button>
           </div>
         </Col>

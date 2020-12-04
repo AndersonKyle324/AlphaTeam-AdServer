@@ -170,7 +170,7 @@ app.put('/campaign/:id', async (req, res) => {
             })
         }
         await campaignDoc
-            .set(req.body.campaignData)
+            .set(req.body)
             .then(
                 console.log(
                     `Succesfully edited data for ${req.body.campaignId}`
@@ -191,11 +191,11 @@ app.post('/campaign', async (req, res) => {
     try {
         const campaignDoc = db.collection('campaign')
         if (!req.body.campaignName) {
-            res.status(400).send({ error: 'Body is missing field: campaignData', errorCode: 400 })
+            res.status(400).send({ error: 'Body is missing field: campaignName', errorCode: 400 })
             return
         }
         const doc = await campaignDoc
-            .add(req.body.campaignName)
+            .add(req.body)
             .then((campaign) => {
                 console.log(
                     `Succesfully created campaign ${campaign.id}`
@@ -259,14 +259,14 @@ app.put('/ad/:id', async (req, res) => {
 //Creates data with given resposne data and adId
 app.post('/ad', async (req, res) => {
     try {
-        if (!req.body.adData) {
-            res.status(400).send({ error: 'Body is missing field: adData', errorCode: 400 })
+        if (!req.body.adName) {
+            res.status(400).send({ error: 'Body is missing field: adName', errorCode: 400 })
             return
         }
         const adDoc = db.collection('ads')
         let adId = ""
         const doc = await adDoc
-            .add(req.body.adData)
+            .add(req.body)
             .then((ad) => {
                     adId = ad.id
                     console.log(`Succesfully created ad ${ad.id}`)
@@ -278,8 +278,8 @@ app.post('/ad', async (req, res) => {
                 console.log(err)
             })
         //Add the campaign Id exist, add the ad to the campaign
-        if (req.body.adData.campaign) {
-            const docRef = db.collection('campaign').doc(req.body.adData.campaign)
+        if (req.body.campaign) {
+            const docRef = db.collection('campaign').doc(req.body.campaign)
             const campaignSnapshot = await docRef.get()
             if (campaignSnapshot.exists) {
                 const unionRes = await docRef.update({
