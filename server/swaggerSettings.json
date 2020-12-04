@@ -107,6 +107,13 @@
                         "campaignName": {
                             "type": "string",
                             "example": "TestCampaignName"
+                        },
+                        "ads":{
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "example": ["1id", "2id", "3id"]
                         }
                     }
                 },
@@ -124,6 +131,7 @@
                     }
                 }
             }
+            
         },
         "paths": {
             "/campaign": {
@@ -167,7 +175,13 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Campaign"
+                                    "type": "object",
+                                    "properties": {
+                                        "campaignName": {
+                                            "type": "string",
+                                            "example": "TestCampaignName"
+                                        }
+                                    }
                                 }
                             }
                         }
