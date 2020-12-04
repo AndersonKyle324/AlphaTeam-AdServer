@@ -166,6 +166,7 @@ app.put('/campaign/:id', async (req, res) => {
                 error: 'Campaign does not exist',
                 errorCode: 404,
             })
+            return
         }
         await campaignDoc
             .set(req.body)

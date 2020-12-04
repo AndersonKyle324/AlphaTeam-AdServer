@@ -34,7 +34,7 @@
 									"});",
 									"",
 									"pm.collectionVariables.set(\"adID\", obj.id);",
-									"pm.collectionVariables.set(\"adCampaign\", req.adData.campaign);",
+									"pm.collectionVariables.set(\"adCampaign\", req.campaign);",
 									"",
 									"",
 									"",
@@ -56,7 +56,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"adData\" : {\n        \"adName\": \"testName\",\n        \"campaign\": \"7QKUcWNNRkIQ89jUzqo7\",\n        \"size\": \"small\",\n        \"title\" : \"testKai\",\n        \"subtitle\" : \"testSubtitle\",\n        \"buttonAlign\": \"left\",\n        \"buttonText\": \"testText\",\n        \"url\": \"testUrl\",\n        \"altText\": \"testText\",\n        \"statistics\" : {   \n            \"impressions\": {\n                \"clicks\" : 0,\n                \"seen\" : 0,\n                \"ctr\" : 0\n            }  \n        }\n    }\n}",
+							"raw": "{ \n    \"adName\": \"testName\",\n    \"campaign\": \"2LeFM9h4RcwLWLijvSK6\",\n    \"size\": \"small\",\n    \"title\" : \"testKai\",\n    \"subtitle\" : \"testSubtitle\",\n    \"alignment\": \"Left\",\n    \"buttonText\": \"testText\",\n    \"imageFile\": {\n        \"imageToken\": \"1607122435182-cover size 400 200.png\",\n        \"size\": \"small\"\n    },\n    \"url\": \"testUrl\",\n    \"altText\": \"testText\",\n    \"statistics\" : {   \n        \"clicks\" : 0,\n        \"seen\" : 0,\n        \"ctr\" : 0\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -158,11 +158,11 @@
 									"});",
 									"",
 									"//Loop over compaign array and check each compaign is an object with property ads",
-									"pm.test(\"Each compaign contains an ads array\", function () {",
+									"pm.test(\"Each compaign contains right property\", function () {",
 									"    for(var i = 0; i < jsonData.length; i++) {",
 									"        var obj = jsonData[i];",
-									"        pm.expect(obj).to.be.an('object').to.have.property('ads');",
-									"        pm.expect(obj.ads).to.be.an(\"array\");",
+									"        pm.expect(obj).to.be.an('object').to.have.property('campaignName');",
+									"        pm.expect(obj.campaignName).to.be.an(\"string\");",
 									"    }   ",
 									"});",
 									""
@@ -216,7 +216,7 @@
 									"        pm.expect(obj).to.have.property('size');",
 									"        pm.expect(obj).to.have.property('title');",
 									"        pm.expect(obj).to.have.property('subtitle');",
-									"        pm.expect(obj).to.have.property('buttonAlign');",
+									"        pm.expect(obj).to.have.property('alignment');",
 									"        pm.expect(obj).to.have.property('buttonText');",
 									"        pm.expect(obj).to.have.property('url');",
 									"        pm.expect(obj).to.have.property('altText');",
@@ -236,10 +236,11 @@
 									"        pm.expect(obj.size).to.be.an('string');",
 									"        pm.expect(obj.title).to.be.an('string');",
 									"        pm.expect(obj.subtitle).to.be.an('string');",
-									"        pm.expect(obj.buttonAlign).to.be.an('string');",
+									"        pm.expect(obj.alignment).to.be.an('string');",
 									"        pm.expect(obj.buttonText).to.be.an('string');",
 									"        pm.expect(obj.url).to.be.an('string');",
 									"        pm.expect(obj.altText).to.be.an('string');",
+									"        pm.expect(obj.imageFile).to.be.an('object');",
 									"        pm.expect(obj.statistics).to.be.an('object');",
 									"    }   ",
 									"});"
@@ -280,9 +281,9 @@
 									"//Get the returned json Data",
 									"let jsonData = pm.response.json();",
 									"",
-									"pm.test(\"Campaign contains ads array\", function () {",
-									"    pm.expect(jsonData).to.have.property('ads');",
-									"    pm.expect(jsonData.ads).to.be.an(\"array\");",
+									"pm.test(\"Campaign contains right property\", function () {",
+									"    pm.expect(jsonData).to.have.property('campaignName');",
+									"    pm.expect(jsonData.campaignName).to.be.an(\"string\");",
 									"});",
 									"",
 									"",
@@ -372,15 +373,14 @@
 									"    pm.expect(obj).to.have.property('size');",
 									"    pm.expect(obj).to.have.property('title');",
 									"    pm.expect(obj).to.have.property('subtitle');",
-									"    pm.expect(obj).to.have.property('buttonAlign');",
+									"    pm.expect(obj).to.have.property('alignment');",
 									"    pm.expect(obj).to.have.property('buttonText');",
 									"    pm.expect(obj).to.have.property('url');",
 									"    pm.expect(obj).to.have.property('altText');",
 									"    pm.expect(obj).to.have.property('statistics');",
-									"    pm.expect(obj.statistics).to.have.property('impressions')",
-									"    pm.expect(obj.statistics.impressions).to.have.property('clicks');",
-									"    pm.expect(obj.statistics.impressions).to.have.property('seen');",
-									"    pm.expect(obj.statistics.impressions).to.have.property('ctr');",
+									"    pm.expect(obj.statistics).to.have.property('clicks');",
+									"    pm.expect(obj.statistics).to.have.property('seen');",
+									"    pm.expect(obj.statistics).to.have.property('ctr');",
 									"});",
 									"",
 									"pm.test(\"Response body should be in the correct value type\", function () {",
@@ -389,7 +389,7 @@
 									"    pm.expect(obj.size).to.be.an('string');",
 									"    pm.expect(obj.title).to.be.an('string');",
 									"    pm.expect(obj.subtitle).to.be.an('string');",
-									"    pm.expect(obj.buttonAlign).to.be.an('string');",
+									"    pm.expect(obj.alignment).to.be.an('string');",
 									"    pm.expect(obj.buttonText).to.be.an('string');",
 									"    pm.expect(obj.url).to.be.an('string');",
 									"    pm.expect(obj.altText).to.be.an('string');",
@@ -467,7 +467,7 @@
 									"        pm.expect(obj).to.have.property('size');",
 									"        pm.expect(obj).to.have.property('title');",
 									"        pm.expect(obj).to.have.property('subtitle');",
-									"        pm.expect(obj).to.have.property('buttonAlign');",
+									"        pm.expect(obj).to.have.property('alignment');",
 									"        pm.expect(obj).to.have.property('buttonText');",
 									"        pm.expect(obj).to.have.property('url');",
 									"        pm.expect(obj).to.have.property('altText');",
@@ -488,8 +488,8 @@
 									"        pm.expect(obj.size).to.be.oneOf([\"small\", \"medium\", \"large\"]);",
 									"        pm.expect(obj.title).to.be.an('string');",
 									"        pm.expect(obj.subtitle).to.be.an('string');",
-									"        pm.expect(obj.buttonAlign).to.be.an('string');",
-									"        pm.expect(obj.buttonAlign).to.be.oneOf([\"left\", \"center\", \"right\"]);",
+									"        pm.expect(obj.alignment).to.be.an('string');",
+									"        pm.expect(obj.alignment).to.be.oneOf([\"Left\", \"Center\", \"Right\"]);",
 									"        pm.expect(obj.buttonText).to.be.an('string');",
 									"        pm.expect(obj.url).to.be.an('string');",
 									"        pm.expect(obj.altText).to.be.an('string');",
@@ -699,7 +699,7 @@
 					"response": []
 				},
 				{
-					"name": "Remove the ad from campaign",
+					"name": "Ad not in campaign anymore",
 					"event": [
 						{
 							"listen": "test",
@@ -1033,19 +1033,19 @@
 	],
 	"variable": [
 		{
-			"id": "d7c2e92d-8220-4323-a22f-eb1c10741051",
+			"id": "c81d1377-1937-4a1b-87c2-b34c535988bd",
 			"key": "adID",
-			"value": "x2rObBLog2OT1zT6KPhZ"
+			"value": "N0kXqOwp89QaMwYBHip1"
 		},
 		{
-			"id": "b7fefc48-f667-4105-8066-659b7781f0eb",
+			"id": "22f293ac-163e-4d82-b9ff-efd456a79585",
 			"key": "campaignID",
-			"value": "22nNIbcM8yhhjncsa1q6"
+			"value": "0F8qqvg2dPfNqMwjgwt1"
 		},
 		{
-			"id": "486697eb-93b5-4e81-a68b-2f9c8857a1a2",
+			"id": "6a56f28c-37f7-4e72-82d8-cb9a6723c07e",
 			"key": "adCampaign",
-			"value": "7QKUcWNNRkIQ89jUzqo7"
+			"value": "2LeFM9h4RcwLWLijvSK6"
 		}
 	],
 	"protocolProfileBehavior": {}
