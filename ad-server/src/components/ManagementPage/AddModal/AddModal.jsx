@@ -78,21 +78,21 @@ export default (props) => {
       alert("Ad Name Required");
     } else {
       const data = {
-        adName: ad.name,
-        campaign: ad.campaign,
-        size: ad.size,
-        title: ad.title,
-        subtitle: ad.subtitle,
-        alignment: ad.alignment,
-        buttonText: ad.buttonText,
-        url: ad.buttonUrl,
-        altText: ad.altText,
-        imageFile: ad.imageFile,
-        statistics: {
-          clicks: 0,
-          seen: 0,
-          ctr: 0,
-        },
+          adName: ad.name,
+          campaign: ad.campaign,
+          size: ad.size,
+          title: ad.title,
+          subtitle: ad.subtitle,
+          alignment: ad.alignment,
+          buttonText: ad.buttonText,
+          url: ad.buttonUrl,
+          altText: ad.altText,
+          imageFile: ad.imageFile,
+          statistics: {
+            clicks: 0,
+            seen: 0,
+            ctr: 0,
+          }
       };
       console.log(data);
       //post ad data to server
