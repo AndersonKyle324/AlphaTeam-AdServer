@@ -1,0 +1,3 @@
+https://www.youtube.com/watch?v=pKd0Rpw7O48&t=932s, basics on learning how to to use Node js Express
+
+https://www.youtube.com/watch?v=Ke90Tje7VS0, for React components to help with the front end
