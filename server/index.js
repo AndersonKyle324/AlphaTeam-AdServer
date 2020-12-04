@@ -131,6 +131,7 @@ app.get('/ad', async (req, res) => {
             const matches = []
             queryRef.forEach((doc) => {
                 matches.push(doc.data())
+                matches[matches.length()-1].id = doc.id
             })
             res.status(200).send(matches)
             return
@@ -141,6 +142,7 @@ app.get('/ad', async (req, res) => {
             .then((snapshot) => {
                 snapshot.forEach((doc) => {
                     adData.push(doc.data())
+                    adData[adData.length - 1].id = doc.id
                 })
             })
             //catching an error if api request fails
@@ -361,9 +363,28 @@ app.get('/ad/:id', async (req, res) => {
         const adSnapshot = await docRef.get()
         if (!adSnapshot.exists) {
             res.status(404).send(missingDataError('ad'))
+            return
         }
         const ad = adSnapshot.data()
         res.status(200).send(ad)
+    } catch (e) {
+        res.status(500).send({ error: 'Error retrieving ad info' })
+    }
+})
+
+app.get('/ad/imageUrl', async (req, res) => {
+    try {
+        const file = bucket.file(req.params.imageToken)
+        if (!file.exists) {
+            res.status(404).send(missingDataError('ad'))
+            return
+        }
+        res.status(200).send(file.getSignedUrl({
+            action: 'read',
+            expires: '12-01-2021'
+        }).then(signedUrl => {
+            signedUrl[0]
+        }))
     } catch (e) {
         res.status(500).send({ error: 'Error retrieving ad info' })
     }

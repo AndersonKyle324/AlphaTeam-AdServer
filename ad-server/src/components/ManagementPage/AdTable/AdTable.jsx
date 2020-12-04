@@ -120,7 +120,7 @@ function Table({ columns, data }) {
   };
 
   return (
-    <>
+    <div style={{margin: '10px'}}>
       <table {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup) => (
@@ -203,7 +203,7 @@ function Table({ columns, data }) {
         show={inputs.showAdd}
         onHide={() => setInputs({ ...inputs, showAdd: false })}
       />
-    </>
+    </div>
   );
 }
 
@@ -272,6 +272,7 @@ class AdTable extends React.Component {
           tempArray.push(tempAd);
         });
         this.setState({ ads: tempArray });
+        console.log(this.state.ads);
       })
       .catch((err) => {
         console.log(err);
