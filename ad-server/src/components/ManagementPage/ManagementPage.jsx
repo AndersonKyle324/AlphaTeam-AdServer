@@ -1,118 +1,111 @@
 import React, { useState } from "react";
-import { Container, Row, Col } from "react-grid-system";
+import { Button, Container, Row, Col } from "react-bootstrap";
 import "./ManagementPage.css";
 import AddModal from "./AddModal/AddModal";
 import AdTable from "./AdTable/AdTable";
 import PublishModal from "./PublishModal/PublishModal";
 import CampaignModal from "./CampaignModal/CampaignModal";
+import { useHistory } from "react-router-dom";
+import firebase from "firebase";
 import Advert from "./Advert/Advert";
-
-// Change to GET from database
-const tableData = [
-  {
-    adName: "SwitchItUp",
-    adSize: "Small",
-    campaign: "Nintendo Switch",
-    lastModified: "10-10-2020",
-    impressions: 100,
-    clicks: 10,
-    conversions: 1,
-  },
-  {
-    adName: "Apples4U",
-    adSize: "Medium",
-    campaign: "Apples",
-    lastModified: "10-10-2020",
-    impressions: 2000,
-    clicks: 300,
-    conversions: 50,
-  },
-  {
-    adName: "OrangesRCool",
-    adSize: "Large",
-    campaign: "Oranges",
-    lastModified: "10-10-2020",
-    impressions: 10,
-    clicks: 0,
-    conversions: 0,
-  },
-  {
-    adName: "BigSwitch",
-    adSize: "Large",
-    campaign: "Nintendo Switch",
-    lastModified: "01-21-2020",
-    impressions: 400,
-    clicks: 300,
-    conversions: 290,
-  },
-];
+import ifixitLogo from "../../images/ifixit_logo.svg";
 
 export default () => {
   const [showPub, setShowPub] = useState(false);
   const [showCampaign, setShowCampaign] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
 
+  const testAd = {
+    adName: "testAd",
+    altText: "No picture",
+    buttonAlign: "Left",
+    buttonText: "Go Here",
+    campaign: "TestCampaign",
+    size: "Large",
+    impressions: 100,
+    clicks: 20,
+    conversions: 30,
+    subtitle: "this is the subtitle",
+    title: "TestAd Title",
+    url: "http://www.Google.com",
+  };
+
+  const history = useHistory();
   const logout = () => {
-    //to do
+    firebase
+      .auth()
+      .signOut()
+      .then(() => {
+        history.push("/");
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.error(`${errorCode}: ${errorMessage}`);
+      });
   };
 
   return (
-    <div className="pageContainer">
-      <Container fluid>
-        <Row className="header">
-          <Col sm={9}>
-            <div className="pageTitle">
-              <h1>
-                <span className="blue">iFixit</span> Ad Server
-              </h1>
-            </div>
-          </Col>
-          <Col sm={3}>
-            <div className="logout-btn">
-              <p className="logout-btn" onClick={() => logout()}>
-                Logout`
-              </p>
-            </div>
-          </Col>
-        </Row>
-        <Row>
-          <Col sm={9}>
-            <div className="nav-bar">
-              <h3 className="open-ad-table">
-                Ad Board
-              </h3>
-              <AddModal
-                show={showAddModal}
-                onHide={() => setShowAddModal(false)}
-              />
-              <AdTable adTableData={tableData}/>
-              <CampaignModal
-                show={showCampaign}
-                onHide={() => setShowCampaign(false)}
-              />
-              <PublishModal
-                ad={{ id: "name1", campaignId: "Test2" }}
-                show={showPub}
-                onHide={() => setShowPub(false)}
-              />
-            </div>
-          </Col>
-          <Col sm={3}>
-            <p className="open-add-modal" onClick={() => setShowAddModal(true)}>
-              New Ad
-            </p>
-            <p
-              className="open-campaign-modal"
-              onClick={() => setShowCampaign(true)}
-            >
-              New Campaign
-            </p>
-            <p className="open-publish-modal" onClick={() => setShowPub(true)}>
-              Publish
-            </p>
-          </Col>
-        </Row>
-      </Container>
-    </div>
-  );
+    <Container fluid>
+      <Row className="header">
+        <Col sm={8}>
+          <div className="pageTitle">
+            <img src={ifixitLogo} alt="Ifixit Logo" width="140px" style={{margin: "0", display: "inline-block"}}/> 
+
+            <h6>
+              Ad Server
+            </h6>
+          </div>
+        </Col>
+        <Col sm={4}>
+          <div className="headerRight">
+            <Button variant="light" onClick={() => logout()} style={{float: "right"}}>
+              Logout
+            </Button>
+          </div>
+        </Col>
+      </Row>
+      <Row>
+        <Col sm={8}>
+          <div>
+            <AddModal
+              show={showAddModal}
+              onHide={() => setShowAddModal(false)}
+            />
+            <AdTable />
+            <CampaignModal
+              show={showCampaign}
+              onHide={() => setShowCampaign(false)}
+            />
+            <PublishModal
+              ad={{ id: "name1", campaignId: "Test2" }}
+              show={showPub}
+              onHide={() => setShowPub(false)}
+            />
+          </div>
+        </Col>
+        <Col sm={4}>
+          <div className="sidebar">
+            <Button variant="primary" onClick={() => setShowAddModal(true)} style={floatLeft}>
+              Create New Ad
+            </Button>
+            <Button variant="secondary" onClick={() => setShowCampaign(true)} style={floatLeft}>
+              Create New Campaign
+            </Button>
+            <Button variant="secondary" onClick={() => setShowPub(true)} style={floatLeft}>
+              Publish Ad
+            </Button>
+          </div>
+        </Col>
+      </Row>
+    </Container>
+  ); 
 };
+
+//Button Styles
+const floatLeft = {
+  float: "left",
+  margin: "0.2em 1em",
+  display: "block",
+  width: "auto"
+}

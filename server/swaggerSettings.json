@@ -62,75 +62,58 @@
                             "type": "string",
                             "example": "xGpTCGJSIDX0Z8RbMbkb"
                         },
-                        "adData": {
+                        "adName": {
+                            "type": "string",
+                            "example":"iPhoneWinter2020"
+                        },
+                        "campaign": {
+                            "type": "string",
+                            "example": "7QKUcWNNRkIQ89jUzqo7"
+                        },
+                        "size": {
+                            "type": "string",
+                            "enum": ["small", "medium", "large"]
+                        },
+                        "title": {
+                            "type": "string",
+                            "example": "Repair your iPhone with just this one kit"
+                        },
+                        "subtitle": {
+                            "type": "string",
+                            "example": "iFixIt has all the tools you need to repair your iPhone yourself"
+                        },
+                        "buttonAlign": {
+                            "type": "string",
+                            "enum": ["left", "center", "right"]
+                        },
+                        "buttonText": {
+                            "type": "string",
+                            "example": "Click here"
+                        },
+                        "url": {
+                            "type": "string"
+                        },
+                        "altText": {
+                            "type": "string"
+                        },
+                        "imageFile": {
+                            "type": "TODO"
+                        },
+                        "statistics": {
                             "type": "object",
-                            "properties": {
-                                "impressions": {
-                                    "$ref": "#/components/schemas/Impressions"
-                                },
-                                "title": {
-                                    "type": "string",
-                                    "example": "Ad title example"
-                                }
-                            }
-                        }
-                    }
-                },
-                "AdWithoutId": {
-                    "type": "object",
-                    "properties": {
-                        "adData": {
-                            "type": "object",
-                            "properties": {
-                                "impressions": {
-                                    "$ref": "#/components/schemas/Impressions"
-                                },
-                                "title": {
-                                    "type": "string",
-                                    "example": "Ad title example"
-                                }
-                            }
+                            "$ref": "#/components/schemas/Impressions"
                         }
                     }
                 },
                 "Campaign": {
                     "type": "object",
                     "properties": {
-                        "campaignId": {
-                            "type": "string",
-                            "example": "7QKUcWNNRkIQ89jUzqo2"
-                        },
                         "campaignData": {
                             "type": "array",
                             "items": {
                                 "type": "string"
                             },
                             "example": ["1st ad id", "2nd ad id", "3rd ad id"]
-                        }
-                    }
-                },
-                "CampaignWithoutId": {
-                    "type": "object",
-                    "properties": {
-                        "campaignData": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "example": ["1st ad id", "2nd ad id", "3rd ad id"]
-                        }
-                    }
-                },
-                "User": {
-                    "type": "object",
-                    "properties": {
-                        "name": {
-                            "type": "string",
-                            "example": "Trump"
-                        },
-                        "email": {
-                            "type": "string",
-                            "example": "test@gmail.com"
                         }
                     }
                 },
@@ -179,36 +162,6 @@
                                     }
                                 }
                             }
-                        }
-                    }
-                },
-                "put": {
-                    "tags": ["campaign"],
-                    "summary": "Update an existing campaign",
-                    "requestBody": {
-                        "required": true,
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Campaign"
-                                }
-                            }
-                        }
-                    },
-                    "responses": {
-                        "200": {
-                            "description": "Successful Operation",
-                            "content": {
-                                "text/plain": {
-                                    "schema": {
-                                        "type": "string",
-                                        "example": "Success"
-                                    }
-                                }
-                            }
-                        },
-                        "500": {
-                            "description": "Improper data inputs"
                         }
                     }
                 },
@@ -276,6 +229,36 @@
                         },
                         "500": {
                             "description": "Error retrieving info"
+                        }
+                    }
+                },
+                "put": {
+                    "tags": ["campaign"],
+                    "summary": "Update an existing campaign",
+                    "requestBody": {
+                        "required": true,
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Campaign"
+                                }
+                            }
+                        }
+                    },
+                    "responses": {
+                        "200": {
+                            "description": "Successful Operation",
+                            "content": {
+                                "text/plain": {
+                                    "schema": {
+                                        "type": "string",
+                                        "example": "Success"
+                                    }
+                                }
+                            }
+                        },
+                        "500": {
+                            "description": "Improper data inputs"
                         }
                     }
                 },
@@ -377,40 +360,6 @@
                             "description": "Server Error"
                         }
                     }
-                },
-                "put": {
-                    "tags": ["ad"],
-                    "summary": "Update an existing ad",
-                    "requestBody": {
-                        "required": true,
-                        "description": "Ad object that needs to be updated to the database",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Ad"
-                                }
-                            }
-                        }
-                    },
-                    "responses": {
-                        "200": {
-                            "description": "Successful Operation",
-                            "content": {
-                                "text/plain": {
-                                    "schema": {
-                                        "type": "string",
-                                        "example": "Success"
-                                    }
-                                }
-                            }
-                        },
-                        "404": {
-                            "description": "Cannot find an ad with a given ID"
-                        },
-                        "500": {
-                            "description": "Improper data inputs"
-                        }
-                    }
                 }
             },
             "/campaign/delete/{campaignId}": {},
@@ -464,6 +413,83 @@
                         }
                     }
                 },
+                "put": {
+                    "tags": ["ad"],
+                    "summary": "Update an existing ad, the adId field is required to send a PUT",
+                    "requestBody": {
+                        "required": true,
+                        "description": "Ad object that needs to be updated to the database",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",   
+                                    "properties": {
+                                        "adName": {
+                                            "type": "string",
+                                            "example":"iPhoneWinter2020"
+                                        },
+                                        "campaign": {
+                                            "type": "string",
+                                            "example": "7QKUcWNNRkIQ89jUzqo7"
+                                        },
+                                        "size": {
+                                            "type": "string",
+                                            "enum": ["small", "medium", "large"]
+                                        },
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Repair your iPhone with just this one kit"
+                                        },
+                                        "subtitle": {
+                                            "type": "string",
+                                            "example": "iFixIt has all the tools you need to repair your iPhone yourself"
+                                        },
+                                        "buttonAlign": {
+                                            "type": "string",
+                                            "enum": ["left", "center", "right"]
+                                        },
+                                        "buttonText": {
+                                            "type": "string",
+                                            "example": "Click here"
+                                        },
+                                        "url": {
+                                            "type": "string"
+                                        },
+                                        "altText": {
+                                            "type": "string"
+                                        },
+                                        "imageFile": {
+                                            "type": "TODO"
+                                        },
+                                        "statistics": {
+                                            "type": "object",
+                                            "$ref": "#/components/schemas/Impressions"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "responses": {
+                        "200": {
+                            "description": "Successful Operation",
+                            "content": {
+                                "text/plain": {
+                                    "schema": {
+                                        "type": "string",
+                                        "example": "Success"
+                                    }
+                                }
+                            }
+                        },
+                        "404": {
+                            "description": "Cannot find an ad with a given ID"
+                        },
+                        "500": {
+                            "description": "Improper data inputs"
+                        }
+                    }
+                },
                 "delete": {
                     "tags": ["ad"],
                     "summary": "Delete an ad",
@@ -493,31 +519,6 @@
                         },
                         "500": {
                             "description": "Improper data inputs"
-                        }
-                    }
-                }
-            },
-            "/user/create": {
-                "post": {
-                    "tags": ["user"],
-                    "summary": "Create a new user",
-                    "requestBody": {
-                        "required": true,
-                        "description": "New user needs to be added to database",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/User"
-                                }
-                            }
-                        }
-                    },
-                    "responses": {
-                        "200": {
-                            "description": "Successful Operation"
-                        },
-                        "500": {
-                            "description": "Cannot create user"
                         }
                     }
                 }

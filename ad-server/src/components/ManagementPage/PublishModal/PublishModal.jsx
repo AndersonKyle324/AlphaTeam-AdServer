@@ -1,19 +1,22 @@
 import React, { useState } from "react";
 import { Form, Button, Modal } from "react-bootstrap";
-import axios from 'axios';
+import axios from "axios";
 
 export default (props) => {
-  const [ad, setAd] = useState({
+  const [adLocation, setAdLocation] = useState({
     url: "",
   });
 
   const handleSubmit = (event) => {
     //to do for handling form submit
-    if (ad.url == "") {
+    if (adLocation.url == "") {
       alert("A url must be provided");
     } else {
       //provide json with ad react component
-      // axios.post('/ad', data );
+      axios.post(adLocation.url, props.ad).then((res) => {
+        console.log(res);
+        // res == error ? alert(res.error) : props.onHide;
+      });
     }
   };
 
@@ -25,12 +28,12 @@ export default (props) => {
       <Modal.Body>
         <Form>
           <Form.Group>
-            <Form.Label>URL for "{props.ad.id}" to be displayed on</Form.Label>
+            <Form.Label>URL for "{props.ad.adName}" to be displayed on</Form.Label>
             <Form.Control
               controlId="url"
               placeholder="Enter url"
-              onChange={(e) => setAd({ url: e.target.value })}
-              value={ad.url}
+              onChange={(e) => setAdLocation({ url: e.target.value })}
+              value={adLocation.url}
             />
           </Form.Group>
         </Form>

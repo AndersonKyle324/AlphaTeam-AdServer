@@ -1,6 +1,13 @@
 import React from "react";
 import styled from "styled-components";
 import { useSortBy, useTable, useGroupBy, useExpanded } from "react-table";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faSort,
+  faSortAmountDown,
+  faSortAmountDownAlt,
+} from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
 const Styles = styled.div`
   padding: 1rem;
@@ -38,7 +45,7 @@ function Table({ columns, data }) {
     headerGroups,
     rows,
     prepareRow,
-  } = useTable({ columns, data }, useGroupBy, useSortBy, useExpanded)
+  } = useTable({ columns, data }, useGroupBy, useSortBy, useExpanded);
 
   return (
     <table {...getTableProps()}>
@@ -48,16 +55,19 @@ function Table({ columns, data }) {
             {headerGroup.headers.map((column) => (
               <th {...column.getHeaderProps()}>
                 {column.canGroupBy ? (
-                  <span {...column.getGroupByToggleProps()}>
-                    {column.isGrouped ? 'X ' : 'O '}
-                  </span>
-                ) : null }
-                {column.render("Header")}
+                  <span {...column.getGroupByToggleProps()}>Σ</span>
+                ) : null}{" "}
+                {column.render("Header")}{" "}
                 <span {...column.getSortByToggleProps()}>
-                  {column.isSorted ? column.isSortedDesc
-                    ? ' ↓'
-                    : ' ↑'
-                  : ' ---'}
+                  {column.isSorted ? (
+                    column.isSortedDesc ? (
+                      <FontAwesomeIcon icon={faSortAmountDown} />
+                    ) : (
+                      <FontAwesomeIcon icon={faSortAmountDownAlt} />
+                    )
+                  ) : (
+                    <FontAwesomeIcon icon={faSort} />
+                  )}
                 </span>
               </th>
             ))}
@@ -71,32 +81,32 @@ function Table({ columns, data }) {
             <tr {...row.getRowProps()}>
               {row.cells.map((cell) => {
                 return (
-                  <td 
+                  <td
                     {...cell.getCellProps()}
                     style={{
-                        background: cell.isGrouped
-                          ? '#0aff0082'
-                          : cell.isAggregated
-                          ? '#ffa50078'
-                          : cell.isPlaceholder
-                          ? '#ff000042'
-                          : 'white',
+                      background: cell.isGrouped
+                        ? "#0aff0082"
+                        : cell.isAggregated
+                        ? "#ffa50078"
+                        : cell.isPlaceholder
+                        ? "#ff000042"
+                        : "white",
                     }}
                   >
                     {cell.isGrouped ? (
                       <>
                         <span {...row.getToggleRowExpandedProps()}>
-                          {row.isExpanded ? '⇩' : '⇨'}
-                        </span>{' '}
-                        {cell.render('Cell')} ({row.subRows.length})
+                          {row.isExpanded ? "⇩" : "⇨"}
+                        </span>{" "}
+                        {cell.render("Cell")} ({row.subRows.length})
                       </>
                     ) : cell.isAggregated ? (
-                      cell.render('Aggregated')
+                      cell.render("Aggregated")
                     ) : cell.isPlaceholder ? null : (
-                      cell.render('Cell')
+                      cell.render("Cell")
                     )}
                   </td>
-                )
+                );
               })}
             </tr>
           );
@@ -106,58 +116,122 @@ function Table({ columns, data }) {
   );
 }
 
-function AdTable({ adTableData }) {
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: "Campaign",
-        accessor: "campaign",
-      },
-      {
-        Header: "Impressions",
-        accessor: "impressions",
-        aggregate: "sum",
-        Aggregated: ({ value }) => `${value} (total)`
-      },
-      {
-        Header: "Clicks",
-        accessor: "clicks",
-        aggregate: "sum",
-        Aggregated: ({ value }) => `${value} (total)`
-      },
-      {
-        Header: "Conversions",
-        accessor: "conversions",
-        aggregate: "sum",
-        Aggregated: ({ value }) => `${value} (total)`
-      },
-      {
-        Header: "Ad Name",
-        accessor: "adName",
-        aggregate: "uniqueCount",
-        Aggregated: ({ value }) => `${value} unique name(s)`
-      },
-      {
-        Header: "Ad Size",
-        accessor: "adSize",
-        aggregate: "uniqueCount",
-        Aggregated: ({ value }) => `${value} unique ad sizes`
-      },
-      {
-        Header: "Last Modified",
-        accessor: "lastModified",
-        aggregate: "uniqueCount",
-        Aggregated: ({ value }) => `${value} unique date(s)`
-      },   
-    ],
-    []
-  );
+const columns = [
+  {
+    Header: "Campaign",
+    accessor: "campaign",
+  },
+  {
+    Header: "Impressions",
+    accessor: "impressions",
+    aggregate: "sum",
+    Aggregated: ({ value }) => `${value} (total)`,
+  },
+  {
+    Header: "Clicks",
+    accessor: "clicks",
+    aggregate: "sum",
+    Aggregated: ({ value }) => `${value} (total)`,
+  },
+  {
+    Header: "Conversions",
+    accessor: "conversions",
+    aggregate: "sum",
+    Aggregated: ({ value }) => `${value} (total)`,
+  },
+  {
+    Header: "Ad Name",
+    accessor: "adName",
+    aggregate: "uniqueCount",
+    Aggregated: ({ value }) => `${value} unique name(s)`,
+  },
+  {
+    Header: "Ad Size",
+    accessor: "size",
+    aggregate: "uniqueCount",
+    Aggregated: ({ value }) => `${value} unique ad sizes`,
+  },
+];
 
-  return (
-    <Styles>
-      <Table columns={columns} data={adTableData} />
-    </Styles>
-  );
+const tableData = [
+  {
+    adName: "SwitchItUp",
+    size: "Small",
+    campaign: "Nintendo Switch",
+    impressions: 100,
+    clicks: 10,
+    conversions: 1,
+  },
+  {
+    adName: "Apples4U",
+    size: "Medium",
+    campaign: "Apples",
+    impressions: 2000,
+    clicks: 300,
+    conversions: 50,
+  },
+  {
+    adName: "OrangesRCool",
+    size: "Large",
+    campaign: "Oranges",
+    impressions: 10,
+    clicks: 0,
+    conversions: 0,
+  },
+  {
+    adName: "BigSwitch",
+    size: "Large",
+    campaign: "Nintendo Switch",
+    impressions: 400,
+    clicks: 300,
+    conversions: 290,
+  },
+];
+
+class AdTable extends React.Component {
+  state = { ads: [] };
+
+  componentDidMount() {
+    axios
+      .get("/ad")
+      .then((res) => {
+        const ads = res.data;
+        console.log(ads);
+
+        const tempArray = [];
+        ads.forEach((ad) => {
+          var tempAd = {
+            adName: ad.adName,
+            altText: ad.altText,
+            buttonAlign: ad.buttonAlign,
+            buttonText: ad.buttonText,
+            campaign: ad.campaign,
+            size: ad.size,
+            impressions: ad.statistics.impressions.seen,
+            clicks: ad.statistics.impressions.clicks,
+            conversions: ad.statistics.impressions.ctr,
+            subtitle: ad.subtitle,
+            title: ad.title,
+            url: ad.url,
+          };
+          tempArray.push(tempAd);
+        });
+        this.setState({ ads: tempArray });
+        console.log(this.state.ads);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  // Change tableData to ads once headers and attributes are solidified
+  render() {
+    return (
+      <Styles>
+        <Table columns={columns} data={tableData} />
+      </Styles>
+    );
+  }
 }
 
 export default AdTable;
