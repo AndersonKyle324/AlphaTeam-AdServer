@@ -22,7 +22,13 @@ export default (props) => {
     setAd({ ...ad, 
             name: props.ad.adName,
             campaign: props.ad.campaign,
-            size: props.ad.size
+            size: props.ad.size,
+            altText: props.ad.altText,
+            title: props.ad.title,
+            subtitle: props.ad.subtitle,
+            alignment: props.ad.alignment,
+            buttonText: props.ad.buttonText,
+            buttonUrl: props.ad.url,
           });
   }, [props.ad])
 
