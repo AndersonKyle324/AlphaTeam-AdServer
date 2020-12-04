@@ -17,7 +17,7 @@ export default (props) => {
       style={{
         "height": height,
         "width": width,
-        "text-align": props.ad.buttonAlign, 
+        "text-align": props.ad.alignment, 
         "padding":"2em auto", 
         "padding-top":"2em", 
         "padding-left":"1em",
