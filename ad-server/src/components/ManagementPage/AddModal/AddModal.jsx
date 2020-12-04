@@ -16,6 +16,7 @@ export default (props) => {
     buttonUrl: "",
     imageFile: false,
     src: false, // for preview
+    imageToken: ""
   });
 
   React.useEffect(() => {
@@ -37,21 +38,8 @@ export default (props) => {
     // Set states for image preview
     var imageFile = e.target.files[0];
     var src = URL.createObjectURL(imageFile);
-    setAd({ ...ad, imageFile: imageFile, src: src });
-
-    // Post image
-    console.log(imageFile)
-    let fileData = new FormData();
-    fileData.set('image', imageFile, `${Date.now()}-${imageFile.name}`);
-    await Axios({
-      method: 'post',
-      url: 'http://localhost:3001/ad/upload',
-      data: fileData,
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    }).then((response) => console.log(response)).catch((error) => console.log(error));
-
+    setAd({ ...ad, imageFile: imageFile, src: src, imageToken: `${Date.now()}-${imageFile.name}`});
+    // Image token created
   };
 
   // Preview based on alignment
@@ -86,6 +74,23 @@ export default (props) => {
     }
   };
 
+  const clearState = () =>{
+    setAd({
+      name: "",
+      campaign: "",
+      size: "",
+      altText: "",
+      title: "",
+      subtitle: "",
+      alignment: "",
+      buttonText: "",
+      buttonUrl: "",
+      imageFile: false,
+      src: false, // for preview
+      imageToken: ""
+    });
+  }
+
   // Post ad
   const handleSubmit = async () => {
     if (ad.name === "") {
@@ -102,18 +107,35 @@ export default (props) => {
           url: ad.buttonUrl,
           altText: ad.altText,
           imageFile: ad.imageFile,
+          imageToken: ad.imageToken,
           statistics: {
             clicks: 0,
             seen: 0,
             ctr: 0,
           }
+
       };
       console.log(data);
-      //post ad data to server
+      // Post ad data
       await Axios.post('http://localhost:3001/ad', data)
         .then((response) => console.log(response))
         .catch((error) => console.log(error));
+      
+      // Post image
+      console.log("ImageToken: " + ad.imageToken)
+      let fileData = new FormData();
+      fileData.set('image', ad.imageFile, ad.imageToken);
+      await Axios({
+        method: 'post',
+        url: 'http://localhost:3001/ad/upload',
+        data: fileData,
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then((response) => console.log(response)).catch((error) => console.log(error));
+
       props.onHide();
+      clearState();
     }
   };
 
