@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Container, Row, Col } from "react-grid-system";
+import { Button, Container, Row, Col } from "react-bootstrap";
 import "./ManagementPage.css";
 import AddModal from "./AddModal/AddModal";
 import AdTable from "./AdTable/AdTable";
@@ -8,6 +8,7 @@ import CampaignModal from "./CampaignModal/CampaignModal";
 import { useHistory } from "react-router-dom";
 import firebase from "firebase";
 import Advert from "./Advert/Advert";
+import ifixitLogo from "../../images/ifixit_logo.svg";
 
 export default () => {
   const [showPub, setShowPub] = useState(false);
@@ -45,60 +46,66 @@ export default () => {
   };
 
   return (
-    <div className="pageContainer">
-      <Container fluid>
-        <Row className="header">
-          <Col sm={9}>
-            <div className="pageTitle">
-              <h1>
-                <span className="blue">iFixit</span> Ad Server
-              </h1>
-            </div>
-          </Col>
-          <Col sm={3}>
-            <div className="logout-btn">
-              <p className="logout-btn" onClick={() => logout()}>
-                Logout`
-              </p>
-            </div>
-          </Col>
-        </Row>
-        <Row>
-          <Col sm={9}>
-            <div className="nav-bar">
-              <h3 className="open-ad-table">Ad Board</h3>
-              <AddModal
-                show={showAddModal}
-                onHide={() => setShowAddModal(false)}
-              />
-              <AdTable />
-              <CampaignModal
-                show={showCampaign}
-                onHide={() => setShowCampaign(false)}
-              />
-              <PublishModal
-                ad={testAd}
-                show={showPub}
-                onHide={() => setShowPub(false)}
-              />
-            </div>
-          </Col>
-          <Col sm={3}>
-            <p className="open-add-modal" onClick={() => setShowAddModal(true)}>
-              New Ad
-            </p>
-            <p
-              className="open-campaign-modal"
-              onClick={() => setShowCampaign(true)}
-            >
-              New Campaign
-            </p>
-            <p className="open-publish-modal" onClick={() => setShowPub(true)}>
-              Publish
-            </p>
-          </Col>
-        </Row>
-      </Container>
-    </div>
-  );
+    <Container fluid>
+      <Row className="header">
+        <Col sm={8}>
+          <div className="pageTitle">
+            <img src={ifixitLogo} alt="Ifixit Logo" width="140px" style={{margin: "0", display: "inline-block"}}/> 
+
+            <h6>
+              Ad Server
+            </h6>
+          </div>
+        </Col>
+        <Col sm={4}>
+          <div className="headerRight">
+            <Button variant="light" onClick={() => logout()} style={{float: "right"}}>
+              Logout
+            </Button>
+          </div>
+        </Col>
+      </Row>
+      <Row>
+        <Col sm={8}>
+          <div>
+            <AddModal
+              show={showAddModal}
+              onHide={() => setShowAddModal(false)}
+            />
+            <AdTable />
+            <CampaignModal
+              show={showCampaign}
+              onHide={() => setShowCampaign(false)}
+            />
+            <PublishModal
+              ad={{ id: "name1", campaignId: "Test2" }}
+              show={showPub}
+              onHide={() => setShowPub(false)}
+            />
+          </div>
+        </Col>
+        <Col sm={4}>
+          <div className="sidebar">
+            <Button variant="primary" onClick={() => setShowAddModal(true)} style={floatLeft}>
+              Create New Ad
+            </Button>
+            <Button variant="secondary" onClick={() => setShowCampaign(true)} style={floatLeft}>
+              Create New Campaign
+            </Button>
+            <Button variant="secondary" onClick={() => setShowPub(true)} style={floatLeft}>
+              Publish Ad
+            </Button>
+          </div>
+        </Col>
+      </Row>
+    </Container>
+  ); 
 };
+
+//Button Styles
+const floatLeft = {
+  float: "left",
+  margin: "0.2em 1em",
+  display: "block",
+  width: "auto"
+}
