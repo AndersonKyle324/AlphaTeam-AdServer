@@ -2,6 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const admin = require('firebase-admin')
 const newman = require('newman')
+const multer = require('multer')
 
 const app = express()
 const port = process.env.port || 3001
@@ -30,10 +31,22 @@ admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     databaseURL:
         'firebase-adminsdk-1vnku@ifixit-ad-server-edd98.iam.gserviceaccount.com',
+    storageBucket: "<BUCKET_NAME>.appspot.com"
 })
 
 // Initialize our DB
 const db = admin.firestore()
+
+const storage = admin.storage()
+
+const bucket = admin.storage().bucket()
+
+const upload = multer({
+    storage: multer.memoryStorage(),
+    limits: {
+        fileSize: 5 * 1024 * 1024,
+    }
+})
 
 //Get the campaign information
 app.get('/campaign', async (req, res) => {
@@ -325,6 +338,31 @@ app.post('/user/create', async (req, res) => {
             })
             console.log('Error creating new user:', error)
         })
+})
+
+app.post('/ad/upload', upload.single('image'), async(req, res, next) => {
+    try {
+        if (!req.file){
+            res.status(400).send("No file uploaded.")
+            return
+        }
+        const blob = bucket.file(req.file.originalname)
+        const blobWriter = blob.createWriteStream({
+            metadata: {
+                conentType: req.file.mimetype,
+            }
+        })
+        blobWriter.on('error', (err) => next(err))
+        blobWriter.on('finish', () => {
+            const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${
+                bucket.name
+              }/o/${encodeURI(blob.name)}?alt=media`
+        })
+        res.status(200).send({ fileName: req.file.originalname, fileLocation: publicUrl })
+        blobWriter.end(req.file.buffer)
+    } catch (e) {
+        res.status(500).send({ error: 'Error uploading file', errorCode: 503 })
+    }
 })
 
 // //Automated postman test, runs everystime when server start
