@@ -1,3 +1,4 @@
+import Axios from "axios";
 import React, { useState } from "react";
 import { Modal, Button, Form, Row, Col } from "react-bootstrap";
 import "./AddModal.css";
@@ -20,11 +21,22 @@ export default (props) => {
   const handleInputChange = (e) => {};
 
   // Create an object of formData and post it to the server
-  const handleImageUpload = (e) => {
+  const handleImageUpload = async (e) => {
     var imageFile = e.target.files[0];
+    console.log(imageFile)
+    let fileData = new FormData();
+    fileData.set('image', imageFile, `${Date.now()}-${imageFile.name}`)
+    await Axios({
+      method: 'post',
+      url: 'http://localhost:3001/ad/upload',
+      data: fileData,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
     var src = URL.createObjectURL(imageFile);
 
-    setAd({ ...ad, imageFile: imageFile, src: src });
+    // setAd({ ...ad, imageFile: imageFile, src: src });
   };
 
   const renderPreview = () => {
@@ -59,7 +71,6 @@ export default (props) => {
   };
 
   const handleSubmit = () => {
-    console.log(ad.name);
     if (ad.name == "") {
       alert("Provide an Ad Name");
     } else {

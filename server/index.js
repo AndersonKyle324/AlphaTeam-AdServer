@@ -3,6 +3,8 @@ const bodyParser = require('body-parser')
 const admin = require('firebase-admin')
 const newman = require('newman')
 const multer = require('multer')
+const cors = require('cors')
+const { uuid } = require('uuidv4')
 
 const app = express()
 const port = process.env.port || 3001
@@ -13,6 +15,8 @@ const swaggerUi = require('swagger-ui-express')
 const specs = swaggerJsdoc(swaggerSettings)
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
+app.use(cors())
+
 app.use(
     '/docs',
     swaggerUi.serve,
@@ -21,6 +25,7 @@ app.use(
     })
 )
 app.get('/docs')
+
 
 // Load credentials from firebase
 const serviceAccount = require('./serviceAccountKey.json')
@@ -31,7 +36,7 @@ admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     databaseURL:
         'firebase-adminsdk-1vnku@ifixit-ad-server-edd98.iam.gserviceaccount.com',
-    storageBucket: "<BUCKET_NAME>.appspot.com"
+    storageBucket: "ifixit-ad-server-edd98.appspot.com"
 })
 
 const missingDataError = (item) => {
@@ -381,9 +386,9 @@ app.post('/user/', async (req, res) => {
         })
 })
 
-<<<<<<< HEAD
 app.post('/ad/upload', upload.single('image'), async(req, res, next) => {
     try {
+        const downloadToken = uuid()
         if (!req.file){
             res.status(400).send("No file uploaded.")
             return
@@ -392,6 +397,7 @@ app.post('/ad/upload', upload.single('image'), async(req, res, next) => {
         const blobWriter = blob.createWriteStream({
             metadata: {
                 conentType: req.file.mimetype,
+                firebaseStorageDownloadTokens: downloadToken
             }
         })
         blobWriter.on('error', (err) => next(err))
@@ -399,11 +405,12 @@ app.post('/ad/upload', upload.single('image'), async(req, res, next) => {
             const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${
                 bucket.name
               }/o/${encodeURI(blob.name)}?alt=media`
+            res.status(200).send({ fileName: req.file.originalname, fileLocation: publicUrl })
         })
-        res.status(200).send({ fileName: req.file.originalname, fileLocation: publicUrl })
         blobWriter.end(req.file.buffer)
     } catch (e) {
-        res.status(500).send({ error: 'Error uploading file', errorCode: 503 })
+        console.log(e)
+        res.status(500).send({ error: e, errorCode: 503 })
     }
 })
 
@@ -420,21 +427,6 @@ app.post('/ad/upload', upload.single('image'), async(req, res, next) => {
 //         console.log('collection run complete!')
 //     }
 // )
-=======
-//Automated postman test, runs everystime when server start
-newman.run(
-    {
-        collection: require('./postman.json'),
-        reporters: 'cli',
-    },
-    function (err) {
-        if (err) {
-            throw err
-        }
-        console.log('collection run complete!')
-    }
-)
->>>>>>> f722688fede7fb2dc6acdedf760e16a510c54a9e
 
 app.listen(port, () => {
     console.log(`Alpha Team Ad Server listening on port ${port}`)
