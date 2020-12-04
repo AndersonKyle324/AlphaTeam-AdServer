@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import { useSortBy, useTable, useGroupBy, useExpanded } from "react-table";
+import { Button, Alert } from "react-bootstrap";
+import { useRowSelect, useSortBy, useTable, useGroupBy, useExpanded } from "react-table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSort,
@@ -38,16 +39,76 @@ const Styles = styled.div`
   }
 `;
 
+const IndeterminateCheckbox = React.forwardRef(
+  ({ indeterminate, ...rest }, ref) => {
+    const defaultRef = React.useRef()
+    const resolvedRef = ref || defaultRef
+
+    React.useEffect(() => {
+      resolvedRef.current.indeterminate = indeterminate
+    }, [resolvedRef, indeterminate])
+
+    return (
+      <>
+        <input type="checkbox" ref={resolvedRef} {...rest} />
+      </>
+    )
+  }
+)
+
 function Table({ columns, data }) {
+  const [inputs, setInputs] = React.useState({
+    error: false
+  });
+
   const {
     getTableProps,
     getTableBodyProps,
     headerGroups,
     rows,
     prepareRow,
-  } = useTable({ columns, data }, useGroupBy, useSortBy, useExpanded);
+    selectedFlatRows,
+    state: { selectedRowIds },
+  } = useTable({ columns, data }, useGroupBy, useSortBy, useExpanded, useRowSelect,
+    hooks => {
+      hooks.visibleColumns.push(columns => [
+        // Create a column for selection
+        {
+          id: 'selection',
+          Cell: ({ row }) => (
+            <div>
+              <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+            </div>
+          ),
+        },
+        ...columns,
+      ])
+    });
+
+    const openAddModal = () => {
+      if (selectedFlatRows.length !== 1) {
+        setInputs({ error: true });
+      }
+      else {
+        setInputs({ error: false });
+        const selectedAd = selectedFlatRows[0].original;
+        console.log(selectedAd);
+      }
+    }
+
+    const openPublishModal = () => {
+      if (selectedFlatRows.length !== 1) {
+        setInputs({ error: true });
+      }
+      else {
+        setInputs({ error: false });
+        const selectedAd = selectedFlatRows[0].original;
+        console.log(selectedAd);
+      }
+    }
 
   return (
+    <>
     <table {...getTableProps()}>
       <thead>
         {headerGroups.map((headerGroup) => (
@@ -113,6 +174,14 @@ function Table({ columns, data }) {
         })}
       </tbody>
     </table>
+    <Button onClick={() => openAddModal()} style={{ margin: '10px' }}>Edit Selected Ad</Button>
+    <Button onClick={() => openPublishModal()}>Publish Selected Ad</Button>
+    {inputs.error ? (
+            <Alert variant="warning" className="p-2">
+              Select 1 valid ad
+            </Alert>
+          ) : null}
+    </>
   );
 }
 
