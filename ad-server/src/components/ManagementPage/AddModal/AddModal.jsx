@@ -28,10 +28,15 @@ export default (props) => {
 
   // Create an object of formData and post it to the server
   const handleImageUpload = async (e) => {
+    // Set states for image preview
     var imageFile = e.target.files[0];
+    var src = URL.createObjectURL(imageFile);
+    setAd({ ...ad, imageFile: imageFile, src: src });
+
+    // Post image
     console.log(imageFile)
     let fileData = new FormData();
-    fileData.set('image', imageFile, `${Date.now()}-${imageFile.name}`)
+    fileData.set('image', imageFile, `${Date.now()}-${imageFile.name}`);
     await Axios({
       method: 'post',
       url: 'http://localhost:3001/ad/upload',
@@ -39,12 +44,11 @@ export default (props) => {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
-    })
-    var src = URL.createObjectURL(imageFile);
+    }).then((response) => console.log(response)).catch((error) => console.log(error));
 
-    // setAd({ ...ad, imageFile: imageFile, src: src });
   };
 
+  // Preview based on alignment
   const renderPreview = () => {
     let align = { backgroundImage: `url(${ad.src})`};
     if (ad.src && ad.alignment !== "" && ad.alignment !== "Select Alignment") {
@@ -76,30 +80,34 @@ export default (props) => {
     }
   };
 
-  const handleSubmit = () => {
+  // Post ad
+  const handleSubmit = async () => {
     if (ad.name === "") {
-      alert("Provide an Ad Name");
+      alert("Ad Name Required");
     } else {
       const data = {
-        adId: ad.name,
-        adName: ad.name,
-        campaign: ad.campaign,
-        size: ad.size,
-        title: ad.title,
-        subtitle: ad.subtitle,
-        alignment: ad.alignment,
-        buttonText: ad.buttonText,
-        url: ad.buttonUrl,
-        altText: ad.altText,
-        imageFile: null,
-        statistics: {
-          clicks: 0,
-          seen: 0,
-          ctr: 0,
-        },
+          adName: ad.name,
+          campaign: ad.campaign,
+          size: ad.size,
+          title: ad.title,
+          subtitle: ad.subtitle,
+          alignment: ad.alignment,
+          buttonText: ad.buttonText,
+          url: ad.buttonUrl,
+          altText: ad.altText,
+          imageFile: ad.imageFile,
+          statistics: {
+            clicks: 0,
+            seen: 0,
+            ctr: 0,
+          }
       };
       console.log(data);
       //post ad data to server
+      await Axios.post('http://localhost:3001/ad', data)
+        .then((response) => console.log(response))
+        .catch((error) => console.log(error));
+      props.onHide();
     }
   };
 
