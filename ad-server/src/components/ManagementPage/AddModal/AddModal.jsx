@@ -26,6 +26,8 @@ export default (props) => {
     console.log(imageFile)
     let fileData = new FormData();
     fileData.set('image', imageFile, `${Date.now()}-${imageFile.name}`)
+    console.log("imageFile name during imageUpload: ");
+    console.log(imageFile.name);
     await Axios({
       method: 'post',
       url: 'http://localhost:3001/ad/upload',
@@ -33,10 +35,10 @@ export default (props) => {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
-    })
+    }).then((response) => console.log(response)).catch((error) => console.log(error));
     var src = URL.createObjectURL(imageFile);
 
-    // setAd({ ...ad, imageFile: imageFile, src: src });
+    setAd({ ...ad, imageFile: imageFile, src: src });
   };
 
   const renderPreview = () => {
@@ -70,12 +72,11 @@ export default (props) => {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (ad.name === "") {
-      alert("Provide an Ad Name");
+      alert("Ad Name Required");
     } else {
       const data = {
-        adId: ad.name,
         adName: ad.name,
         campaign: ad.campaign,
         size: ad.size,
@@ -85,7 +86,7 @@ export default (props) => {
         buttonText: ad.buttonText,
         url: ad.buttonUrl,
         altText: ad.altText,
-        imageFile: null,
+        imageFile: ad.imageFile,
         statistics: {
           clicks: 0,
           seen: 0,
@@ -94,6 +95,10 @@ export default (props) => {
       };
       console.log(data);
       //post ad data to server
+      await Axios.post('http://localhost:3001/ad', data)
+        .then((response) => console.log(response))
+        .catch((error) => console.log(error));
+      props.onHide();
     }
   };
 
