@@ -16,7 +16,7 @@
         },
         "servers": [
             {
-                "url": "http://localhost:3000/"
+                "url": "http://localhost:3001/"
             }
         ],
         "tags": [
@@ -58,10 +58,6 @@
                 "Ad": {
                     "type": "object",
                     "properties": {
-                        "adId": {
-                            "type": "string",
-                            "example": "xGpTCGJSIDX0Z8RbMbkb"
-                        },
                         "adName": {
                             "type": "string",
                             "example":"iPhoneWinter2020"
@@ -108,12 +104,9 @@
                 "Campaign": {
                     "type": "object",
                     "properties": {
-                        "campaignData": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "example": ["1st ad id", "2nd ad id", "3rd ad id"]
+                        "campaignName": {
+                            "type": "string",
+                            "example": "TestCampaignName"
                         }
                     }
                 },
@@ -157,7 +150,7 @@
                                     "schema": {
                                         "type": "array",
                                         "items": {
-                                            "$ref": "#/components/schemas/CampaignWithoutId"
+                                            "$ref": "#/components/schemas/Campaign"
                                         }
                                     }
                                 }
@@ -219,7 +212,7 @@
                             "content": {
                                 "application/json": {
                                     "schema": {
-                                        "$ref": "#/components/schemas/CampaignWithoutId"
+                                        "$ref": "#/components/schemas/Campaign"
                                     }
                                 }
                             }
@@ -318,7 +311,7 @@
                                     "schema": {
                                         "type": "array",
                                         "items": {
-                                            "$ref": "#/components/schemas/AdWithoutId"
+                                            "$ref": "#/components/schemas/Ad"
                                         }
                                     }
                                 }
@@ -403,7 +396,7 @@
                             "content": {
                                 "application/json": {
                                     "schema": {
-                                        "$ref": "#/components/schemas/AdWithoutId"
+                                        "$ref": "#/components/schemas/Ad"
                                     }
                                 }
                             }
