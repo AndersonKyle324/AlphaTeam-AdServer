@@ -18,16 +18,17 @@ export default (props) => {
     src: false, // for preview
   });
 
-  const handleInputChange = (e) => {};
-
   // Create an object of formData and post it to the server
   const handleImageUpload = async (e) => {
+    // Set states for image preview
     var imageFile = e.target.files[0];
+    var src = URL.createObjectURL(imageFile);
+    setAd({ ...ad, imageFile: imageFile, src: src });
+
+    // Post image
     console.log(imageFile)
     let fileData = new FormData();
-    fileData.set('image', imageFile, `${Date.now()}-${imageFile.name}`)
-    console.log("imageFile name during imageUpload: ");
-    console.log(imageFile.name);
+    fileData.set('image', imageFile, `${Date.now()}-${imageFile.name}`);
     await Axios({
       method: 'post',
       url: 'http://localhost:3001/ad/upload',
@@ -36,11 +37,10 @@ export default (props) => {
         'Content-Type': 'multipart/form-data'
       }
     }).then((response) => console.log(response)).catch((error) => console.log(error));
-    var src = URL.createObjectURL(imageFile);
 
-    setAd({ ...ad, imageFile: imageFile, src: src });
   };
 
+  // Preview based on alignment
   const renderPreview = () => {
     let align = { backgroundImage: `url(${ad.src})`};
     if (ad.src && ad.alignment !== "" && ad.alignment !== "Select Alignment") {
@@ -72,6 +72,7 @@ export default (props) => {
     }
   };
 
+  // Post ad
   const handleSubmit = async () => {
     if (ad.name === "") {
       alert("Ad Name Required");
