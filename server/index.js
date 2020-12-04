@@ -168,7 +168,7 @@ app.put('/campaign/:id', async (req, res) => {
             })
         }
         await campaignDoc
-            .set(req.body.campaignData)
+            .set(req.body)
             .then(
                 console.log(
                     `Succesfully edited data for ${req.body.campaignId}`
@@ -189,11 +189,11 @@ app.post('/campaign', async (req, res) => {
     try {
         const campaignDoc = db.collection('campaign')
         if (!req.body.campaignName) {
-            res.status(400).send({ error: 'Body is missing field: campaignData', errorCode: 400 })
+            res.status(400).send({ error: 'Body is missing field: campaignName', errorCode: 400 })
             return
         }
         const doc = await campaignDoc
-            .add(req.body.campaignName)
+            .add(req.body)
             .then((campaign) => {
                 console.log(
                     `Succesfully created campaign ${campaign.id}`
