@@ -68,7 +68,7 @@ function Table({ columns, data }) {
   const [inputs, setInputs] = React.useState({
     showPub: false,
     showAdd: false,
-    selectedAd: { adName: "temp" },
+    selectedAd: {},
     error: false,
   });
 
@@ -79,7 +79,6 @@ function Table({ columns, data }) {
     rows,
     prepareRow,
     selectedFlatRows,
-    state: { selectedRowIds },
   } = useTable(
     { columns, data },
     useGroupBy,
