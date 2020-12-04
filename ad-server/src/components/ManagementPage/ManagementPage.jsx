@@ -67,6 +67,7 @@ export default () => {
         <Col sm={8}>
           <div>
             <AddModal
+              ad={{ adName: "", campaign: "", size: "" }}
               show={showAddModal}
               onHide={() => setShowAddModal(false)}
             />

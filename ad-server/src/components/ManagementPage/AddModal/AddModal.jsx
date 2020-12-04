@@ -19,6 +19,14 @@ export default (props) => {
     imageToken: ""
   });
 
+  React.useEffect(() => {
+    setAd({ ...ad, 
+            name: props.ad.adName,
+            campaign: props.ad.campaign,
+            size: props.ad.size
+          });
+  }, [props.ad])
+
   // Create an object of formData and post it to the server
   const handleImageUpload = async (e) => {
     // Set states for image preview
