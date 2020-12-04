@@ -1,13 +1,20 @@
 import React from "react";
 import styled from "styled-components";
 import { Button, Alert } from "react-bootstrap";
-import { useRowSelect, useSortBy, useTable, useGroupBy, useExpanded } from "react-table";
+import {
+  useRowSelect,
+  useSortBy,
+  useTable,
+  useGroupBy,
+  useExpanded,
+} from "react-table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSort,
   faSortAmountDown,
   faSortAmountDownAlt,
 } from "@fortawesome/free-solid-svg-icons";
+import PublishModal from "../PublishModal/PublishModal";
 import axios from "axios";
 
 const Styles = styled.div`
@@ -41,24 +48,27 @@ const Styles = styled.div`
 
 const IndeterminateCheckbox = React.forwardRef(
   ({ indeterminate, ...rest }, ref) => {
-    const defaultRef = React.useRef()
-    const resolvedRef = ref || defaultRef
+    const defaultRef = React.useRef();
+    const resolvedRef = ref || defaultRef;
 
     React.useEffect(() => {
-      resolvedRef.current.indeterminate = indeterminate
-    }, [resolvedRef, indeterminate])
+      resolvedRef.current.indeterminate = indeterminate;
+    }, [resolvedRef, indeterminate]);
 
     return (
       <>
         <input type="checkbox" ref={resolvedRef} {...rest} />
       </>
-    )
+    );
   }
-)
+);
 
 function Table({ columns, data }) {
   const [inputs, setInputs] = React.useState({
-    error: false
+    showPub: false,
+    showAdd: false,
+    selectedAd: { adName: "temp" },
+    error: false,
   });
 
   const {
@@ -69,12 +79,17 @@ function Table({ columns, data }) {
     prepareRow,
     selectedFlatRows,
     state: { selectedRowIds },
-  } = useTable({ columns, data }, useGroupBy, useSortBy, useExpanded, useRowSelect,
-    hooks => {
-      hooks.visibleColumns.push(columns => [
+  } = useTable(
+    { columns, data },
+    useGroupBy,
+    useSortBy,
+    useExpanded,
+    useRowSelect,
+    (hooks) => {
+      hooks.visibleColumns.push((columns) => [
         // Create a column for selection
         {
-          id: 'selection',
+          id: "selection",
           Cell: ({ row }) => (
             <div>
               <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
@@ -82,105 +97,110 @@ function Table({ columns, data }) {
           ),
         },
         ...columns,
-      ])
-    });
-
-    const openAddModal = () => {
-      if (selectedFlatRows.length !== 1) {
-        setInputs({ error: true });
-      }
-      else {
-        setInputs({ error: false });
-        const selectedAd = selectedFlatRows[0].original;
-        console.log(selectedAd);
-      }
+      ]);
     }
+  );
 
-    const openPublishModal = () => {
-      if (selectedFlatRows.length !== 1) {
-        setInputs({ error: true });
-      }
-      else {
-        setInputs({ error: false });
-        const selectedAd = selectedFlatRows[0].original;
-        console.log(selectedAd);
-      }
+  const openAddModal = () => {
+    if (selectedFlatRows.length !== 1) {
+      setInputs({ ...inputs, error: true });
+    } else {
+      setInputs({ ...inputs, showAdd: true, error: false });
+      const selectedAd = selectedFlatRows[0].original;
+      console.log(selectedAd);
     }
+  };
+
+  const openPublishModal = () => {
+    if (selectedFlatRows.length !== 1) {
+      setInputs({ ...inputs, error: true });
+    } else {
+      const ad = selectedFlatRows[0].original;
+      setInputs({ ...inputs, selectedAd: ad, showPub: true, error: false });
+    }
+  };
 
   return (
     <>
-    <table {...getTableProps()}>
-      <thead>
-        {headerGroups.map((headerGroup) => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map((column) => (
-              <th {...column.getHeaderProps()}>
-                {column.canGroupBy ? (
-                  <span {...column.getGroupByToggleProps()}>Σ</span>
-                ) : null}{" "}
-                {column.render("Header")}{" "}
-                <span {...column.getSortByToggleProps()}>
-                  {column.isSorted ? (
-                    column.isSortedDesc ? (
-                      <FontAwesomeIcon icon={faSortAmountDown} />
+      <table {...getTableProps()}>
+        <thead>
+          {headerGroups.map((headerGroup) => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map((column) => (
+                <th {...column.getHeaderProps()}>
+                  {column.canGroupBy ? (
+                    <span {...column.getGroupByToggleProps()}>Σ</span>
+                  ) : null}{" "}
+                  {column.render("Header")}{" "}
+                  <span {...column.getSortByToggleProps()}>
+                    {column.isSorted ? (
+                      column.isSortedDesc ? (
+                        <FontAwesomeIcon icon={faSortAmountDown} />
+                      ) : (
+                        <FontAwesomeIcon icon={faSortAmountDownAlt} />
+                      )
                     ) : (
-                      <FontAwesomeIcon icon={faSortAmountDownAlt} />
-                    )
-                  ) : (
-                    <FontAwesomeIcon icon={faSort} />
-                  )}
-                </span>
-              </th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody {...getTableBodyProps()}>
-        {rows.map((row, i) => {
-          prepareRow(row);
-          return (
-            <tr {...row.getRowProps()}>
-              {row.cells.map((cell) => {
-                return (
-                  <td
-                    {...cell.getCellProps()}
-                    style={{
-                      background: cell.isGrouped
-                        ? "#0aff0082"
-                        : cell.isAggregated
-                        ? "#ffa50078"
-                        : cell.isPlaceholder
-                        ? "#ff000042"
-                        : "white",
-                    }}
-                  >
-                    {cell.isGrouped ? (
-                      <>
-                        <span {...row.getToggleRowExpandedProps()}>
-                          {row.isExpanded ? "⇩" : "⇨"}
-                        </span>{" "}
-                        {cell.render("Cell")} ({row.subRows.length})
-                      </>
-                    ) : cell.isAggregated ? (
-                      cell.render("Aggregated")
-                    ) : cell.isPlaceholder ? null : (
-                      cell.render("Cell")
+                      <FontAwesomeIcon icon={faSort} />
                     )}
-                  </td>
-                );
-              })}
+                  </span>
+                </th>
+              ))}
             </tr>
-          );
-        })}
-      </tbody>
-    </table>
-    <Button onClick={() => openAddModal()} style={{ margin: '10px' }}>Edit Selected Ad</Button>
-    <Button onClick={() => openPublishModal()}>Publish Selected Ad</Button>
-    {inputs.error ? (
-            <Alert variant="warning" className="p-2">
-              Select 1 valid ad
-            </Alert>
-          ) : null}
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {rows.map((row, i) => {
+            prepareRow(row);
+            return (
+              <tr {...row.getRowProps()}>
+                {row.cells.map((cell) => {
+                  return (
+                    <td
+                      {...cell.getCellProps()}
+                      style={{
+                        background: cell.isGrouped
+                          ? "#0aff0082"
+                          : cell.isAggregated
+                          ? "#ffa50078"
+                          : cell.isPlaceholder
+                          ? "#ff000042"
+                          : "white",
+                      }}
+                    >
+                      {cell.isGrouped ? (
+                        <>
+                          <span {...row.getToggleRowExpandedProps()}>
+                            {row.isExpanded ? "⇩" : "⇨"}
+                          </span>{" "}
+                          {cell.render("Cell")} ({row.subRows.length})
+                        </>
+                      ) : cell.isAggregated ? (
+                        cell.render("Aggregated")
+                      ) : cell.isPlaceholder ? null : (
+                        cell.render("Cell")
+                      )}
+                    </td>
+                  );
+                })}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+      <Button onClick={() => openAddModal()} style={{ margin: "10px" }}>
+        Edit Selected Ad
+      </Button>
+      <Button onClick={() => openPublishModal()}>Publish Selected Ad</Button>
+      {inputs.error ? (
+        <Alert variant="warning" className="p-2">
+          Select 1 valid ad
+        </Alert>
+      ) : null}
+      <PublishModal
+        ad={inputs.selectedAd}
+        show={inputs.showPub}
+        onHide={() => setInputs({ ...inputs, showPub: false })}
+      />
     </>
   );
 }
