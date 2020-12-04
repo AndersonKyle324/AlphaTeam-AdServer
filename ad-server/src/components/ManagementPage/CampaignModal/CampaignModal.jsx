@@ -3,19 +3,19 @@ import { Modal, Button, Form } from "react-bootstrap";
 import axios from "axios";
 
 export default (props) => {
-  const [c, setCampaign] = useState({
-    campaignName: {campaignName: ""},
+  const [campaign, setCampaign] = useState({
+    campaignName: "",
   });
 
   const handleSubmit = () => {
     //to do for handling form submit
-    if (c.campaignName.campaignName == "") {
+    if (campaign.campaignName == "") {
       alert("A name must be provided");
     } else {
-      console.log(c);
-      axios.post("/campaign", c)
+      console.log(campaign);
+      axios.post("/campaign", campaign)
         .then((res) => {
-          alert(c.campaignName.campaignName + " campaign was create successfully");
+          alert(campaign.campaignName + " campaign was create successfully");
           props.onHide();
         })
         .catch(err => {alert(err.message) });
@@ -36,7 +36,7 @@ export default (props) => {
             <Form.Control
               controlId="campaign"
               placeholder="Enter campaign"
-              onChange={(e) => setCampaign({ campaignName: new Object({campaignName: e.target.value}) })}
+              onChange={(e) => setCampaign({ campaignName: e.target.value })}
             />
           </Form.Group>
         </Form>
