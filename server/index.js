@@ -371,7 +371,7 @@ app.get('/ad/:id', async (req, res) => {
     }
 })
 
-app.get('/ad/imageUrl', async (req, res) => {
+app.get('/ad/:imageToken', async (req, res) => {
     try {
         const file = bucket.file(req.params.imageToken)
         if (!file.exists) {
