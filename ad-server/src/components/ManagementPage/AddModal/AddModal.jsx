@@ -71,7 +71,7 @@ export default (props) => {
   };
 
   const handleSubmit = () => {
-    if (ad.name == "") {
+    if (ad.name === "") {
       alert("Provide an Ad Name");
     } else {
       const data = {
@@ -111,11 +111,13 @@ export default (props) => {
               <Form.Control
                 placeholder="Enter ad name"
                 onChange={(e) => setAd({ ...ad, name: e.target.value })}
+                value={ad.name}
               />
               <Form.Label>Ad Size</Form.Label>
               <Form.Control
                 as="select"
                 onChange={(e) => setAd({ ...ad, size: e.target.value })}
+                value={ad.size}
               >
                 <option>Select Ad Size</option>
                 <option>Small: 400px x 200px</option>
@@ -125,6 +127,7 @@ export default (props) => {
               <Form.Control
                 as="select"
                 onChange={(e) => setAd({ ...ad, campaign: e.target.value })}
+                value={ad.campaign}
               >
                 <option>Select Campaign</option>
                 <option>Repair Kit Sale</option>
@@ -141,6 +144,7 @@ export default (props) => {
                 rows={4}
                 placeholder="Describe your image for screen readers..."
                 onChange={(e) => setAd({ ...ad, altText: e.target.value })}
+                value={ad.altText}
               />
             </Col>
             <Col sm={8}>
@@ -150,10 +154,12 @@ export default (props) => {
                   <Form.Label>Title</Form.Label>
                   <Form.Control
                     onChange={(e) => setAd({ ...ad, title: e.target.value })}
+                    value={ad.title}
                   />
                   <Form.Label>Subtitle</Form.Label>
                   <Form.Control
                     onChange={(e) => setAd({ ...ad, subtitle: e.target.value })}
+                    value={ad.subtitle}
                   />
                 </Col>
                 <Col sm={6}>
@@ -163,6 +169,7 @@ export default (props) => {
                     onChange={(e) =>
                       setAd({ ...ad, alignment: e.target.value })
                     }
+                    value={ad.alignment}
                   >
                     <option>Select Alignment</option>
                     <option>Left</option>
@@ -173,6 +180,7 @@ export default (props) => {
                     onChange={(e) =>
                       setAd({ ...ad, buttonText: e.target.value })
                     }
+                    value={ad.buttonText}
                   />
                   <Form.Label>Button Click Destination</Form.Label>
                   <Form.Control
@@ -180,6 +188,7 @@ export default (props) => {
                     onChange={(e) =>
                       setAd({ ...ad, buttonUrl: e.target.value })
                     }
+                    value={ad.buttonUrl}
                   />
                 </Col>
               </Row>
