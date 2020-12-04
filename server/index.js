@@ -188,7 +188,7 @@ app.put('/campaign/:id', async (req, res) => {
 app.post('/campaign', async (req, res) => {
     try {
         const campaignDoc = db.collection('campaign')
-        if (!req.body.campaignData) {
+        if (!req.body.campaignName) {
             res.status(400).send({ error: 'Body is missing field: campaignData', errorCode: 400 })
             return
         }
