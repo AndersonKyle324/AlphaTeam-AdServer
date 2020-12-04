@@ -193,7 +193,7 @@ app.post('/campaign', async (req, res) => {
             return
         }
         const doc = await campaignDoc
-            .add(req.body.campaignName)
+            .add(req.body)
             .then((campaign) => {
                 console.log(
                     `Succesfully created campaign ${campaign.id}`
