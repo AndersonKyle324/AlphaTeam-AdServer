@@ -10,7 +10,7 @@ export default (props) => {
     altText: "",
     title: "",
     subtitle: "",
-    buttonAlign: "",
+    alignment: "",
     buttonText: "",
     buttonUrl: "",
     imageFile: false,
@@ -28,40 +28,31 @@ export default (props) => {
   };
 
   const renderPreview = () => {
-    if (ad.src) {
-      if (ad.buttonAlign === "Left") {
-        return (
-          <div
-            className="preview"
-            style={{ textAlign: "left", backgroundImage: `url(${ad.src})` }}
-          >
-            <div className="previewText">
-              <h3>{ad.title}</h3>
-              <h5>{ad.subtitle}</h5>
-            </div>
-            <div className="fakeButtonLeft">
-              <p>{ad.buttonText}</p>
-            </div>
-          </div>
-        );
-      } else if (ad.buttonAlign === "Center") {
-        return (
-          <div
-            className="preview"
-            style={{ backgroundImage: `url(${ad.src})` }}
-          >
-            <div className="previewText">
-              <h3>{ad.title}</h3>
-              <h5>{ad.subtitle}</h5>
-            </div>
-            <div className="fakeButton">
-              <p>{ad.buttonText}</p>
-            </div>
-          </div>
-        );
+    let align = { backgroundImage: `url(${ad.src})`};
+    if (ad.src && ad.alignment !== "" && ad.alignment !== "Select Alignment") {
+      if (ad.alignment === "Left") {
+        align = { textAlign: "left", backgroundImage: `url(${ad.src})` };
+      } else if (ad.alignment === "Center") {
+        align = { textAlign: "center", backgroundImage: `url(${ad.src})` };
       } else {
-        return <p>Select Alignment</p>;
+        align = { backgroundImage: `url(${ad.src})`};
       }
+      return (
+        <div
+          className="preview"
+          style={align}
+        >
+          <div className="previewText">
+            <h3>{ad.title}</h3>
+            <h5>{ad.subtitle}</h5>
+          </div>
+          <div className="fakeButtonLeft">
+            <p>{ad.buttonText}</p>
+          </div>
+        </div>
+        );
+    } else if (ad.alignment === "" || ad.alignment === "Select Alignment") {
+      return <p>Select Alignment</p>;
     } else {
       return <p>Upload Background Image</p>;
     }
@@ -79,7 +70,7 @@ export default (props) => {
         size: ad.size,
         title: ad.title,
         subtitle: ad.subtitle,
-        buttonAlign: ad.buttonAlign,
+        alignment: ad.alignment,
         buttonText: ad.buttonText,
         url: ad.buttonUrl,
         altText: ad.altText,
@@ -155,14 +146,14 @@ export default (props) => {
                   />
                 </Col>
                 <Col sm={6}>
-                  <Form.Label>Button Alignment</Form.Label>
+                  <Form.Label>Content Alignment</Form.Label>
                   <Form.Control
                     as="select"
                     onChange={(e) =>
-                      setAd({ ...ad, buttonAlign: e.target.value })
+                      setAd({ ...ad, alignment: e.target.value })
                     }
                   >
-                    <option>Select Button Alignment</option>
+                    <option>Select Alignment</option>
                     <option>Left</option>
                     <option>Center</option>
                   </Form.Control>
