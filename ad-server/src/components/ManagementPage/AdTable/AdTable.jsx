@@ -15,6 +15,7 @@ import {
   faSortAmountDownAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import PublishModal from "../PublishModal/PublishModal";
+import AddModal from "../AddModal/AddModal";
 import axios from "axios";
 
 const Styles = styled.div`
@@ -105,9 +106,8 @@ function Table({ columns, data }) {
     if (selectedFlatRows.length !== 1) {
       setInputs({ ...inputs, error: true });
     } else {
-      setInputs({ ...inputs, showAdd: true, error: false });
-      const selectedAd = selectedFlatRows[0].original;
-      console.log(selectedAd);
+      const ad = selectedFlatRows[0].original;
+      setInputs({ ...inputs, selectedAd: ad, showAdd: true, error: false });
     }
   };
 
@@ -187,9 +187,7 @@ function Table({ columns, data }) {
           })}
         </tbody>
       </table>
-      <Button onClick={() => openAddModal()} style={{ margin: "10px" }}>
-        Edit Selected Ad
-      </Button>
+      <Button onClick={() => openAddModal()} style={{ margin: "10px" }}>Edit Selected Ad</Button>
       <Button onClick={() => openPublishModal()}>Publish Selected Ad</Button>
       {inputs.error ? (
         <Alert variant="warning" className="p-2">
@@ -200,6 +198,11 @@ function Table({ columns, data }) {
         ad={inputs.selectedAd}
         show={inputs.showPub}
         onHide={() => setInputs({ ...inputs, showPub: false })}
+      />
+      <AddModal
+        ad={inputs.selectedAd}
+        show={inputs.showAdd}
+        onHide={() => setInputs({ ...inputs, showAdd: false })}
       />
     </>
   );
