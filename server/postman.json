@@ -312,47 +312,6 @@
 					"response": []
 				},
 				{
-					"name": "Campaign contains newly created ad ",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "b9bb2d23-752f-47e7-89b0-777c27ef36e4",
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"",
-									"let obj = pm.response.json();",
-									"let adID = pm.variables.get(\"adID\");",
-									"",
-									"pm.test(\"Campaign contains newly created ad\", function() {",
-									"    pm.expect(obj.ads).to.include(adID)",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:3001/campaign/{{adCampaign}}",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "3001",
-							"path": [
-								"campaign",
-								"{{adCampaign}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Get ad by id",
 					"event": [
 						{
@@ -697,47 +656,6 @@
 						}
 					},
 					"response": []
-				},
-				{
-					"name": "Ad not in campaign anymore",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "28c4a617-3fb4-45c8-9205-a426905fbe64",
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"",
-									"let obj = pm.response.json();",
-									"let adID = pm.variables.get(\"adID\");",
-									"",
-									"pm.test(\"Campaign does not contain newly created ad\", function() {",
-									"    pm.expect(obj.ads).to.not.include(adID)",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:3001/campaign/{{adCampaign}}",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "3001",
-							"path": [
-								"campaign",
-								"{{adCampaign}}"
-							]
-						}
-					},
-					"response": []
 				}
 			],
 			"protocolProfileBehavior": {}
@@ -1033,17 +951,17 @@
 	],
 	"variable": [
 		{
-			"id": "c81d1377-1937-4a1b-87c2-b34c535988bd",
+			"id": "5405e979-7a40-4708-afec-bd3756f504a4",
 			"key": "adID",
-			"value": "N0kXqOwp89QaMwYBHip1"
+			"value": "VwREug9YC0WLaB05u8EY"
 		},
 		{
-			"id": "22f293ac-163e-4d82-b9ff-efd456a79585",
+			"id": "7c243144-67d3-439c-9d5e-91de6e1bcc69",
 			"key": "campaignID",
 			"value": "0F8qqvg2dPfNqMwjgwt1"
 		},
 		{
-			"id": "6a56f28c-37f7-4e72-82d8-cb9a6723c07e",
+			"id": "6f15981d-8b60-4650-b861-dd9d7295fcbe",
 			"key": "adCampaign",
 			"value": "2LeFM9h4RcwLWLijvSK6"
 		}

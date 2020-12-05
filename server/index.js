@@ -131,7 +131,6 @@ app.get('/ad', async (req, res) => {
             const matches = []
             queryRef.forEach((doc) => {
                 matches.push(doc.data())
-                matches[matches.length()-1].id = doc.id
             })
             res.status(200).send(matches)
             return
