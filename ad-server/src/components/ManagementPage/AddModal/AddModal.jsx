@@ -23,6 +23,28 @@ export default (props) => {
     ctr: 0,
   });
 
+  const [camp, setCamp] = useState({
+    c: []
+  })
+
+  let campaignList = [];
+  let campaigns = null;
+
+  const getCampaigns = async () => {
+    await Axios.get('/campaign')
+      .then((res) => {
+        const data = res.data;
+        data.map((campaign) => {
+          campaignList.push(campaign.campaignName);
+        })
+        console.log(campaignList);
+        campaigns = campaignList.map((campaign) =>
+          <option>{campaign}</option>);
+        setCamp({ c: campaigns });
+      })
+      .catch((err) => console.log(err))
+  }
+
   React.useEffect(() => {
     setAd({ ...ad, 
             id: props.ad.id,
@@ -201,10 +223,9 @@ export default (props) => {
                 as="select"
                 onChange={(e) => setAd({ ...ad, campaign: e.target.value })}
                 value={ad.campaign}
+                onClick={() => getCampaigns()}
               >
-                <option>Select Campaign</option>
-                <option>Repair Kit Sale</option>
-                <option>Nintendo Switch</option>
+                {camp.c}
               </Form.Control>
               <Form.File
                 id="ad.imageFile"
