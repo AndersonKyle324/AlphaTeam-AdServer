@@ -5,6 +5,7 @@ import "./AddModal.css";
 
 export default (props) => {
   const [ad, setAd] = useState({
+    id: "",
     name: "",
     campaign: "",
     size: "",
@@ -16,11 +17,15 @@ export default (props) => {
     buttonUrl: "",
     imageFile: false,
     src: false, // for preview
-    imageToken: ""
+    imageToken: "",
+    impressions: 0,
+    clicks: 0,
+    ctr: 0,
   });
 
   React.useEffect(() => {
     setAd({ ...ad, 
+            id: props.ad.id,
             name: props.ad.adName,
             campaign: props.ad.campaign,
             size: props.ad.size,
@@ -30,6 +35,10 @@ export default (props) => {
             alignment: props.ad.alignment,
             buttonText: props.ad.buttonText,
             buttonUrl: props.ad.url,
+            imageToken: props.ad.imageToken,
+            impressions: props.ad.impressions,
+            clicks: props.ad.clicks,
+            ctr: props.ad.conversions
           });
   }, [props.ad])
 
@@ -91,33 +100,55 @@ export default (props) => {
     });
   }
 
-  // Post ad
+  // POST or PUT an ad
   const handleSubmit = async () => {
     if (ad.name === "") {
       alert("Ad Name Required");
+    } else if (ad.id) {
+      const data = {
+        adName: ad.name,
+        campaign: ad.campaign,
+        size: ad.size,
+        title: ad.title,
+        subtitle: ad.subtitle,
+        alignment: ad.alignment,
+        buttonText: ad.buttonText,
+        url: ad.buttonUrl,
+        altText: ad.altText,
+        imageFile: ad.imageFile,
+        imageToken: ad.imageToken,
+        statistics: {
+          clicks: ad.clicks,
+          seen: ad.impressions,
+          ctr: ad.ctr,
+        }
+      }
+
+      await Axios.put(`/ad/${ad.id}`, data)
+        .then((response) => console.log(response))
+        .catch((error) => console.log(error));
+
     } else {
       const data = {
-          adName: ad.name,
-          campaign: ad.campaign,
-          size: ad.size,
-          title: ad.title,
-          subtitle: ad.subtitle,
-          alignment: ad.alignment,
-          buttonText: ad.buttonText,
-          url: ad.buttonUrl,
-          altText: ad.altText,
-          imageFile: ad.imageFile,
-          imageToken: ad.imageToken,
-          statistics: {
-            clicks: 0,
-            seen: 0,
-            ctr: 0,
-          }
+        adName: ad.name,
+        campaign: ad.campaign,
+        size: ad.size,
+        title: ad.title,
+        subtitle: ad.subtitle,
+        alignment: ad.alignment,
+        buttonText: ad.buttonText,
+        url: ad.buttonUrl,
+        altText: ad.altText,
+        imageFile: ad.imageFile,
+        imageToken: ad.imageToken,
+        statistics: {
+          clicks: 0,
+          seen: 0,
+          ctr: 0,
+        }
+      }
 
-      };
-      console.log(data);
-      // Post ad data
-      await Axios.post('http://localhost:3001/ad', data)
+      await Axios.post('/ad', data)
         .then((response) => console.log(response))
         .catch((error) => console.log(error));
       
@@ -132,11 +163,11 @@ export default (props) => {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
-      }).then((response) => console.log(response)).catch((error) => console.log(error));
-
-      props.onHide();
-      clearState();
+      }).then((response) => console.log(response)).catch((error) => console.log(error));  
     }
+    
+    props.onHide();
+    clearState();
   };
 
   return (

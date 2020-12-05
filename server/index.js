@@ -244,7 +244,7 @@ app.put('/ad/:id', async (req, res) => {
             req.body.adData = {...req.body.adData, ...impressions}
         }
         await adDoc
-            .set(req.body.adData)
+            .set(req.body)
             .then(console.log(`Succesfully modified ad ${req.body.adId}`))
             //Catches error in the case api request fails
             .catch((err) => {
@@ -372,7 +372,7 @@ app.get('/ad/:id', async (req, res) => {
     }
 })
 
-app.get('/ad/imageUrl', async (req, res) => {
+app.get('/ad/:imageToken', async (req, res) => {
     try {
         const file = bucket.file(req.params.imageToken)
         if (!file.exists) {
