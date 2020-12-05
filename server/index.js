@@ -371,7 +371,7 @@ app.get('/ad/:id', async (req, res) => {
     }
 })
 
-app.get('/image', async (req, res) => {
+app.get('/image/:imageToken', async (req, res) => {
     try {
         console.log(req.params)
         const file = storage.child(req.params.imageToken)
