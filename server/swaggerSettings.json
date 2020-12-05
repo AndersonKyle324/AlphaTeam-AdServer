@@ -369,7 +369,6 @@
                     }
                 }
             },
-            "/campaign/delete/{campaignId}": {},
             "/ad/{adId}": {
                 "get": {
                     "tags": ["ad"],
