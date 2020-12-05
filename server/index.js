@@ -372,16 +372,17 @@ app.get('/ad/:id', async (req, res) => {
     }
 })
 
-app.get('/ad/:imageToken', async (req, res) => {
+app.get('/image', async (req, res) => {
     try {
+        console.log(req.params)
         const file = storage.child(req.params.imageToken)
         if (!file.exists) {
-            res.status(404).send(missingDataError('ad'))
+            res.status(404).send(missingDataError('Image'))
             return
         }
         res.status(200).send(file.getDownloadURL())
     } catch (e) {
-        res.status(500).send({ error: 'Error retrieving ad info' })
+        res.status(500).send({ error: 'Error retrieving ad info', errorCode: 500 })
     }
 })
 

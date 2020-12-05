@@ -29,8 +29,8 @@
                 "description": "Everything about campaign"
             },
             {
-                "name": "user",
-                "description": "Everything about user"
+                "name": "image",
+                "description": "Everything about image"
             }
         ],
         "components": {
@@ -526,6 +526,54 @@
                         },
                         "500": {
                             "description": "Improper data inputs"
+                        }
+                    }
+                }
+            },
+            "/image": {
+                "get": {
+                    "tags": ["image"],
+                    "summary": "Retrieves an image related to a particular ad by its token",
+                    "parameters": [
+                        {
+                            "in": "path",
+                            "name": "imageToken",
+                            "description": "An image's unique identifier. The identifier is stored as part of the ad object",
+                            "required": true,
+                            "schema": {
+                                "type": "string"
+                            },
+                            "example": "1607128589851-ad_1_image.jpg"
+                        }
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "Successful Operation",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "type": "string"
+                                    },
+                                    "example": "https://firebasestorage.googleapis.com/v0/b/ifixit-ad-server-edd98.appspot.com/o/1607128589851-RAID.jpg?alt=media&token=b6621b77-4e18-4526-ab2d-e378efe2dad1"
+                                }
+                            }
+                        },
+                        "404": {
+                            "description": "Ad token not found",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "type": "object"
+                                    },
+                                    "example": {
+                                        "error": "Image does not exist",
+                                        "errorCode": 404
+                                    }
+                                }
+                            }
+                        },
+                        "500": {
+                            "description": "Error retrieving info"
                         }
                     }
                 }
