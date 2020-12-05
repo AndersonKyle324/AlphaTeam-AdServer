@@ -529,7 +529,7 @@
                     }
                 }
             },
-            "/image": {
+            "/image/{imageToken}": {
                 "get": {
                     "tags": ["image"],
                     "summary": "Retrieves an image related to a particular ad by its token",
