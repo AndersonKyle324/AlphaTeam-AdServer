@@ -168,6 +168,7 @@ app.put('/campaign/:id', async (req, res) => {
                 error: 'Campaign does not exist',
                 errorCode: 404,
             })
+            return
         }
         await campaignDoc
             .set(req.body)
@@ -243,7 +244,7 @@ app.put('/ad/:id', async (req, res) => {
             req.body.adData = {...req.body.adData, ...impressions}
         }
         await adDoc
-            .set(req.body.adData)
+            .set(req.body)
             .then(console.log(`Succesfully modified ad ${req.body.adId}`))
             //Catches error in the case api request fails
             .catch((err) => {

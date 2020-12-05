@@ -256,6 +256,7 @@ class AdTable extends React.Component {
         const tempArray = [];
         ads.forEach((ad) => {
           var tempAd = {
+            id: ad.id,
             adName: ad.adName,
             altText: ad.altText,
             alignment: ad.alignment,
