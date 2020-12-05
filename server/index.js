@@ -374,17 +374,12 @@ app.get('/ad/:id', async (req, res) => {
 
 app.get('/ad/:imageToken', async (req, res) => {
     try {
-        const file = bucket.file(req.params.imageToken)
+        const file = storage.child(req.params.imageToken)
         if (!file.exists) {
             res.status(404).send(missingDataError('ad'))
             return
         }
-        res.status(200).send(file.getSignedUrl({
-            action: 'read',
-            expires: '12-01-2021'
-        }).then(signedUrl => {
-            signedUrl[0]
-        }))
+        res.status(200).send(file.getDownloadURL())
     } catch (e) {
         res.status(500).send({ error: 'Error retrieving ad info' })
     }
