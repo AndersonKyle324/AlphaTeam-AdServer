@@ -107,13 +107,6 @@
                         "campaignName": {
                             "type": "string",
                             "example": "TestCampaignName"
-                        },
-                        "ads":{
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "example": ["1id", "2id", "3id"]
                         }
                     }
                 },
