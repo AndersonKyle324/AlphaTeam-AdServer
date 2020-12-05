@@ -369,7 +369,6 @@
                     }
                 }
             },
-            "/campaign/delete/{campaignId}": {},
             "/ad/{adId}": {
                 "get": {
                     "tags": ["ad"],
@@ -520,6 +519,59 @@
                                     "schema": {
                                         "type": "string",
                                         "example": "Success"
+                                    }
+                                }
+                            }
+                        },
+                        "500": {
+                            "description": "Improper data inputs"
+                        }
+                    }
+                }
+            },
+            "/ad/upload/": {
+                "post":{
+                    "tags": ["ad"],
+                    "summary": "Upload an image",
+                    "requestBody": {
+                        "required": true,
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object"
+                                        },
+                                        "headers": {
+                                            "type": "object",
+                                            "properties": {
+                                                "Content-Type": {
+                                                    "type": "string",
+                                                    "example": "multipart/form-data"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "responses": {
+                        "200": {
+                            "description": "Successful Operation",   
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "type": "object",
+                                        "properties": {
+                                            "fileName": {
+                                                "type": "string"
+                                            },
+                                            "fileLocation": {
+                                                "type": "string"
+                                            }
+                                        }
                                     }
                                 }
                             }
